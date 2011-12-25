@@ -1,0 +1,47 @@
+div.bb_quote {
+	width: 90%;
+	display: block;
+	margin: 5px;
+	padding: 5px;
+	background: #f9fcff;
+	border: 1px solid silver;
+	
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;	
+}
+
+div.bb_code {
+	width: 90%;
+	display: block;
+	margin: 5px;
+	padding: 5px;
+	background: #f7faef;
+	border: 1px solid silver;
+	
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;	
+}
+
+span.bb_style_title {
+	font: bold medium Georgia, "Times New Roman", Times, serif;	
+}
+
+span.bb_style_heading {
+	font: bold small Georgia, "Times New Roman", Times, serif;
+}
+
+span.bb_style_sub_section {
+	font: bold small Georgia, "Times New Roman", Times, serif;
+}
+
+span.bb_style_body {
+	font: x-small Georgia, "Times New Roman", Times, serif;
+}
+
+img.bb_image {
+	border: 0;
+	margin: 5px;
+	padding: 0px;
+}

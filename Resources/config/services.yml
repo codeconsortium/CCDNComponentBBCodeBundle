@@ -1,0 +1,8 @@
+parameters:
+    bb_code.extension.class: CodeConsortium\BBCodeBundle\Extension\BBCodeExtension
+
+services:
+    bb_code.extension:
+        class: %bb_code.extension.class%
+        tags:
+            - { name: twig.extension }
