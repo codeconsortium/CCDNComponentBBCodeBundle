@@ -7,67 +7,77 @@
 
 namespace CodeConsortium\BBCodeBundle\Engine;
 
-class BBCodeEngine
+use Symfony\Component\DependencyInjection\ContainerAware;
+
+class BBCodeEngine extends ContainerAware
 {
+	
+	private $parser_state_flags = array(
+/*		'use_pre_tag' => array('state' => false, 'token_holder' => '', ),
+		'enable_nested' => array('state' => true, 'token_holder' => '', ),*/
+	);
 
 	private $lexemes;
 	
 	public function __construct()
 	{
 		$this->lexemes = array(
-			array(	'lexeme' => 'quote',
-					'token' => array('/(\[quote?(=[a-zA-Z0-9]*)*\])/', '/(\[\/quote\])/'),
-					'html' => array('<div class="bb_quote"><b>{{param}}</b><hr />', '</div>'),
+			array(	'symbol_lexeme' => 'quote',
+					'symbol_token' => array('/(\[quote?(=[a-zA-Z0-9]*)*\])/', '/(\[\/quote\])/'),
+					'symbol_html' => array('<div class="bb_quote"><b>{{param}}</b><br /><pre>', '</pre></div>'),
+					'use_pre_tag' => true,
 			),
-			array(	'lexeme' => 'code',
-					'token' => array('/(\[code?(=[a-zA-Z0-9]*)*\])/', '/(\[\/code\])/'),
-					'html' => array('<div class="bb_code">{{param}}', '</div>'),
+			array(	'symbol_lexeme' => 'code',
+					'symbol_token' => array('/(\[code?(=[a-zA-Z0-9]*)*\])/', '/(\[\/code\])/'),
+					'symbol_html' => array('<div class="bb_code">{{param}}<br /><pre class="bb_code">', '</pre></div>'),
+					'use_pre_tag' => true,
+					'use_nested' => false,
 			),	
-			array(	'lexeme' => 'bold',
-					'token' => array('/(\[b\])/', '/(\[\/b\])/'),
-					'html' => array('<b>', '</b>'),
+			array(	'symbol_lexeme' => 'bold',
+					'symbol_token' => array('/(\[b\])/', '/(\[\/b\])/'),
+					'symbol_html' => array('<b>', '</b>'),
 			),
-			array(	'lexeme' => 'underline',
-					'token' => array('/(\[u\])/', '/(\[\/u\])/'),
-					'html' => array('<u>', '</u>'),
+			array(	'symbol_lexeme' => 'underline',
+					'symbol_token' => array('/(\[u\])/', '/(\[\/u\])/'),
+					'symbol_html' => array('<u>', '</u>'),
 			),
-			array(	'lexeme' => 'italics',
-					'token' => array('/(\[i\])/', '/(\[\/i\])/'),
-					'html' => array('<i>', '</i>'),
+			array(	'symbol_lexeme' => 'italics',
+					'symbol_token' => array('/(\[i\])/', '/(\[\/i\])/'),
+					'symbol_html' => array('<i>', '</i>'),
 			),
-			array(	'lexeme' => 'style',
-					'token' => array('/(\[style?(=[a-zA-Z0-9]*)*\])/', '/(\[\/style\])/'),
-					'html' => array('<span class="{{style}}">', '</span>'),
+			array(	'symbol_lexeme' => 'style',
+					'symbol_token' => array('/(\[style?(=[a-zA-Z0-9]*)*\])/', '/(\[\/style\])/'),
+					'symbol_html' => array('<span class="{{style}}">', '</span>'),
 			),
-			array(	'lexeme' => 'subscript',
-					'token' => array('/(\[sub\])/', '/(\[\/sub\])/'),
-					'html' => array('<sub>', '</sub>'),
+			array(	'symbol_lexeme' => 'subscript',
+					'symbol_token' => array('/(\[sub\])/', '/(\[\/sub\])/'),
+					'symbol_html' => array('<sub>', '</sub>'),
 			),
-			array(	'lexeme' => 'superscript',
-					'token' => array('/(\[sup\])/', '/(\[\/sup\])/'),
-					'html' => array('<sup>', '</sup>'),
+			array(	'symbol_lexeme' => 'superscript',
+					'symbol_token' => array('/(\[sup\])/', '/(\[\/sup\])/'),
+					'symbol_html' => array('<sup>', '</sup>'),
 			),
-			array(	'lexeme' => 'strikethrough',
-					'token' => array('/(\[strike\])/', '/(\[\/strike\])/'),
-					'html' => array('<del>', '</del>'),
+			array(	'symbol_lexeme' => 'strikethrough',
+					'symbol_token' => array('/(\[strike\])/', '/(\[\/strike\])/'),
+					'symbol_html' => array('<del>', '</del>'),
 			),
-/*			array(	'lexeme' => 'url',
-					'token' => array('/(\[url=\"\"\])/', '/(\[\/url\])/'),
-					'html' => array('<a href="{{url}}">', '</a>'),
+/*			array(	'symbol_lexeme' => 'url',
+					'symbol_token' => array('/(\[url=\"\"\])/', '/(\[\/url\])/'),
+					'symbol_html' => array('<a href="{{url}}">', '</a>'),
 			),
-			array(	'lexeme' => 'image',
-					'token' => array('/(\[img\])/', '/(\[\/img\])/'),
-					'html' => array('<img src="', '" />'),
+			array(	'symbol_lexeme' => 'image',
+					'symbol_token' => array('/(\[img\])/', '/(\[\/img\])/'),
+					'symbol_html' => array('<img src="', '" />'),
 			),
-			array(	'lexeme' => 'image_named',
-					'token' => array('/(\[img?(=[a-zA-Z0-9]*)*\])/', '/(\[\/img\])/'),
-					'html' => array('<img alt="{{alt}}" src="', '" />'),
+			array(	'symbol_lexeme' => 'image_named',
+					'symbol_token' => array('/(\[img?(=[a-zA-Z0-9]*)*\])/', '/(\[\/img\])/'),
+					'symbol_html' => array('<img alt="{{alt}}" src="', '" />'),
 			),*/
 		);
 		
 		foreach($this->lexemes as $key => &$lexeme)
 		{
-			$lexeme['token_count'] = count($lexeme['token']);
+			$lexeme['token_count'] = count($lexeme['symbol_token']);
 		}
 	}
 	
@@ -139,11 +149,11 @@ class BBCodeEngine
 	{
 		foreach ($lexemes as $lexeme_key => $lexeme)
 		{
-			foreach ($lexeme['token'] as $token_key => $token)
+			foreach ($lexeme['symbol_token'] as $token_key => $token)
 			{
 				if (preg_match($token, $lookup))
 				{
-					return array('lookup_str' => $lookup, 'lexeme_key' => $lexeme_key, 'token_key' => $token_key);
+					return array('lookup_str' => $lookup, 'lexeme_key' => $lexeme_key, 'token_key' => $token_key, 'original_lexeme' => &$lexeme);
 				}
 			}
 		}
@@ -178,6 +188,8 @@ class BBCodeEngine
 			}
 		}
 
+		// check if we have reached depth 0 which
+		// is where we want we want to return
 		if ($depth < 1)
 		{
 			return $tree[$tree_size];
@@ -209,7 +221,7 @@ class BBCodeEngine
 				// *******************************************************
 				// does token have matching closing tokens in the lexemes? 
 				// (could be a one off, like a smiley [i.e; no closing tag required])
-				if (count($lexemes[$lookup['lexeme_key']]['token']) > 1)
+				if (count($lexemes[$lookup['lexeme_key']]['symbol_token']) > 1)
 				{
 					// *******************************************************
 					// 		CLOSING TAG
@@ -220,7 +232,7 @@ class BBCodeEngine
 						
 						if (is_array($branch[0]))
 						{
-							if (preg_match($lexemes[$lookup['lexeme_key']]['token'][0], $branch[0]['lookup_str']))
+							if (preg_match($lexemes[$lookup['lexeme_key']]['symbol_token'][0], $branch[0]['lookup_str']))
 							{
 								// interconnect associative lexeme
 								$token = '__' . md5(uniqid(mt_rand(), true)) . '__';
@@ -240,7 +252,7 @@ class BBCodeEngine
 								
 								if (is_array($branch[0]))
 								{
-									if (preg_match($lexemes[$lookup['lexeme_key']]['token'][0], $branch[0]['lookup_str']))
+									if (preg_match($lexemes[$lookup['lexeme_key']]['symbol_token'][0], $branch[0]['lookup_str']))
 									{
 										// interconnect associative lexeme
 										$token = '__' . md5(uniqid(mt_rand(), true)) . '__';
@@ -307,19 +319,40 @@ class BBCodeEngine
 		for ($lexeme_leaf_key = 0; $lexeme_leaf_key < count($lexeme_tree); $lexeme_leaf_key++)
 		{
 			$lexeme_leaf = $lexeme_tree[$lexeme_leaf_key];
+			$use_pre_tag = false;
+			$use_nested = true;
+			
+			// check for any state flags that could affect this iteration.
+			foreach($this->parser_state_flags as $key => &$flag)
+			{
+				if (array_key_exists('use_pre_tag', $flag))
+				{
+					$use_pre_tag = true;
+				}
+				if (array_key_exists('use_nested', $flag))
+				{
+					$use_nested = false;
+				}
+			}
 						
 			if (is_array($lexeme_leaf))
 			{
 				if (array_key_exists('lexeme_key', $lexeme_leaf))
 				{
+					// we have to check the validation token separately from the lexeme key,
+					// because if we only check the validation key, then indices containing
+					// lexemes that are invalid will be processed as nested branches, this 
+					// will throw various errors, such as invalid array indice offsets etc.
 					if (array_key_exists('validation_token', $lexeme_leaf))
 					{
-						$tag = $lexemes[$lexeme_leaf['lexeme_key']]['html'][$lexeme_leaf['token_key']];
-					
+						$tag = $lexemes[$lexeme_leaf['lexeme_key']]['symbol_html'][$lexeme_leaf['token_key']];
+				
+						// here we are only concerned with the opening tag, and
+						// wether it contains a parameter in the opening tag.
 						if ($lexeme_leaf['token_key'] == 0)
 						{
 							$param = preg_split('/(\[)|(\=)|(\])/', $lexeme_leaf['lookup_str'], null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
-						
+					
 							if (is_array($param) && count($param) > 0)
 							{
 								if ($param[2] == '=')
@@ -327,20 +360,65 @@ class BBCodeEngine
 									$tag = str_replace('{{param}}', $param[3], $tag);
 								}
 							}
+						
+							if (array_key_exists('use_pre_tag', $lexeme_leaf['original_lexeme']))
+							{
+								if ($lexeme_leaf['original_lexeme']['use_pre_tag'] == true)
+								{
+									$this->parser_state_flags[] = array('use_pre_tag' => true, 'token_holder' => $lexeme_leaf['validation_token']);
+								}
+							}
+							if (array_key_exists('use_nested', $lexeme_leaf['original_lexeme']))
+							{
+								if ($lexeme_leaf['original_lexeme']['use_nested'] == false)
+								{
+									$this->parser_state_flags[] = array('use_nested' => false, 'token_holder' => $lexeme_leaf['validation_token']);
+								}
+							}
+						} else {
+							// remove any special state flags for closing tags that match prior opened ones.
+							if (count($this->parser_state_flags) > 0)
+							{
+								//for ($flag_index = 0; $flag_index < count($this->parser_state_flags); $flag_index++)
+								foreach($this->parser_state_flags as $flag_index => $flag)
+								{
+									if ($flag['token_holder'] == $lexeme_leaf['validation_token'])
+									{
+										unset($this->parser_state_flags[$flag_index]);
+									}
+								}
+							}
 						}
 					} else {
 						$tag = $lexeme_leaf['lookup_str'];
 					}
+				
 					$html .= $tag;
+				
+					continue;
 				} else {
 					if (count($lexeme_tree[$lexeme_leaf_key]) > 0)
 					{
 						$html .= $this->bb_parser($lexeme_tree[$lexeme_leaf_key] , $lexemes);
+						
+						continue;
 					}
 				}
 			} else {
-				$html .= nl2br(htmlspecialchars($lexeme_leaf, ENT_QUOTES));
+				// non tag related, content only just plain
+				// old text or garbled invalid bb code tags.
+				$tag = $lexeme_leaf;
 			}
+			
+			if ($use_pre_tag == true)
+			{
+				$str = htmlentities($tag, ENT_QUOTES|ENT_SUBSTITUTE);
+			} else {
+				$str = nl2br(htmlentities($tag, ENT_QUOTES|ENT_SUBSTITUTE));
+			}
+			
+			$html .= $str;			
+			
 		}
 
 		return $html;

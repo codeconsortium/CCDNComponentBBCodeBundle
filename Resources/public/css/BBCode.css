@@ -1,5 +1,5 @@
 div.bb_quote {
-	width: 90%;
+	width: 95%;
 	display: block;
 	margin: 5px;
 	padding: 5px;
@@ -9,19 +9,30 @@ div.bb_quote {
 	border-radius:5px;
 	-moz-border-radius:5px;
 	-webkit-border-radius:5px;	
+	overflow: scroll;
 }
 
 div.bb_code {
-	width: 90%;
+	width: 95%;
 	display: block;
-	margin: 5px;
-	padding: 5px;
-	background: #f7faef;
-	border: 1px solid silver;
+	margin: 5px;		
+	padding: 3px 0 5px;
+
 	
 	border-radius:5px;
 	-moz-border-radius:5px;
-	-webkit-border-radius:5px;	
+	-webkit-border-radius:5px;
+	background-color: silver;
+}
+pre.bb_code {
+	padding: 0 5px 3px;
+
+	background: #f7faef url(../images/bb_codetag_background.png);
+	border: 1px solid silver;
+
+	font: small/16px "Andale Mono", mono, Courier, "Courier New";
+	overflow: scroll;
+	white-space: pre;
 }
 
 span.bb_style_title {
