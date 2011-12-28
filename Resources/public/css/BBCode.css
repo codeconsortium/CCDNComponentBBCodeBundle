@@ -44,11 +44,11 @@ pre.bb_code {
 }
 
 span.bb_style_title {
-	font: bold medium Georgia, "Times New Roman", Times, serif;	
+	font: bold large Georgia, "Times New Roman", Times, serif;	
 }
 
 span.bb_style_heading {
-	font: bold small Georgia, "Times New Roman", Times, serif;
+	font: bold medium Georgia, "Times New Roman", Times, serif;
 }
 
 span.bb_style_sub_section {
@@ -56,7 +56,7 @@ span.bb_style_sub_section {
 }
 
 span.bb_style_body {
-	font: x-small Georgia, "Times New Roman", Times, serif;
+	font: small Georgia, "Times New Roman", Times, serif;
 }
 
 img.bb_image {

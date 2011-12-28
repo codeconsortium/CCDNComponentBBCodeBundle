@@ -124,7 +124,7 @@ class BBCodeEngine extends ContainerAware
 						$chunks[] = $str;
 						$str = $current_symbol;
 					} else {
-						$str.= $current_symbol;						
+						$str.= $current_symbol;
 					}
 				}
 			} else {
@@ -378,8 +378,22 @@ class BBCodeEngine extends ContainerAware
 						
 						if ($tag_param !== null)
 						{
-							$lexeme_leaf['tag_param'] = $tag_param;
-							$tag = str_replace('{{param}}', htmlentities($tag_param, ENT_QUOTES|ENT_SUBSTITUTE), $tag);
+							if (array_key_exists('param_choices', $lexeme_leaf['original_lexeme']))
+							{
+								foreach($lexeme_leaf['original_lexeme']['param_choices'] as $param_choice_key => $param_choice)
+								{
+									if ($tag_param == $param_choice_key)
+									{
+										$lexeme_leaf['tag_param'] = $param_choice;
+										$tag = str_replace('{{param}}', $param_choice, $tag);
+										
+										break;
+									}
+								}
+							} else {
+								$lexeme_leaf['tag_param'] = $tag_param;
+								$tag = str_replace('{{param}}', htmlentities($tag_param, ENT_QUOTES|ENT_SUBSTITUTE), $tag);
+							}
 						}
 						
 						// here we are only concerned with the opening tag, and
