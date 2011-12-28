@@ -1,8 +1,13 @@
 parameters:
-    bb_code.extension.class: CodeConsortium\BBCodeBundle\Extension\BBCodeExtension
+    bb_code.extension.class:                        CodeConsortium\BBCodeBundle\Extension\BBCodeExtension
+    code_consortium_bbcode.bb_code.engine.class:     CodeConsortium\BBCodeBundle\Engine\BBCodeEngine
 
 services:
     bb_code.extension:
         class: %bb_code.extension.class%
+        arguments: [@service_container]
         tags:
             - { name: twig.extension }
+    bb_code.engine:
+        class:  %code_consortium_bbcode.bb_code.engine.class%
+        arguments: [@service_container]

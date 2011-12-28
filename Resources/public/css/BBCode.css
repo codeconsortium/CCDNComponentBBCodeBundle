@@ -16,19 +16,27 @@ div.bb_code {
 	width: 95%;
 	display: block;
 	margin: 5px;		
-	padding: 3px 0 5px;
+	padding: 3px 0 0;
 
-	
+	border
 	border-radius:5px;
 	-moz-border-radius:5px;
 	-webkit-border-radius:5px;
-	background-color: silver;
+	background: url(./../../codeconsortiumcommon/images/common_item_bubble/gray_bar.png) repeat-x;
+	border: 1px solid silver;
+}
+div.bb_code_strip {
+	line-height: 20px;
+	padding: 4px 4px 4px 8px;
+	font-weight: bold;
+	font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
 }
 pre.bb_code {
+	margin: 0px;
 	padding: 0 5px 3px;
 
 	background: #f7faef url(../images/bb_codetag_background.png);
-	border: 1px solid silver;
+	/*border: 1px solid silver;*/
 
 	font: small/16px "Andale Mono", mono, Courier, "Courier New";
 	overflow: scroll;

@@ -1,7 +1,9 @@
 <?php
 /*
- * Created by Reece Fowell <me at reecefowell dot com> / <reece at codeconsortium dot com>
- * 17/12/2011
+ * Created by Reece Fowell 
+ * <me at reecefowell dot com> 
+ * <reece at codeconsortium dot com>
+ * Created on 17/12/2011
  *
 */
 
@@ -11,25 +13,32 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 
 class BBCodeEngine extends ContainerAware
 {
-	
+	// TODO: add styles to the style bbcode!
 	private $parser_state_flags = array(
-/*		'use_pre_tag' => array('state' => false, 'token_holder' => '', ),
-		'enable_nested' => array('state' => true, 'token_holder' => '', ),*/
+		'use_pre_tag' => false,
+		'use_pre_tag_child' => null,
+		'use_nested' => true,
+		'use_nested_child' => null,
 	);
-
+	
 	private $lexemes;
 	
-	public function __construct()
+	public function __construct($container)
 	{
+		$this->container = $container;
+
+		$label_said = $this->container->get('translator')->trans('bb_code.quote.said', array(), 'CodeConsortiumBBCodeBundle');
+		$label_code = $this->container->get('translator')->trans('bb_code.code', array(), 'CodeConsortiumBBCodeBundle');
+		
 		$this->lexemes = array(
 			array(	'symbol_lexeme' => 'quote',
-					'symbol_token' => array('/(\[quote?(=[a-zA-Z0-9]*)*\])/', '/(\[\/quote\])/'),
-					'symbol_html' => array('<div class="bb_quote"><b>{{param}}</b><br /><pre>', '</pre></div>'),
+					'symbol_token' => array('/(\[quote?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/quote\])/'),
+					'symbol_html' => array('<div class="bb_quote"><b>{{param}} ' . $label_said . ':</b><br /><pre>', '</pre></div>'),
 					'use_pre_tag' => true,
 			),
 			array(	'symbol_lexeme' => 'code',
-					'symbol_token' => array('/(\[code?(=[a-zA-Z0-9]*)*\])/', '/(\[\/code\])/'),
-					'symbol_html' => array('<div class="bb_code">{{param}}<br /><pre class="bb_code">', '</pre></div>'),
+					'symbol_token' => array('/(\[code?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/code\])/'),
+					'symbol_html' => array('<div class="bb_code"><div class="bb_code_strip">' . $label_code . ': {{param}}</div><pre class="bb_code">', '</pre></div>'),
 					'use_pre_tag' => true,
 					'use_nested' => false,
 			),	
@@ -46,8 +55,9 @@ class BBCodeEngine extends ContainerAware
 					'symbol_html' => array('<i>', '</i>'),
 			),
 			array(	'symbol_lexeme' => 'style',
-					'symbol_token' => array('/(\[style?(=[a-zA-Z0-9]*)*\])/', '/(\[\/style\])/'),
-					'symbol_html' => array('<span class="{{style}}">', '</span>'),
+					'symbol_token' => array('/(\[style?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/style\])/'),
+					'symbol_html' => array('<span class="{{param}}">', '</span>'),
+					'param_choices' => array('title' => 'bb_style_title', 'heading' => 'bb_style_heading', 'sub section' => 'bb_style_sub_section', 'body' => 'bb_style_body'),
 			),
 			array(	'symbol_lexeme' => 'subscript',
 					'symbol_token' => array('/(\[sub\])/', '/(\[\/sub\])/'),
@@ -61,18 +71,14 @@ class BBCodeEngine extends ContainerAware
 					'symbol_token' => array('/(\[strike\])/', '/(\[\/strike\])/'),
 					'symbol_html' => array('<del>', '</del>'),
 			),
-/*			array(	'symbol_lexeme' => 'url',
-					'symbol_token' => array('/(\[url=\"\"\])/', '/(\[\/url\])/'),
-					'symbol_html' => array('<a href="{{url}}">', '</a>'),
+			array(	'symbol_lexeme' => 'url',
+					'symbol_token' => array('/(\[url?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/url\])/'),
+					'symbol_html' => array('<a href="', '">{{param}}</a>'),
 			),
 			array(	'symbol_lexeme' => 'image',
-					'symbol_token' => array('/(\[img\])/', '/(\[\/img\])/'),
-					'symbol_html' => array('<img src="', '" />'),
+					'symbol_token' => array('/(\[img?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/img\])/'),
+					'symbol_html' => array('<img alt="{{param}}" src="', '" />'),
 			),
-			array(	'symbol_lexeme' => 'image_named',
-					'symbol_token' => array('/(\[img?(=[a-zA-Z0-9]*)*\])/', '/(\[\/img\])/'),
-					'symbol_html' => array('<img alt="{{alt}}" src="', '" />'),
-			),*/
 		);
 		
 		foreach($this->lexemes as $key => &$lexeme)
@@ -145,7 +151,7 @@ class BBCodeEngine extends ContainerAware
 	 *
 	 *
 	 */
-	public function bb_lexeme_lookup(&$lexemes, $lookup)
+	private function bb_lexeme_lookup(&$lexemes, $lookup)
 	{
 		foreach ($lexemes as $lexeme_key => $lexeme)
 		{
@@ -153,7 +159,15 @@ class BBCodeEngine extends ContainerAware
 			{
 				if (preg_match($token, $lookup))
 				{
-					return array('lookup_str' => $lookup, 'lexeme_key' => $lexeme_key, 'token_key' => $token_key, 'original_lexeme' => &$lexeme);
+					return array(
+						'lookup_str' => $lookup,
+	/*					'symbol_lexeme' => &$lexeme['symbol_lexeme'],*/
+						'symbol_token' => &$lexeme['symbol_token'][$token_key],
+						'symbol_html' => &$lexeme['symbol_html'][$token_key],
+						'lexeme_key' => $lexeme_key,
+						'token_key' => $token_key,
+						'original_lexeme' => &$lexeme,
+					);
 				}
 			}
 		}
@@ -183,7 +197,7 @@ class BBCodeEngine extends ContainerAware
 				// if it is an array make sure its not a lexeme
 				if (array_key_exists('lexeme_key', $tree[$tree_size]))
 				{
-					$tree[++$tree_size] = array();					
+					$tree[++$tree_size] = array();
 				}
 			}
 		}
@@ -197,7 +211,30 @@ class BBCodeEngine extends ContainerAware
 			return $this->bb_lexeme_tree_branch($tree[$tree_size] , --$depth);
 		}
 	}
-	
+
+	private function bb_lexer_find_my_parent(&$branch, $lookup)
+	{
+		$leaf_count = count($branch);
+		
+		for($leaf_key = --$leaf_count; $leaf_key >= 0; $leaf_key--)
+		{
+			if (is_array($branch[$leaf_key]))
+			{
+				if (array_key_exists('lexeme_key', $branch[$leaf_key]))
+				{
+					if ($branch[$leaf_key]['lexeme_key'] == $lookup['lexeme_key'] && $branch[$leaf_key]['token_key'] == 0)
+					{
+						if ( ! array_key_exists('parent_ref', $branch[$leaf_key]))
+						{
+							return $leaf_key;
+						}
+					}
+				}
+			}
+		}
+		
+		return null;
+	}
 	
 	/**
 	 *
@@ -221,7 +258,7 @@ class BBCodeEngine extends ContainerAware
 				// *******************************************************
 				// does token have matching closing tokens in the lexemes? 
 				// (could be a one off, like a smiley [i.e; no closing tag required])
-				if (count($lexemes[$lookup['lexeme_key']]['symbol_token']) > 1)
+				if (count($lookup['original_lexeme']['symbol_token']) > 1)
 				{
 					// *******************************************************
 					// 		CLOSING TAG
@@ -230,45 +267,31 @@ class BBCodeEngine extends ContainerAware
 					{
 						$branch = &$this->bb_lexeme_tree_branch($lexeme_tree, $lexeme_tree_depth);
 						
-						if (is_array($branch[0]))
+						// find the parent tag
+						$parent_leaf_key = $this->bb_lexer_find_my_parent($branch, $lookup);
+						
+						
+						if ($parent_leaf_key !== null)
 						{
-							if (preg_match($lexemes[$lookup['lexeme_key']]['symbol_token'][0], $branch[0]['lookup_str']))
-							{
-								// interconnect associative lexeme
-								$token = '__' . md5(uniqid(mt_rand(), true)) . '__';
-								$branch[0]['validation_token'] = $token;
-								$lookup['validation_token'] = $token;
-
-								$branch[] = $lookup;
-								
-								// nested tags get put in nested arrays.
-								$lexeme_tree_depth--;
-								
-								continue;
-							} else {
-								// second chance / last ditch effort to align stuff up
-								// by getting the parent branch to look for a match
-								$branch = &$this->bb_lexeme_tree_branch($lexeme_tree, ($lexeme_tree_depth - 1));
-								
-								if (is_array($branch[0]))
-								{
-									if (preg_match($lexemes[$lookup['lexeme_key']]['symbol_token'][0], $branch[0]['lookup_str']))
-									{
-										// interconnect associative lexeme
-										$token = '__' . md5(uniqid(mt_rand(), true)) . '__';
-										$branch[0]['validation_token'] = $token;
-										$lookup['validation_token'] = $token;
-
-										$branch[] = $lookup;
-									
-										// nested tags get put in nested arrays.
-										$lexeme_tree_depth--;
-
-										continue;
-									}
-								}
-							}
+							// interconnect associative lexeme
+							$token = '__' . md5(uniqid(mt_rand(), true)) . '__';
+							$lookup['validation_token'] = $token;
+							$lookup['parent_ref'] = &$branch[$parent_leaf_key];
+							// add the lookup array to the branch
+							$branch[] = $lookup;
+							
+							$branch[$parent_leaf_key]['validation_token'] = $token;
+							$branch[$parent_leaf_key]['child_ref'] = &$branch[(count($branch) - 1)];
+							
+							// nested tags get put in nested arrays.
+							$lexeme_tree_depth--;
+							
+							continue;
+						} else {
+							
+						//	$lexeme_tree_depth--;
 						}
+						
 					// *******************************************************
 					// 		OPENING TAG
 					// *******************************************************
@@ -277,7 +300,7 @@ class BBCodeEngine extends ContainerAware
 						// deeper down the rabbit hole.
 						$lexeme_tree_depth++;
 						
-						$branch = &$this->bb_lexeme_tree_branch($lexeme_tree, $lexeme_tree_depth);						
+						$branch = &$this->bb_lexeme_tree_branch($lexeme_tree, $lexeme_tree_depth);
 
 						$branch[] = $lookup;
 						
@@ -304,10 +327,40 @@ class BBCodeEngine extends ContainerAware
 
 			$branch[] = $scan_tree[$scan_key];
 		}
-			
+		
 		return $lexeme_tree;
 	}
 	
+	private function bb_parser_param_substitute($tag, $lookup_str)
+	{
+		$param = preg_split('/(\[)|(\=)|(\])/', $lookup_str, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+
+		if (is_array($param) && count($param) > 0)
+		{
+			if ($param[2] == '=')
+			{
+				$tag = str_replace('{{param}}', $param[3], $tag);
+			}
+		}
+		
+		return $tag;
+	}
+
+	private function bb_parser_fetch_param_for_tag($lookup_str)
+	{
+		$param = preg_split('/(\[)|(\=)|(\])/', $lookup_str, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+
+		if (is_array($param) && count($param) > 0)
+		{
+			if ($param[2] == '=')
+			{
+			//	echo 'param: ' . $param[3] . '<hr />';
+				return $param[3];
+			}
+		}
+		
+		return null;
+	}
 	/**
 	 *
 	 *
@@ -315,26 +368,16 @@ class BBCodeEngine extends ContainerAware
 	public function bb_parser(&$lexeme_tree, &$lexemes)
 	{
 		$html = '';
+
+		$use_pre_tag =& $this->parser_state_flags['use_pre_tag'];
+		$use_pre_tag_child =& $this->parser_state_flags['use_pre_tag_child'];
+		$use_nested =& $this->parser_state_flags['use_nested'];
+		$use_nested_child =& $this->parser_state_flags['use_nested_child'];
 		
 		for ($lexeme_leaf_key = 0; $lexeme_leaf_key < count($lexeme_tree); $lexeme_leaf_key++)
 		{
-			$lexeme_leaf = $lexeme_tree[$lexeme_leaf_key];
-			$use_pre_tag = false;
-			$use_nested = true;
+			$lexeme_leaf =& $lexeme_tree[$lexeme_leaf_key];
 			
-			// check for any state flags that could affect this iteration.
-			foreach($this->parser_state_flags as $key => &$flag)
-			{
-				if (array_key_exists('use_pre_tag', $flag))
-				{
-					$use_pre_tag = true;
-				}
-				if (array_key_exists('use_nested', $flag))
-				{
-					$use_nested = false;
-				}
-			}
-						
 			if (is_array($lexeme_leaf))
 			{
 				if (array_key_exists('lexeme_key', $lexeme_leaf))
@@ -345,48 +388,85 @@ class BBCodeEngine extends ContainerAware
 					// will throw various errors, such as invalid array indice offsets etc.
 					if (array_key_exists('validation_token', $lexeme_leaf))
 					{
-						$tag = $lexemes[$lexeme_leaf['lexeme_key']]['symbol_html'][$lexeme_leaf['token_key']];
-				
+						$tag = $lexeme_leaf['symbol_html'];
+
+						// substitute any params
+						//$tag = $this->bb_parser_param_substitute($tag, $lexeme_leaf['lookup_str']);
+						$tag_param = $this->bb_parser_fetch_param_for_tag($lexeme_leaf['lookup_str']);
+						
+						if ($tag_param !== null)
+						{
+							$lexeme_leaf['tag_param'] = $tag_param;
+							$tag = str_replace('{{param}}', htmlentities($tag_param, ENT_QUOTES|ENT_SUBSTITUTE), $tag);
+							//echo 'param: ' . $lexeme_leaf['tag_param'] . '<hr />';
+							
+						}
+						
 						// here we are only concerned with the opening tag, and
 						// wether it contains a parameter in the opening tag.
 						if ($lexeme_leaf['token_key'] == 0)
 						{
-							$param = preg_split('/(\[)|(\=)|(\])/', $lexeme_leaf['lookup_str'], null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
-					
-							if (is_array($param) && count($param) > 0)
+							if ($use_nested == true)
 							{
-								if ($param[2] == '=')
+								if (array_key_exists('use_pre_tag', $lexeme_leaf['original_lexeme']))
 								{
-									$tag = str_replace('{{param}}', $param[3], $tag);
-								}
-							}
-						
-							if (array_key_exists('use_pre_tag', $lexeme_leaf['original_lexeme']))
-							{
-								if ($lexeme_leaf['original_lexeme']['use_pre_tag'] == true)
-								{
-									$this->parser_state_flags[] = array('use_pre_tag' => true, 'token_holder' => $lexeme_leaf['validation_token']);
-								}
-							}
-							if (array_key_exists('use_nested', $lexeme_leaf['original_lexeme']))
-							{
-								if ($lexeme_leaf['original_lexeme']['use_nested'] == false)
-								{
-									$this->parser_state_flags[] = array('use_nested' => false, 'token_holder' => $lexeme_leaf['validation_token']);
-								}
-							}
-						} else {
-							// remove any special state flags for closing tags that match prior opened ones.
-							if (count($this->parser_state_flags) > 0)
-							{
-								//for ($flag_index = 0; $flag_index < count($this->parser_state_flags); $flag_index++)
-								foreach($this->parser_state_flags as $flag_index => $flag)
-								{
-									if ($flag['token_holder'] == $lexeme_leaf['validation_token'])
+									if ($lexeme_leaf['original_lexeme']['use_pre_tag'] == true)
 									{
-										unset($this->parser_state_flags[$flag_index]);
+										if ($use_pre_tag == false)
+										{
+											$use_pre_tag = true;
+											$use_pre_tag_child = $lexeme_leaf['child_ref'];
+										}
 									}
 								}
+								if (array_key_exists('use_nested', $lexeme_leaf['original_lexeme']))
+								{
+									if ($lexeme_leaf['original_lexeme']['use_nested'] == false)
+									{
+										if ($use_nested == true)
+										{
+											$use_nested = false;
+											$use_nested_child = $lexeme_leaf['child_ref'];
+										}
+									}
+								}
+							} else {
+								$tag = $lexeme_leaf['lookup_str'];
+							}
+						} else {
+							// closing tag stuff
+														
+							// remove any special state flags for closing tags that match prior opened ones.
+							if ($use_pre_tag_child['validation_token'] == $lexeme_leaf['validation_token'])
+							{
+								$use_pre_tag = false;
+								$use_pre_tag_child = null;
+							}
+							
+							if ($use_nested_child['validation_token'] == $lexeme_leaf['validation_token'])
+							{
+								$use_nested = true;
+								$use_nested_child = null;
+							}
+							
+							if ($use_nested == true)
+							{
+								// if this closing tag has a married opening tag reference,
+								// then check if a param exists further in the html counter part.
+								if (array_key_exists('parent_ref', $lexeme_leaf))
+								{
+									if (array_key_exists('tag_param', $lexeme_leaf['parent_ref']))
+									{
+										$tag = str_replace('{{param}}', htmlentities($lexeme_leaf['parent_ref']['tag_param'], ENT_QUOTES|ENT_SUBSTITUTE), $tag);
+									} else {
+										// if {{param}} is in closing half of html and also
+										// if left blank, then it should be replaced by the
+										// content of the tag instead.
+										$tag = str_replace('{{param}}', $last_tag_content, $tag);
+									}
+								}
+							} else {
+								$tag = $lexeme_leaf['lookup_str'];
 							}
 						}
 					} else {
@@ -417,7 +497,9 @@ class BBCodeEngine extends ContainerAware
 				$str = nl2br(htmlentities($tag, ENT_QUOTES|ENT_SUBSTITUTE));
 			}
 			
-			$html .= $str;			
+			$last_tag_content = $str;
+			
+			$html .= $str;
 			
 		}
 

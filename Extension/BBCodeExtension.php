@@ -11,6 +11,10 @@ use CodeConsortium\BBCodeBundle\Engine\BBCodeEngine;
 
 class BBCodeExtension extends \Twig_Extension
 {
+	public function __construct($container)
+	{
+		$this->container = $container;
+	}
 
 	public function getFunctions()
 	{
@@ -30,7 +34,8 @@ class BBCodeExtension extends \Twig_Extension
 	// so during the lexing process via an reference token.
 	public function BBCode($input)
 	{
-		$engine = new BBCodeEngine();
+		$engine = $this->container->get('bb_code.engine');
+		//$engine = new BBCodeEngine();
 		 
 		$scan_tree 		= $engine->bb_scanner($input);
 		$lexeme_tree 	= $engine->bb_lexer($scan_tree, $engine->get_lexemes());
