@@ -1,0 +1,32 @@
+{% block textarea_widget %}
+	{% set attr = attr|merge({ 'class': attr.class|default('') ~ 'widget_textarea widget_bb_editor_textarea'}) %}
+	{% set field_id = BBCodeFetchElementIDforTheme(block('widget_attributes')) %}
+	
+	<div class="bb_editor_widget ">
+		<div class="tool_strip_container collapse">
+			<div class="tool_strip">
+				<select class="bb_select">
+				{% set styles = BBCodeFetchChoices('style') %}
+				{% for key, style in styles %}
+					<option value="{{ style }}">{{ key }}</option>
+				{% endfor %}
+				</select>
+				<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="B"><b>B</b></button>
+				<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="U"><u>U</u></button>
+				<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="I"><i>i</i></button>
+
+				<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="STRIKE"><strike>S</strike></button>
+
+				<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="SUB"><b><i>x</i></b><sub class="button_script">y</sub></button>
+				<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="SUP"><b><i>x</i></b><sup class="button_script">y</sup></button>
+                                                                                                            
+				<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="CODE" data-has-param="What language?">code</button>
+				<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="QUOTE" data-has-param="Who said this?">quote</button>
+                                                                                                            
+				<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="URL" data-has-param="What label for this url?">url</button>
+				<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="IMG" data-has-param="Alt text for image?">image</button>
+			</div>
+		</div>
+		<textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+	</div>
+{% endblock textarea_widget %}

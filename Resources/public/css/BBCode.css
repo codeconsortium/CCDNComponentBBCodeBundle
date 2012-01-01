@@ -64,3 +64,96 @@ img.bb_image {
 	margin: 5px;
 	padding: 0px;
 }
+/* **********************************
+ * COMMON BB EDITOR WIDGET
+ * *********************************/
+div.bb_editor_widget {
+	display: inline-block;
+	border: 1px solid #a6a6a6;
+	padding: 0px;
+}
+
+textarea.widget_bb_editor_textarea {
+	border: none;	
+	
+}
+
+div.bb_editor_widget div.tool_strip_container {
+	background-color: #f2f5f5;
+/*	border-bottom: 1px solid black;*/
+	font: small Georgia, "Times New Roman", Times, serif;
+}
+
+div.bb_editor_widget div.collapse {
+	visibility: collapse;
+}
+
+div.bb_editor_widget div.tool_strip {
+	height: 26px;
+	vertical-align: middle;
+	border-bottom: 1px solid #e3e3e3;
+	padding: 1px 5px;
+}
+
+/*
+div.multiple_button_container {
+	display: inline-block;
+	margin: 1px 5px;
+
+	border-top: 1px solid gray;
+	border-left: 1px solid gray;
+	border-bottom: 1px solid gray;
+    border-radius:2px;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+
+	background: url(../images/BBCodeEditor/gray_button.png) repeat-x;
+}
+
+div.multiple_button_container .bb_button_borderless {
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	padding: 2px 4px;
+	border: none;
+	border-right: 1px solid gray;
+	
+	text-align: center;
+	vertical-align: middle;
+}
+*/
+button.bb_button {
+	display: inline-block;
+	height: 20px;
+	margin: 3px 5px;
+	padding: 2px 4px;
+	
+	border: 1px solid gray;
+    border-radius:2px;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+
+	background: url(../images/BBCodeEditor/gray_button.png) repeat-x;
+	
+	text-align: center;
+	vertical-align: middle;
+}
+button.bb_button_mouse_down {
+	border: 1px dashed gray;
+}
+
+.button_script {
+	font-size: x-small;
+}
+
+select.bb_select {
+	display: inline-block;
+	height: 21px;
+	margin: 3px 5px;
+	padding: 2px 4px;
+	
+	border: 1px solid gray;
+	background: url(../images/BBCodeEditor/gray_button.png) repeat-x;
+	
+	vertical-align: middle;
+}

@@ -13,7 +13,6 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 
 class BBCodeEngine extends ContainerAware
 {
-	// TODO: add styles to the style bbcode!
 	private $parser_state_flags = array(
 		'use_pre_tag' => false,
 		'use_pre_tag_child' => null,
@@ -32,51 +31,51 @@ class BBCodeEngine extends ContainerAware
 		
 		$this->lexemes = array(
 			array(	'symbol_lexeme' => 'quote',
-					'symbol_token' => array('/(\[quote?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/quote\])/'),
+					'symbol_token' => array('/(\[QUOTE?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/QUOTE\])/'),
 					'symbol_html' => array('<div class="bb_quote"><b>{{param}} ' . $label_said . ':</b><br /><pre>', '</pre></div>'),
 					'use_pre_tag' => true,
 			),
 			array(	'symbol_lexeme' => 'code',
-					'symbol_token' => array('/(\[code?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/code\])/'),
+					'symbol_token' => array('/(\[CODE?(\=[a-zA-Z0-9 #+.]*)*\])/', '/(\[\/CODE\])/'),
 					'symbol_html' => array('<div class="bb_code"><div class="bb_code_strip">' . $label_code . ': {{param}}</div><pre class="bb_code">', '</pre></div>'),
 					'use_pre_tag' => true,
 					'use_nested' => false,
 			),	
 			array(	'symbol_lexeme' => 'bold',
-					'symbol_token' => array('/(\[b\])/', '/(\[\/b\])/'),
+					'symbol_token' => array('/(\[B\])/', '/(\[\/B\])/'),
 					'symbol_html' => array('<b>', '</b>'),
 			),
 			array(	'symbol_lexeme' => 'underline',
-					'symbol_token' => array('/(\[u\])/', '/(\[\/u\])/'),
+					'symbol_token' => array('/(\[U\])/', '/(\[\/U\])/'),
 					'symbol_html' => array('<u>', '</u>'),
 			),
 			array(	'symbol_lexeme' => 'italics',
-					'symbol_token' => array('/(\[i\])/', '/(\[\/i\])/'),
+					'symbol_token' => array('/(\[I\])/', '/(\[\/I\])/'),
 					'symbol_html' => array('<i>', '</i>'),
 			),
 			array(	'symbol_lexeme' => 'style',
-					'symbol_token' => array('/(\[style?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/style\])/'),
+					'symbol_token' => array('/(\[STYLE?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/STYLE\])/'),
 					'symbol_html' => array('<span class="{{param}}">', '</span>'),
 					'param_choices' => array('title' => 'bb_style_title', 'heading' => 'bb_style_heading', 'sub section' => 'bb_style_sub_section', 'body' => 'bb_style_body'),
 			),
 			array(	'symbol_lexeme' => 'subscript',
-					'symbol_token' => array('/(\[sub\])/', '/(\[\/sub\])/'),
+					'symbol_token' => array('/(\[SUB\])/', '/(\[\/SUB\])/'),
 					'symbol_html' => array('<sub>', '</sub>'),
 			),
 			array(	'symbol_lexeme' => 'superscript',
-					'symbol_token' => array('/(\[sup\])/', '/(\[\/sup\])/'),
+					'symbol_token' => array('/(\[SUP\])/', '/(\[\/SUP\])/'),
 					'symbol_html' => array('<sup>', '</sup>'),
 			),
 			array(	'symbol_lexeme' => 'strikethrough',
-					'symbol_token' => array('/(\[strike\])/', '/(\[\/strike\])/'),
+					'symbol_token' => array('/(\[STRIKE\])/', '/(\[\/STRIKE\])/'),
 					'symbol_html' => array('<del>', '</del>'),
 			),
 			array(	'symbol_lexeme' => 'url',
-					'symbol_token' => array('/(\[url?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/url\])/'),
+					'symbol_token' => array('/(\[URL?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/URL\])/'),
 					'symbol_html' => array('<a href="', '">{{param}}</a>'),
 			),
 			array(	'symbol_lexeme' => 'image',
-					'symbol_token' => array('/(\[img?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/img\])/'),
+					'symbol_token' => array('/(\[IMG?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/IMG\])/'),
 					'symbol_html' => array('<img alt="{{param}}" src="', '" />'),
 			),
 		);
@@ -356,6 +355,7 @@ class BBCodeEngine extends ContainerAware
 		$use_pre_tag_child =& $this->parser_state_flags['use_pre_tag_child'];
 		$use_nested =& $this->parser_state_flags['use_nested'];
 		$use_nested_child =& $this->parser_state_flags['use_nested_child'];
+		$last_tag_content = "";
 		
 		for ($lexeme_leaf_key = 0; $lexeme_leaf_key < count($lexeme_tree); $lexeme_leaf_key++)
 		{

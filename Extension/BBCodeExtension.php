@@ -20,6 +20,8 @@ class BBCodeExtension extends \Twig_Extension
 	{
 		return array(
 			'BBCode' => new \Twig_Function_Method($this, 'BBCode'),
+			'BBCodeFetchChoices' => new \Twig_Function_Method($this, 'BBCodeFetchChoices'),
+			'BBCodeFetchElementIDforTheme' => new \Twig_Function_Method($this, 'BBCodeFetchElementIDforTheme'),
 		);
 	}
 	
@@ -35,13 +37,42 @@ class BBCodeExtension extends \Twig_Extension
 	public function BBCode($input)
 	{
 		$engine = $this->container->get('bb_code.engine');
-		//$engine = new BBCodeEngine();
 		 
 		$scan_tree 		= $engine->bb_scanner($input);
 		$lexeme_tree 	= $engine->bb_lexer($scan_tree, $engine->get_lexemes());
 		$html 			= $engine->bb_parser($lexeme_tree, $engine->get_lexemes());
 		
 		return $html;
+	}
+	
+	public function BBCodeFetchChoices($tag)
+	{
+		$engine = $this->container->get('bb_code.engine');	
+
+		$choices =& $engine->get_lexemes();
+		
+		foreach($choices as $choice_key => $choice)
+		{
+			if ($choice['symbol_lexeme'] == $tag)
+			{
+				if (array_key_exists('param_choices', $choice))
+				{
+					return $choice['param_choices'];
+				}
+				
+				return array();
+			}
+		}
+		
+		return array();
+	}
+	
+	public function BBCodeFetchElementIDforTheme($attributes)
+	{
+		preg_match('/id\=\"([a-zA-Z0-9_[]]*)*\"/', $attributes, $matches, 0, 0);
+		$id = substr($matches[0], 4, -1);
+	//	echo '<pre>' . print_r($id, true) . '</pre>'; die();
+		return $id;
 	}
 
 }
