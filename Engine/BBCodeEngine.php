@@ -32,12 +32,12 @@ class BBCodeEngine extends ContainerAware
 		$this->lexemes = array(
 			array(	'symbol_lexeme' => 'quote',
 					'symbol_token' => array('/(\[QUOTE?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/QUOTE\])/'),
-					'symbol_html' => array('<div class="bb_quote"><b>{{param}} ' . $label_said . ':</b><br /><pre>', '</pre></div>'),
+					'symbol_html' => array('<div class="bb_tag_quote"><b>{{param}} ' . $label_said . ':</b><br /><pre>', '</pre></div>'),
 					'use_pre_tag' => true,
 			),
 			array(	'symbol_lexeme' => 'code',
 					'symbol_token' => array('/(\[CODE?(\=[a-zA-Z0-9 #+.]*)*\])/', '/(\[\/CODE\])/'),
-					'symbol_html' => array('<div class="bb_code"><div class="bb_code_strip">' . $label_code . ': {{param}}</div><pre class="bb_code">', '</pre></div>'),
+					'symbol_html' => array('<div class="bb_tag_code"><div class="bb_tag_code_strip">' . $label_code . ': {{param}}</div><pre class="bb_tag_code">', '</pre></div>'),
 					'use_pre_tag' => true,
 					'use_nested' => false,
 			),	
@@ -56,7 +56,7 @@ class BBCodeEngine extends ContainerAware
 			array(	'symbol_lexeme' => 'style',
 					'symbol_token' => array('/(\[STYLE?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/STYLE\])/'),
 					'symbol_html' => array('<span class="{{param}}">', '</span>'),
-					'param_choices' => array('title' => 'bb_style_title', 'heading' => 'bb_style_heading', 'sub section' => 'bb_style_sub_section', 'body' => 'bb_style_body'),
+					'param_choices' => array('title' => 'bb_tag_style_title', 'heading' => 'bb_tag_style_heading', 'sub section' => 'bb_tag_style_sub_section', 'body' => 'bb_tag_style_body'),
 			),
 			array(	'symbol_lexeme' => 'subscript',
 					'symbol_token' => array('/(\[SUB\])/', '/(\[\/SUB\])/'),
@@ -76,7 +76,7 @@ class BBCodeEngine extends ContainerAware
 			),
 			array(	'symbol_lexeme' => 'image',
 					'symbol_token' => array('/(\[IMG?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/IMG\])/'),
-					'symbol_html' => array('<img alt="{{param}}" src="', '" />'),
+					'symbol_html' => array('<img class="bb_tag_img" alt="{{param}}" src="', '" />'),
 			),
 		);
 		

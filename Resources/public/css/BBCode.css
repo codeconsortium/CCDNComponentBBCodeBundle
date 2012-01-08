@@ -1,4 +1,4 @@
-div.bb_quote {
+div.bb_tag_quote {
 	width: 95%;
 	display: block;
 	margin: 5px;
@@ -12,54 +12,53 @@ div.bb_quote {
 	overflow: scroll;
 }
 
-div.bb_code {
+div.bb_tag_code {
 	width: 95%;
 	display: block;
 	margin: 5px;		
-	padding: 3px 0 0;
+	padding: 3px 0 10px;
 
 	border
 	border-radius:5px;
 	-moz-border-radius:5px;
 	-webkit-border-radius:5px;
-	background: url(./../../codeconsortiumcommon/images/common_item_bubble/gray_bar.png) repeat-x;
+	background: silver none repeat-x;
 	border: 1px solid silver;
 }
-div.bb_code_strip {
+div.bb_tag_code_strip {
 	line-height: 20px;
 	padding: 4px 4px 4px 8px;
 	font-weight: bold;
 	font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
 }
-pre.bb_code {
+pre.bb_tag_code {
 	margin: 0px;
 	padding: 0 5px 3px;
 
 	background: #f7faef url(../images/bb_codetag_background.png);
-	/*border: 1px solid silver;*/
 
 	font: small/16px "Andale Mono", mono, Courier, "Courier New";
 	overflow: scroll;
 	white-space: pre;
 }
 
-span.bb_style_title {
+span.bb_tag_style_title {
 	font: bold large Georgia, "Times New Roman", Times, serif;	
 }
 
-span.bb_style_heading {
+span.bb_tag_style_heading {
 	font: bold medium Georgia, "Times New Roman", Times, serif;
 }
 
-span.bb_style_sub_section {
+span.bb_tag_style_sub_section {
 	font: bold small Georgia, "Times New Roman", Times, serif;
 }
 
-span.bb_style_body {
+span.bb_tag_style_body {
 	font: small Georgia, "Times New Roman", Times, serif;
 }
 
-img.bb_image {
+img.bb_tag_img {
 	border: 0;
 	margin: 5px;
 	padding: 0px;
@@ -75,12 +74,10 @@ div.bb_editor_widget {
 
 textarea.widget_bb_editor_textarea {
 	border: none;	
-	
 }
 
 div.bb_editor_widget div.tool_strip_container {
 	background-color: #f2f5f5;
-/*	border-bottom: 1px solid black;*/
 	font: small Georgia, "Times New Roman", Times, serif;
 }
 
@@ -95,33 +92,6 @@ div.bb_editor_widget div.tool_strip {
 	padding: 1px 5px;
 }
 
-/*
-div.multiple_button_container {
-	display: inline-block;
-	margin: 1px 5px;
-
-	border-top: 1px solid gray;
-	border-left: 1px solid gray;
-	border-bottom: 1px solid gray;
-    border-radius:2px;
-	-moz-border-radius:2px;
-	-webkit-border-radius:2px;
-
-	background: url(../images/BBCodeEditor/gray_button.png) repeat-x;
-}
-
-div.multiple_button_container .bb_button_borderless {
-	display: inline-block;
-	width: 15px;
-	height: 15px;
-	padding: 2px 4px;
-	border: none;
-	border-right: 1px solid gray;
-	
-	text-align: center;
-	vertical-align: middle;
-}
-*/
 button.bb_button {
 	display: inline-block;
 	height: 20px;
@@ -138,10 +108,12 @@ button.bb_button {
 	text-align: center;
 	vertical-align: middle;
 }
+
 button.bb_button_mouse_down {
 	border: 1px dashed gray;
 }
 
+/* This is for subscript & superscript parts of the button labels */
 .button_script {
 	font-size: x-small;
 }
