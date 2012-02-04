@@ -1,11 +1,11 @@
 parameters:
-    bb_code.extension.class:                        CodeConsortium\BBCodeBundle\Extension\BBCodeExtension
-#    bb_code_fetch_choices.extension.class:          CodeConsortium\BBCodeBundle\Extension\BBCodeFetchChoicesExtension
-    code_consortium_bbcode.bb_code.engine.class:    CodeConsortium\BBCodeBundle\Engine\BBCodeEngine
+    ccdn_component_bb_code.extension.class:                        CCDNComponent\BBCodeBundle\Extension\BBCodeExtension
+#    bb_code_fetch_choices.extension.class:          CCDNComponent\BBCodeBundle\Extension\BBCodeFetchChoicesExtension
+    ccdn_component_bb_code.bb_code.engine.class:    CCDNComponent\BBCodeBundle\Engine\BBCodeEngine
 
 services:
     bb_code.extension:
-        class: %bb_code.extension.class%
+        class: %ccdn_component_bb_code.extension.class%
         arguments: [@service_container]
         tags:
             - { name: twig.extension }
@@ -15,5 +15,5 @@ services:
 #        tags:
 #            - { name: twig.extension }
     bb_code.engine:
-        class:  %code_consortium_bbcode.bb_code.engine.class%
+        class:  %ccdn_component_bb_code.bb_code.engine.class%
         arguments: [@service_container]

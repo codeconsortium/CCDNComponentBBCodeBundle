@@ -1,61 +1,68 @@
-div.bb_tag_quote {
-	width: 95%;
+/* SOME TAG WRAPPERS */
+div.bb_box {
+	width: 100% auto;
 	display: block;
 	margin: 5px;
+	padding: 0px;
+}
+
+div.bb_tag_head_strip {
+	line-height: 20px;
+	padding: 4px 4px 4px 8px;
+	font-weight: bold;
+	font-family: "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;;
+}
+
+/* TAGS */
+div.bb_tag_quote {
+	width: 100% auto;
+	display: block;
+	margin: 0px;
 	padding: 5px;
 	background: #f9fcff;
-	border: 1px solid silver;
+	border: 1px solid #e4e4e4;
 	
 	border-radius:5px;
 	-moz-border-radius:5px;
 	-webkit-border-radius:5px;	
-	overflow: scroll;
+	overflow: auto;
 }
 
 div.bb_tag_code {
-	width: 95%;
+	width: 100%;
 	display: block;
-	margin: 5px;		
-	padding: 3px 0 10px;
+	margin: 0;
+	padding: 0;
+	overflow: auto;
 
-	border
-	border-radius:5px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	background: silver none repeat-x;
-	border: 1px solid silver;
+	background: #f7faef url(../images/bb_codetag_background.png) repeat;
+	border: 1px solid #e4e4e4;
 }
-div.bb_tag_code_strip {
-	line-height: 20px;
-	padding: 4px 4px 4px 8px;
-	font-weight: bold;
-	font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
-}
+
 pre.bb_tag_code {
-	margin: 0px;
-	padding: 0 5px 3px;
-
-	background: #f7faef url(../images/bb_codetag_background.png);
-
+	width: 100%;
+	display: block;
+	margin: 0px 10px;
+	padding: 0 10px;
+	
 	font: small/16px "Andale Mono", mono, Courier, "Courier New";
-	overflow: scroll;
 	white-space: pre;
 }
 
 span.bb_tag_style_title {
-	font: bold large Georgia, "Times New Roman", Times, serif;	
+	font: bold large "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
 }
 
 span.bb_tag_style_heading {
-	font: bold medium Georgia, "Times New Roman", Times, serif;
+	font: bold medium "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
 }
 
 span.bb_tag_style_sub_section {
-	font: bold small Georgia, "Times New Roman", Times, serif;
+	font: bold small "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
 }
 
 span.bb_tag_style_body {
-	font: small Georgia, "Times New Roman", Times, serif;
+	font: small "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
 }
 
 img.bb_tag_img {

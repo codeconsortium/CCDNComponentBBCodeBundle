@@ -1,6 +1,17 @@
 <?php
 
-namespace CodeConsortium\BBCodeBundle\DependencyInjection;
+/*
+ * This file is part of the CCDN BBCodeBundle
+ *
+ * (c) CCDN (c) CodeConsortium <http://www.codeconsortium.com/> 
+ * 
+ * Available on github <http://www.github.com/codeconsortium/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace CCDNComponent\BBCodeBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -11,9 +22,13 @@ use Symfony\Component\DependencyInjection\Loader;
  * This is the class that loads and manages your bundle configuration
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
+ * 
+ * @author Reece Fowell <reece@codeconsortium.com> 
+ * @version 1.0
  */
-class CodeConsortiumBBCodeExtension extends Extension
+class CCDNComponentBBCodeExtension extends Extension
 {
+
     /**
      * {@inheritDoc}
      */
@@ -25,4 +40,5 @@ class CodeConsortiumBBCodeExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }
+
 }

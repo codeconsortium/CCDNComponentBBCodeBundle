@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeConsortium\BBCodeBundle\Tests\Controller;
+namespace CCDNComponent\BBCodeBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

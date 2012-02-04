@@ -1,18 +1,44 @@
 <?php
+
+/*
+ * This file is part of the CCDN BBCodeBundle
+ *
+ * (c) CCDN (c) CodeConsortium <http://www.codeconsortium.com/> 
+ * 
+ * Available on github <http://www.github.com/codeconsortium/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 /*
  * Created by Reece Fowell 
  * <me at reecefowell dot com> 
  * <reece at codeconsortium dot com>
  * Created on 17/12/2011
  *
+ * Note: use of ENT_SUBSTITUTE in htmlentities requires PHP 5.4.0, and so
+ * PHP versions below won't use it, so it was commented out, and can be
+ * uncommented if you are using PHP 5.4.0 and above only.
 */
 
-namespace CodeConsortium\BBCodeBundle\Engine;
+namespace CCDNComponent\BBCodeBundle\Engine;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 
+/**
+ * 
+ * @author Reece Fowell <reece@codeconsortium.com> 
+ * @version 1.0
+ */
 class BBCodeEngine extends ContainerAware
 {
+	
+	
+	/**
+	 *
+	 * @access private
+	 */
 	private $parser_state_flags = array(
 		'use_pre_tag' => false,
 		'use_pre_tag_child' => null,
@@ -20,24 +46,35 @@ class BBCodeEngine extends ContainerAware
 		'use_nested_child' => null,
 	);
 	
+	
+	/**
+	 * 
+	 * @access private
+	 */
 	private $lexemes;
 	
+	
+	/**
+	 *
+	 * @access private
+	 * @param $container
+	 */
 	public function __construct($container)
 	{
 		$this->container = $container;
 
-		$label_said = $this->container->get('translator')->trans('bb_code.quote.said', array(), 'CodeConsortiumBBCodeBundle');
-		$label_code = $this->container->get('translator')->trans('bb_code.code', array(), 'CodeConsortiumBBCodeBundle');
+		$label_said = $this->container->get('translator')->trans('bb_code.quote.said', array(), 'CCDNComponentBBCodeBundle');
+		$label_code = $this->container->get('translator')->trans('bb_code.code', array(), 'CCDNComponentBBCodeBundle');
 		
 		$this->lexemes = array(
 			array(	'symbol_lexeme' => 'quote',
-					'symbol_token' => array('/(\[QUOTE?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/QUOTE\])/'),
-					'symbol_html' => array('<div class="bb_tag_quote"><b>{{param}} ' . $label_said . ':</b><br /><pre>', '</pre></div>'),
+					'symbol_token' => array('/(\[QUOTE?(\=[\P{C}\p{Cc}]*)*\])/', '/(\[\/QUOTE\])/'),
+					'symbol_html' => array('<div class="bb_box"><div class="bb_tag_head_strip">{{param}} ' . $label_said . ':</div><div class="bb_tag_quote"><pre>', '</pre></div></div>'),
 					'use_pre_tag' => true,
 			),
 			array(	'symbol_lexeme' => 'code',
-					'symbol_token' => array('/(\[CODE?(\=[a-zA-Z0-9 #+.]*)*\])/', '/(\[\/CODE\])/'),
-					'symbol_html' => array('<div class="bb_tag_code"><div class="bb_tag_code_strip">' . $label_code . ': {{param}}</div><pre class="bb_tag_code">', '</pre></div>'),
+					'symbol_token' => array('/(\[CODE?(\=[\P{C}\p{Cc}]*)*\])/', '/(\[\/CODE\])/'),
+					'symbol_html' => array('<div class="bb_box"><div class="bb_tag_head_strip">' . $label_code . ': {{param}}</div><div class="bb_tag_code"><pre class="bb_tag_code">', '</pre></div></div>'),
 					'use_pre_tag' => true,
 					'use_nested' => false,
 			),	
@@ -71,11 +108,13 @@ class BBCodeEngine extends ContainerAware
 					'symbol_html' => array('<del>', '</del>'),
 			),
 			array(	'symbol_lexeme' => 'url',
-					'symbol_token' => array('/(\[URL?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/URL\])/'),
-					'symbol_html' => array('<a href="', '">{{param}}</a>'),
+				//	'symbol_token' => array('/(\[URL?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/URL\])/'),
+				//[a-zA-Z0-9 #+.-\:\/\?\=\&]
+					'symbol_token' => array('/(\[URL?(\=[\P{C}\p{Cc}]*)*\])/', '/(\[\/URL\])/'),
+					'symbol_html' => array('<a href="', '" target="_blank">{{param}}</a>'),
 			),
 			array(	'symbol_lexeme' => 'image',
-					'symbol_token' => array('/(\[IMG?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/IMG\])/'),
+					'symbol_token' => array('/(\[IMG?(\=[\P{C}\p{Cc}]*)*\])/', '/(\[\/IMG\])/'),
 					'symbol_html' => array('<img class="bb_tag_img" alt="{{param}}" src="', '" />'),
 			),
 		);
@@ -84,16 +123,27 @@ class BBCodeEngine extends ContainerAware
 		{
 			$lexeme['token_count'] = count($lexeme['symbol_token']);
 		}
+		
 	}
 	
-	public function &get_lexemes()
-	{
-		return $this->lexemes;
-	}
 	
 	/**
 	 *
+	 * @access public
+	 * @return $lexemes[]
+	 */
+	public function &get_lexemes()
+	{
+		
+		return $this->lexemes;
+	}
+	
+	
+	/**
 	 *
+	 * @access public
+	 * @param $input
+	 * @return $chunks[]
 	 */
 	public function bb_scanner($input)
 	{
@@ -146,9 +196,12 @@ class BBCodeEngine extends ContainerAware
 		return $chunks;
 	}
 
+
 	/**
 	 *
-	 *
+	 * @access private
+	 * @param $lexemes, $lookup
+	 * @return $lookup
 	 */
 	private function bb_lexeme_lookup(&$lexemes, $lookup)
 	{
@@ -174,9 +227,12 @@ class BBCodeEngine extends ContainerAware
 		return $lookup;
 	}
 	
+	
 	/**
 	 *
-	 *
+	 * @access private
+	 * @param $tree, $depth
+	 * @return $tree[]
 	 */
 	private function &bb_lexeme_tree_branch(&$tree, $depth)
 	{
@@ -211,6 +267,13 @@ class BBCodeEngine extends ContainerAware
 		}
 	}
 
+
+	/**
+	 *
+	 * @access private
+	 * @param $branch, $lookup
+	 * @return $leaf_key | null
+	 */
 	private function bb_lexer_find_my_parent(&$branch, $lookup)
 	{
 		$leaf_count = count($branch);
@@ -235,9 +298,12 @@ class BBCodeEngine extends ContainerAware
 		return null;
 	}
 	
+	
 	/**
 	 *
-	 *
+	 * @access public
+	 * @param $scanTree, $lexemes
+	 * @return $lexemeTree
 	 */
 	public function bb_lexer(&$scan_tree, &$lexemes)
 	{
@@ -329,6 +395,13 @@ class BBCodeEngine extends ContainerAware
 		return $lexeme_tree;
 	}
 	
+	
+	/**
+	 *
+	 * @access private
+	 * @param $lookupStr
+	 * @return string|null
+	 */
 	private function bb_parser_fetch_param_for_tag($lookup_str)
 	{
 		$param = preg_split('/(\[)|(\=)|(\])/', $lookup_str, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
@@ -343,9 +416,13 @@ class BBCodeEngine extends ContainerAware
 		
 		return null;
 	}
+	
+	
 	/**
 	 *
-	 *
+	 * @access public
+	 * @param $lexemeTree, $lexemes
+	 * @return string $html
 	 */
 	public function bb_parser(&$lexeme_tree, &$lexemes)
 	{
@@ -392,7 +469,7 @@ class BBCodeEngine extends ContainerAware
 								}
 							} else {
 								$lexeme_leaf['tag_param'] = $tag_param;
-								$tag = str_replace('{{param}}', htmlentities($tag_param, ENT_QUOTES|ENT_SUBSTITUTE), $tag);
+								$tag = str_replace('{{param}}', htmlentities($tag_param, ENT_QUOTES/* | ENT_SUBSTITUTE*/), $tag);
 							}
 						}
 						
@@ -451,7 +528,7 @@ class BBCodeEngine extends ContainerAware
 								{
 									if (array_key_exists('tag_param', $lexeme_leaf['ref_parent']))
 									{
-										$tag = str_replace('{{param}}', htmlentities($lexeme_leaf['ref_parent']['tag_param'], ENT_QUOTES|ENT_SUBSTITUTE), $tag);
+										$tag = str_replace('{{param}}', htmlentities($lexeme_leaf['ref_parent']['tag_param'], ENT_QUOTES/* | ENT_SUBSTITUTE*/), $tag);
 									} else {
 										// if {{param}} is in closing half of html and also
 										// if left blank, then it should be replaced by the
@@ -486,9 +563,9 @@ class BBCodeEngine extends ContainerAware
 			
 			if ($use_pre_tag == true)
 			{
-				$str = htmlentities($tag, ENT_QUOTES|ENT_SUBSTITUTE);
+				$str = htmlentities($tag, ENT_QUOTES/* | ENT_SUBSTITUTE*/);
 			} else {
-				$str = nl2br(htmlentities($tag, ENT_QUOTES|ENT_SUBSTITUTE));
+				$str = nl2br(htmlentities($tag, ENT_QUOTES/* | ENT_SUBSTITUTE*/));
 			}
 			
 			$last_tag_content = $str;
