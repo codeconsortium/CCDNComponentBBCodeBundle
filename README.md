@@ -24,21 +24,42 @@ Dependencies:
 -------------
 
 [CCDNComponent CommonBundle](https://github.com/codeconsortium/CommonBundle)
-
+[CCDNComponent BBCodeBundle](https://github.com/codeconsortium/BBCodeBundle)
   
 Installation:
 -------------
-    
-1) Create the directory src/CCDNComponent in your Symfony directory.
-  
-2) Add the BBCodeBundle src/CCDNComponent directory.  
 
-3) In your AppKernel.php add the following bundles to the registerBundles method array:  
+1) Download and install the dependencies.
+   
+   You can set deps to include:
 
-	new CCDNComponent\BBCodeBundle\CCDNComponentBBCodeBundle(),    
-	  
-4) Symlink assets to your public web directory by running this in the command line:
+```sh
+[CCDNComponentCommonBundle]
+    git=http://github.com/codeconsortium/CommonBundle.git
+    target=/bundles/CCDNComponent/CommonBundle
 
+[CCDNComponentBBCodeBundle]
+    git=http://github.com/codeconsortium/BBCodeBundle.git
+    target=/bundles/CCDNComponent/BBCodeBundle
+```
+add to your autoload:
+
+```php
+    'CCDNComponent'    => __DIR__.'/../vendor/bundles',
+```
+and then run `bin/vendors install` script.
+
+2) In your AppKernel.php add the following bundles to the registerBundles method array:  
+
+```php
+	new CCDNComponent\CommonBundle\CCDNComponentCommonBundle(),
+	new CCDNComponent\BBCodeBundle\CCDNComponentBBCodeBundle(),
+```
+
+3) Symlink assets to your public web directory by running this in the command line:
+
+```sh
 	php app/console assets:install --symlink web/
-
+```
+	
 Then your done, if you need further help/support, have suggestions or want to contribute please join the community at [www.codeconsortium.com](http://www.codeconsortium.com)
