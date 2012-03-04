@@ -24,7 +24,6 @@ Dependencies:
 -------------
 
 [CCDNComponent CommonBundle](https://github.com/codeconsortium/CommonBundle)
-[CCDNComponent BBCodeBundle](https://github.com/codeconsortium/BBCodeBundle)
   
 Installation:
 -------------
