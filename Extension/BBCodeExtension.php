@@ -79,7 +79,7 @@ class BBCodeExtension extends \Twig_Extension
 	 */
 	public function BBCode($input)
 	{
-		$engine = $this->container->get('bb_code.engine');
+		$engine = $this->container->get('ccdn_component_bb_code.bb_code.engine');
 		 
 		$scan_tree 		= $engine->bb_scanner($input);
 		$lexeme_tree 	= $engine->bb_lexer($scan_tree, $engine->get_lexemes());
@@ -97,7 +97,7 @@ class BBCodeExtension extends \Twig_Extension
 	 */
 	public function BBCodeFetchChoices($tag)
 	{
-		$engine = $this->container->get('bb_code.engine');	
+		$engine = $this->container->get('ccdn_component_bb_code.bb_code.engine');	
 
 		$choices =& $engine->get_lexemes();
 		

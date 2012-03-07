@@ -32,7 +32,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('ccdn_component_bb_code');
+        $rootNode = $treeBuilder->root('bb_code');
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
