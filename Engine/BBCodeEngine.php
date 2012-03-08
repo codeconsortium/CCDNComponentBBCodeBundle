@@ -117,6 +117,14 @@ class BBCodeEngine extends ContainerAware
 					'symbol_token' => array('/(\[IMG?(\=[\P{C}\p{Cc}]*)*\])/', '/(\[\/IMG\])/'),
 					'symbol_html' => array('<img class="bb_tag_img" alt="{{param}}" src="', '" />'),
 			),
+            array(	'symbol_lexeme' => 'youtube',
+                    'symbol_token' => array('/(\[YOUTUBE?(\=[\P{C}\p{Cc}]*)*\])/', '/(\[\/YOUTUBE\])/'),
+                    'symbol_html' => array('<iframe width="560" height="315" src="http://www.youtube.com/embed/', '" frameborder="0" allowfullscreen></iframe>'),
+            ),
+            array(	'symbol_lexeme' => 'vimeo',
+                    'symbol_token' => array('/(\[VIMEO?(\=[\P{C}\p{Cc}]*)*\])/', '/(\[\/VIMEO\])/'),
+                    'symbol_html' => array('<iframe src="http://player.vimeo.com/video/', '?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="400" height="300" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>'),
+            ),
 		);
 		
 		foreach($this->lexemes as $key => &$lexeme)
