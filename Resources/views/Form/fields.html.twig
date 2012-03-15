@@ -23,8 +23,8 @@
 				<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="CODE" data-has-param="What language?">code</button>
 				<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="QUOTE" data-has-param="Who said this?">quote</button>
                                                                                                             
-				<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="URL" data-has-param="What label for this url?">url</button>
-				<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="IMG" data-has-param="Alt text for image?">image</button>
+				<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="URL" data-has-param="Add the url here:" data-has-input-prompt="Add a label for this url:">url</button>
+				<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="IMG" data-has-param="Add the image url here:" data-has-input-prompt="Add text for image description:">image</button>
 			</div>
 		</div>
 		<textarea {{ block('widget_attributes') }}>{{ value }}</textarea>

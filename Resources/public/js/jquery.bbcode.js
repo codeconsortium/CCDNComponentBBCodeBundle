@@ -22,26 +22,32 @@ $(document).ready(function() {
 			if ($(this).data("has-param")) {
 				param = '=' + prompt($(this).data("has-param"));
 			}
+			
+			var input = "";
+			if ($(this).data("has-input-prompt")) {
+				input = prompt($(this).data("has-input-prompt"));
+			}
+			
 			var start = '[' + $(this).data("tag") + param + ']';
 			var end = '[/' + $(this).data("tag") + ']';
 			
-			insert(start, end, element);
+			insert(start, input, end, element);
 			return false;
 		});
 	}
 	
-	function insert(start, end, element) {
+	function insert(start, input, end, element) {
 		if (document.selection) {
 			element.focus();
 			sel = document.selection.createRange();
-			sel.text = start + sel.text + end;
+			sel.text = start + sel.text + (input ? input : '') + end;
 		} else if (element.selectionStart || element.selectionStart == '0') {
 			element.focus();
 			var startPos = element.selectionStart;
 			var endPos = element.selectionEnd;
-			element.value = element.value.substring(0, startPos) + start + element.value.substring(startPos, endPos) + end + element.value.substring(endPos, element.value.length);
+			element.value = element.value.substring(0, startPos) + start + element.value.substring(startPos, endPos) + (input ? input : '') + end + element.value.substring(endPos, element.value.length);
 		} else {
-			element.value += start + end;
+			element.value += start + (input ? input : '') + end;
 		}
 	}
 })(jQuery);

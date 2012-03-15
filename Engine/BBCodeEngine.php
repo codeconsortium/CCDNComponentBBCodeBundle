@@ -110,12 +110,17 @@ class BBCodeEngine extends ContainerAware
 			array(	'symbol_lexeme' => 'url',
 				//	'symbol_token' => array('/(\[URL?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/URL\])/'),
 				//[a-zA-Z0-9 #+.-\:\/\?\=\&]
-					'symbol_token' => array('/(\[URL?(\=[\P{C}\p{Cc}]*)*\])/', '/(\[\/URL\])/'),
-					'symbol_html' => array('<a href="', '" target="_blank">{{param}}</a>'),
+				//	'symbol_token' => array('/(\[URL?(\=[\P{C}\p{Cc}  #+.-\:\/\?\=\&]*)*\])/', '/(\[\/URL\])/'),
+				//'symbol_token' => array('/(\[URL?(\=([\P{C}\p{Cc}\x80-\xFF\x]|[A-Z0-9_-\d+:.])|(\=\?\&)*)*\])/', '/(\[\/URL\])/'),
+				//'symbol_token' => array('/(\[URL?(\=((([\P{C}\p{Cc}\x80-\xFF\x #+.-\:\/\?\=\&])|(?:=))*)*)\])/', '/(\[\/URL\])/'),
+					'symbol_token' => array('/(\[URL?(\=(.*?)*)\])/', '/(\[\/URL\])/'),
+					'symbol_html' => array('<a href="{{param}}" target="_blank">', '</a>'),
+					'param_is_url' => true,
 			),
 			array(	'symbol_lexeme' => 'image',
-					'symbol_token' => array('/(\[IMG?(\=[\P{C}\p{Cc}]*)*\])/', '/(\[\/IMG\])/'),
-					'symbol_html' => array('<img class="bb_tag_img" alt="{{param}}" src="', '" />'),
+					'symbol_token' => array('/(\[IMG?(\=(.*?)*)\])/', '/(\[\/IMG\])/'),
+					'symbol_html' => array('<img class="bb_tag_img" alt="', '" src="{{param}}" />'),
+					'param_is_url' => true,
 			),
             array(	'symbol_lexeme' => 'youtube',
                     'symbol_token' => array('/(\[YOUTUBE?(\=[\P{C}\p{Cc}]*)*\])/', '/(\[\/YOUTUBE\])/'),
@@ -410,15 +415,41 @@ class BBCodeEngine extends ContainerAware
 	 * @param $lookupStr
 	 * @return string|null
 	 */
-	private function bb_parser_fetch_param_for_tag($lookup_str)
+	private function bb_parser_fetch_param_for_tag($lookup_str, $original_lexeme)
 	{
-		$param = preg_split('/(\[)|(\=)|(\])/', $lookup_str, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+		$count = strlen($original_lexeme['symbol_lexeme']);
+		
+		// /(\[)|(\=)|(\])/
+		$regex = '/(\[([a-zA-Z0-9]{0,' . $count . '})\=)|(\])/';
+		
+		$param = preg_split($regex, $lookup_str, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
 
-		if (is_array($param) && count($param) > 0)
+		if (is_array($param) && count($param) > 2)
 		{
-			if ($param[2] == '=')
+			$len = strlen($param[0]);
+			
+			if (substr($param[0], $len - 1, $len)  == '=')
 			{
-				return $param[3];
+				if (array_key_exists('param_is_url', $original_lexeme))
+				{
+					if ($original_lexeme['param_is_url'] == false)
+					{
+						// just a regular value
+						return $param[2];					
+					}
+					
+					$protocol = preg_split('/(http|https|ftp)/', $param[2], null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+					
+					if ($protocol[0] == "http" || $protocol[0] == "https" || $protocol[0] == "ftp")
+					{
+						return $param[2];
+					} else {
+						return 'http://' . $param[2];
+					}
+				} else {
+					// just a regular value
+					return $param[2];					
+				}
 			}
 		}
 		
@@ -459,7 +490,7 @@ class BBCodeEngine extends ContainerAware
 						$tag = $lexeme_leaf['symbol_html'];
 
 						// substitute any params
-						$tag_param = $this->bb_parser_fetch_param_for_tag($lexeme_leaf['lookup_str']);
+						$tag_param = $this->bb_parser_fetch_param_for_tag($lexeme_leaf['lookup_str'], $lexeme_leaf['original_lexeme']);
 						
 						if ($tag_param !== null)
 						{
