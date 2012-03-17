@@ -119,7 +119,7 @@ class BBCodeEngine extends ContainerAware
 			),
 			array(	'symbol_lexeme' => 'image',
 					'symbol_token' => array('/(\[IMG?(\=(.*?)*)\])/', '/(\[\/IMG\])/'),
-					'symbol_html' => array('<img class="bb_tag_img" src="{{param}}" alt="User contributed image: ', '" />'),
+					'symbol_html' => array('<img class="bb_tag_img" src="{{param}}" alt="User contributed image: ', '">'),
 					'param_is_url' => true,
 			),
             array(	'symbol_lexeme' => 'youtube',
