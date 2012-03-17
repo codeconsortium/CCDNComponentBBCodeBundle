@@ -119,7 +119,7 @@ class BBCodeEngine extends ContainerAware
 			),
 			array(	'symbol_lexeme' => 'image',
 					'symbol_token' => array('/(\[IMG?(\=(.*?)*)\])/', '/(\[\/IMG\])/'),
-					'symbol_html' => array('<img class="bb_tag_img" alt="', '" src="{{param}}" />'),
+					'symbol_html' => array('<img class="bb_tag_img" src="{{param}}" alt="User contributed image: ', '" />'),
 					'param_is_url' => true,
 			),
             array(	'symbol_lexeme' => 'youtube',
@@ -494,6 +494,9 @@ class BBCodeEngine extends ContainerAware
 						
 						if ($tag_param !== null)
 						{
+							// this section is for tags with multiple choices for a param,
+							// in such cases the param provided must match one from the 
+							// list provided for that bb tag type.
 							if (array_key_exists('param_choices', $lexeme_leaf['original_lexeme']))
 							{
 								foreach($lexeme_leaf['original_lexeme']['param_choices'] as $param_choice_key => $param_choice)

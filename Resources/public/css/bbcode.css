@@ -1,6 +1,6 @@
 /* SOME TAG WRAPPERS */
 div.bb_box {
-	width: 100% auto;
+	width: auto;
 	display: block;
 	margin: 5px;
 	padding: 0px;
@@ -15,7 +15,7 @@ div.bb_tag_head_strip {
 
 /* TAGS */
 div.bb_tag_quote {
-	width: 100% auto;
+	width: auto;
 	display: block;
 	margin: 0px;
 	padding: 5px;
@@ -107,8 +107,6 @@ button.bb_button {
 	
 	border: 1px solid gray;
     border-radius:2px;
-	-moz-border-radius:2px;
-	-webkit-border-radius:2px;
 
 	background: url(../images/BBCodeEditor/gray_button.png) repeat-x;
 	
