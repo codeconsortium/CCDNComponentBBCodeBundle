@@ -1,7 +1,8 @@
 parameters:
-    ccdn_component_bb_code.extension.class:                        CCDNComponent\BBCodeBundle\Extension\BBCodeExtension
-#    bb_code_fetch_choices.extension.class:          CCDNComponent\BBCodeBundle\Extension\BBCodeFetchChoicesExtension
-    ccdn_component_bb_code.bb_code.engine.class:    CCDNComponent\BBCodeBundle\Engine\BBCodeEngine
+    ccdn_component_bb_code.extension.class:         CCDNComponent\BBCodeBundle\Extension\BBCodeExtension
+#    bb_code_fetch_choices.extension.class:         CCDNComponent\BBCodeBundle\Extension\BBCodeFetchChoicesExtension
+    ccdn_component_bb_code.bb_code.engine.class:    CCDNComponent\BBCodeBundle\Component\Engine\BBCodeEngine
+    ccdn_component_bb_code.lexeme_table.class:      CCDNComponent\BBCodeBundle\Component\Engine\LexemeTable
 
 services:
     ccdn_component_bb_code.bb_code.extension:
@@ -15,5 +16,8 @@ services:
 #        tags:
 #            - { name: twig.extension }
     ccdn_component_bb_code.bb_code.engine:
-        class:  %ccdn_component_bb_code.bb_code.engine.class%
+        class: %ccdn_component_bb_code.bb_code.engine.class%
+        arguments: [@service_container]
+    ccdn_component_bb_code.lexeme_table:
+        class: %ccdn_component_bb_code.lexeme_table.class%
         arguments: [@service_container]
