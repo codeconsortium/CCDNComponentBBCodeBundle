@@ -125,9 +125,7 @@ class LexemeTable extends ContainerAware
 
 			//
 			// Smileys
-			//
-//			$this->basePath . '/bundles/ccdncomponentcommon/images/icons/Black/32x32/32x32_bookmark.png'
-			
+			//			
 			array(
 				'symbol_lexeme' => 'angel',
 				'symbol_token' => array('/\:angel\:/'),
@@ -225,7 +223,7 @@ class LexemeTable extends ContainerAware
 			),
 			array(
 				'symbol_lexeme' => 'crossbones',
-				'symbol_token' => array('/\:crossbone\:/'),
+				'symbol_token' => array('/\:crossbones\:/'),
 				'symbol_html' => array('<img src="' . $smileys . 'crossbones.gif" />'),
 			),
 			array(

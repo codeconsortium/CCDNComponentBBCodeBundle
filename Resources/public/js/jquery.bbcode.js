@@ -16,8 +16,10 @@ $(document).ready(function() {
 	$.fn.bbcode = function() {
 		
 		$('button.bb_button').click(function(event) {
-			var element = $(this).parents('.tool_strip_container').next('textarea').get(0);
-	
+//			var element = $(this).parents('.tool_strip_container').next('textarea').get(0);
+			var eid = $(this).data('target-textarea');
+			var element = $('textarea[id=' + eid +']').get(0);
+
 			var param = "";
 			if ($(this).data("has-param")) {
 				param = '=' + prompt($(this).data("has-param"));
@@ -30,6 +32,27 @@ $(document).ready(function() {
 			
 			var start = '[' + $(this).data("tag") + param + ']';
 			var end = '[/' + $(this).data("tag") + ']';
+			
+			insert(start, input, end, element);
+			return false;
+		});
+	
+		$('a[href=#smiley]').click(function(event) {
+			var eid = $(this).data('target-textarea');
+			var element = $('textarea[id=' + eid +']').get(0);	
+
+			var param = "";
+			if ($(this).data("has-param")) {
+				param = '=' + prompt($(this).data("has-param"));
+			}
+			
+			var input = "";
+			if ($(this).data("has-input-prompt")) {
+				input = prompt($(this).data("has-input-prompt"));
+			}
+			
+			var start = '[' + $(this).data("tag") + param + ']';
+			var end = '';
 			
 			insert(start, input, end, element);
 			return false;
