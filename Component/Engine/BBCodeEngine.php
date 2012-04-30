@@ -41,9 +41,24 @@ class BBCodeEngine extends ContainerAware
 	 * @access private
 	 */
 	protected $lexemes;
+
 	
+	
+	/**
+	 *
+	 * @access protected
+	 */
 	protected $lexer;
+	
+	
+	
+	/**
+	 *
+	 * @access protected
+	 */
 	protected $parser;
+	
+	
 	
 	/**
 	 *
@@ -65,20 +80,14 @@ class BBCodeEngine extends ContainerAware
 	/**
 	 *
 	 * @access public
-	 * @return $lexemes[]
+	 * @return String $html
 	 */
-/*	public function &get_lexemes()
-	{
-		return $this->lexemes;
-	}*/
-	
 	public function process($input)
 	{
 		$scan_tree 		= $this->bb_scanner($input);
 		$lexeme_tree 	= $this->lexer->process($scan_tree, $this->lexemes);
-//		echo '<pre>' . print_r($lexeme_tree, true). '</pre>'; die();
 		$html 			= $this->parser->parse($lexeme_tree, $this->lexemes);
-//		echo '<pre>' . print_r($html, true). '</pre>'; die();
+
 		return $html;
 	}
 	
