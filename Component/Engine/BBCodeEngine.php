@@ -85,11 +85,11 @@ class BBCodeEngine extends ContainerAware
 	public function process($input)
 	{
 		$scan_tree 		= &$this->bb_scanner($input);
-		$symbol_tree 	= &$this->lexer->process(&$scan_tree, $this->lexemes);
-						  $this->lexer->post_process(&$symbol_tree, $this->lexemes);
+		$symbol_tree 	= &$this->lexer->process(&$scan_tree, &$this->lexemes);
+						  $this->lexer->post_process(&$symbol_tree, &$this->lexemes);
 						
 //		echo '<pre>' . print_r(&$symbol_tree, true) . '</pre>'; die();
-		$html 			= $this->parser->parse(&$symbol_tree, $this->lexemes);
+		$html 			= $this->parser->parse(&$symbol_tree, &$this->lexemes);
 
 		return $html;
 	}
