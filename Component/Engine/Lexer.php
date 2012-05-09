@@ -169,7 +169,6 @@ class Lexer
 					return;
 				}
 
-
 				if (array_key_exists('param_is_url', $lexeme))
 				{
 					if ($lexeme['param_is_url'] == true)
@@ -185,7 +184,6 @@ class Lexer
 						
 						return;
 					}
-					
 				} 
 				
 				$symbol['tag_param'] = $param[2];

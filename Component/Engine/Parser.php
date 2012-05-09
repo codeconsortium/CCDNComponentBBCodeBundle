@@ -168,14 +168,10 @@ class Parser
 			
 			if ($use_pre_tag == true)
 			{
-				$str = htmlentities($tag, ENT_QUOTES);
+				$html .= htmlentities($tag, ENT_QUOTES);
 			} else {
-				$str = nl2br(htmlentities($tag, ENT_QUOTES));
+				$html .= nl2br(htmlentities($tag, ENT_QUOTES));
 			}
-			
-			$last_tag_content = $str;
-			
-			$html .= $str;
 		}
 
 		return $html;
