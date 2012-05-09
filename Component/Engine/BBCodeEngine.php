@@ -84,9 +84,12 @@ class BBCodeEngine extends ContainerAware
 	 */
 	public function process($input)
 	{
-		$scan_tree 		= $this->bb_scanner($input);
-		$lexeme_tree 	= $this->lexer->process($scan_tree, $this->lexemes);
-		$html 			= $this->parser->parse($lexeme_tree, $this->lexemes);
+		$scan_tree 		= &$this->bb_scanner($input);
+		$symbol_tree 	= &$this->lexer->process(&$scan_tree, $this->lexemes);
+						  $this->lexer->post_process(&$symbol_tree, $this->lexemes);
+						
+//		echo '<pre>' . print_r(&$symbol_tree, true) . '</pre>'; die();
+		$html 			= $this->parser->parse(&$symbol_tree, $this->lexemes);
 
 		return $html;
 	}
@@ -98,7 +101,7 @@ class BBCodeEngine extends ContainerAware
 	 * @param $input
 	 * @return $chunks[]
 	 */
-	public function bb_scanner($input)
+	public function &bb_scanner($input)
 	{
 		$chunks = array();
 		$regex = '/(\[)|(\])/';

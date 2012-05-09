@@ -45,192 +45,117 @@ class Parser
 		'use_nested' => true,
 		'use_nested_child' => null,
 	);
-	
-	
+
+
+
 	/**
 	 *
 	 * @access private
-	 * @param $lookupStr
-	 * @return string|null
+	 * @param Array $symbol_tree, Array $symbol, string $tag
 	 */
-	private function fetch_param_for_tag($lookup_str, $original_lexeme)
-	{
-		$count = strlen($original_lexeme['symbol_lexeme']);
+	private function put_param_in_context(&$symbol_tree, &$symbol, &$tag)
+	{					
+		$param = null;
 		
-		// /(\[)|(\=)|(\])/
-		$regex = '/(\[([a-zA-Z0-9]{0,' . $count . '})\=)|(\])/';
-		
-		$param = preg_split($regex, $lookup_str, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
-
-		if (is_array($param) && count($param) > 2)
+		if (array_key_exists('ref_child', $symbol))
 		{
-			$len = strlen($param[0]);
-			
-			if (substr($param[0], $len - 1, $len)  == '=')
+			if (array_key_exists('tag_param', $symbol_tree[$symbol['ref_child']]))
 			{
-				if (array_key_exists('param_is_url', $original_lexeme))
-				{
-					if ($original_lexeme['param_is_url'] == false)
-					{
-						// just a regular value
-						return $param[2];					
-					}
-					
-					$protocol = preg_split('/(http|https|ftp)/', $param[2], null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
-					
-					if ($protocol[0] == "http" || $protocol[0] == "https" || $protocol[0] == "ftp")
-					{
-						return $param[2];
-					} else {
-						return 'http://' . $param[2];
-					}
-				} else {
-					// just a regular value
-					return $param[2];					
-				}
+				$param = $symbol_tree[$symbol['ref_child']]['tag_param'];
 			}
 		}
 		
-		return null;
+		if (array_key_exists('ref_parent', $symbol))
+		{			
+			if (array_key_exists('tag_param', $symbol_tree[$symbol['ref_parent']]))
+			{
+				$param = $symbol_tree[$symbol['ref_parent']]['tag_param'];				
+			}
+		}
+		
+		// Any param in current context takes priority and overrides previous param.
+		if (array_key_exists('tag_param', $symbol))
+		{
+			$param = $symbol['tag_param'];
+		}
+		
+		if ($param)		
+		{
+			$tag = str_replace('{{param}}', htmlentities($param, ENT_QUOTES), $tag);
+		}
 	}
+	
 	
 	
 	/**
 	 *
 	 * @access public
-	 * @param $lexemeTree, $lexemes
+	 * @param Array $symbol_tree, Array $lexemes
 	 * @return string $html
 	 */
-	public function parse(&$lexeme_tree, &$lexemes)
+	public function parse(&$symbol_tree, &$lexemes)
 	{
 		$html = '';
 
-		$use_pre_tag =& $this->parser_state_flags['use_pre_tag'];
-		$use_pre_tag_child =& $this->parser_state_flags['use_pre_tag_child'];
-		$use_nested =& $this->parser_state_flags['use_nested'];
-		$use_nested_child =& $this->parser_state_flags['use_nested_child'];
+		$use_pre_tag =& $this->parser_state_flags['use_pre_tag'];					// This tags html wraps its content in a <pre> tag, so we don't convert \n to <br> as a result.
+		$use_pre_tag_child =& $this->parser_state_flags['use_pre_tag_child'];		// reference to the tag that initiated this <pre> tag state.
 		$last_tag_content = "";
 		
-		for ($lexeme_leaf_key = 0; $lexeme_leaf_key < count($lexeme_tree); $lexeme_leaf_key++)
+		for ($symbol_key = 0; $symbol_key < count($symbol_tree); $symbol_key++)
 		{
-			$lexeme_leaf =& $lexeme_tree[$lexeme_leaf_key];
-			
-			if (is_array($lexeme_leaf))
-			{
-				if (array_key_exists('lexeme_key', $lexeme_leaf))
-				{
-					// we have to check the validation token separately from the lexeme key,
-					// because if we only check the validation key, then indices containing
-					// lexemes that are invalid will be processed as nested branches, this 
-					// will throw various errors, such as invalid array indice offsets etc.
-					if (array_key_exists('validation_token', $lexeme_leaf))
-					{
-						$tag = $lexeme_leaf['symbol_html'];
+			$symbol =& $symbol_tree[$symbol_key];
 
-						// substitute any params
-						$tag_param = $this->fetch_param_for_tag($lexeme_leaf['lookup_str'], $lexeme_leaf['original_lexeme']);
-						
-						if ($tag_param !== null)
-						{
-							// this section is for tags with multiple choices for a param,
-							// in such cases the param provided must match one from the 
-							// list provided for that bb tag type.
-							if (array_key_exists('param_choices', $lexeme_leaf['original_lexeme']))
-							{
-								foreach($lexeme_leaf['original_lexeme']['param_choices'] as $param_choice_key => $param_choice)
-								{
-									if ($tag_param == $param_choice_key)
-									{
-										$lexeme_leaf['tag_param'] = $param_choice;
-										$tag = str_replace('{{param}}', $param_choice, $tag);
-										
-										break;
-									}
-								}
-							} else {
-								$lexeme_leaf['tag_param'] = $tag_param;
-								$tag = str_replace('{{param}}', htmlentities($tag_param, ENT_QUOTES/* | ENT_SUBSTITUTE*/), $tag);
-							}
-						}
+			if (is_array($symbol))
+			{
+				if (array_key_exists('lexeme_key', $symbol))
+				{
+					$lexeme =& $lexemes[$symbol['lexeme_key']];
+					
+					if (array_key_exists('validation_token', $symbol))
+					{
+						$tag = $lexeme['symbol_html'][$symbol['token_key']];
 						
 						// here we are only concerned with the opening tag, and
 						// wether it contains a parameter in the opening tag.
-						if ($lexeme_leaf['token_key'] == 0)
+						if ($symbol['token_key'] == 0)
 						{
-							if ($use_nested == true)
+							if (array_key_exists('use_pre_tag', $lexeme))
 							{
-								if (array_key_exists('use_pre_tag', $lexeme_leaf['original_lexeme']))
+								if ($lexeme['use_pre_tag'] == true)
 								{
-									if ($lexeme_leaf['original_lexeme']['use_pre_tag'] == true)
+									if ($use_pre_tag == false)
 									{
-										if ($use_pre_tag == false)
-										{
-											$use_pre_tag = true;
-											$use_pre_tag_child = $lexeme_leaf['ref_child'];
-										}
+										$use_pre_tag = true;
+										$use_pre_tag_child = $symbol_tree[$symbol['ref_child']];
 									}
 								}
-								if (array_key_exists('use_nested', $lexeme_leaf['original_lexeme']))
-								{
-									if ($lexeme_leaf['original_lexeme']['use_nested'] == false)
-									{
-										if ($use_nested == true)
-										{
-											$use_nested = false;
-											$use_nested_child = $lexeme_leaf['ref_child'];
-										}
-									}
-								}
-							} else {
-								$tag = $lexeme_leaf['lookup_str'];
-							}
+							}						
 						} else {
+							//
 							// closing tag stuff
+							//
 							
 							// remove any special state flags for closing tags that match prior opened ones.
-							if ($use_pre_tag_child['validation_token'] == $lexeme_leaf['validation_token'])
+							if ($use_pre_tag_child['validation_token'] == $symbol['validation_token'])
 							{
 								$use_pre_tag = false;
 								$use_pre_tag_child = null;
 							}
-							
-							if ($use_nested_child['validation_token'] == $lexeme_leaf['validation_token'])
-							{
-								$use_nested = true;
-								$use_nested_child = null;
-							}
-							
-							if ($use_nested == true)
-							{
-								// if this closing tag has a married opening tag reference,
-								// then check if a param exists further in the html counter part.
-								if (array_key_exists('ref_parent', $lexeme_leaf))
-								{
-									if (array_key_exists('tag_param', $lexeme_leaf['ref_parent']))
-									{
-										$tag = str_replace('{{param}}', htmlentities($lexeme_leaf['ref_parent']['tag_param'], ENT_QUOTES/* | ENT_SUBSTITUTE*/), $tag);
-									} else {
-										// if {{param}} is in closing half of html and also
-										// if left blank, then it should be replaced by the
-										// content of the tag instead.
-										$tag = str_replace('{{param}}', $last_tag_content, $tag);
-									}
-								}
-							} else {
-								$tag = $lexeme_leaf['lookup_str'];
-							}
 						}
+
+						$this->put_param_in_context(&$symbol_tree, &$symbol, &$tag);
+						
 					} else {
-						$tag = $lexeme_leaf['lookup_str'];
+						$tag = $symbol['lookup_str'];
 					}
 				
 					$html .= $tag;
 				
 					continue;
 				} else {
-					if (count($lexeme_tree[$lexeme_leaf_key]) > 0)
+					if (count($symbol_tree[$symbol_key]) > 0)
 					{
-						$html .= $this->parse($lexeme_tree[$lexeme_leaf_key] , $lexemes);
+						$html .= $this->parse($symbol_tree[$symbol_key] , $lexemes);
 						
 						continue;
 					}
@@ -238,20 +163,19 @@ class Parser
 			} else {
 				// non tag related, content only just plain
 				// old text or garbled invalid bb code tags.
-				$tag = $lexeme_leaf;
+				$tag = $symbol;
 			}
 			
 			if ($use_pre_tag == true)
 			{
-				$str = htmlentities($tag, ENT_QUOTES/* | ENT_SUBSTITUTE*/);
+				$str = htmlentities($tag, ENT_QUOTES);
 			} else {
-				$str = nl2br(htmlentities($tag, ENT_QUOTES/* | ENT_SUBSTITUTE*/));
+				$str = nl2br(htmlentities($tag, ENT_QUOTES));
 			}
 			
 			$last_tag_content = $str;
 			
 			$html .= $str;
-			
 		}
 
 		return $html;
