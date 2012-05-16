@@ -27,7 +27,8 @@ Dependencies:
 -------------
 
 [CCDNComponent CommonBundle](https://github.com/codeconsortium/CommonBundle)
-  
+[libgeshi](https://github.com/codeconsortium/geshi)
+
 Installation:
 -------------
 
@@ -36,6 +37,10 @@ Installation:
    You can set deps to include:
 
 ```sh
+[libgeshi]
+	git=http://github.com/codeconsortium/geshi.git
+	target=/geshi
+	
 [CCDNComponentCommonBundle]
     git=http://github.com/codeconsortium/CommonBundle.git
     target=/bundles/CCDNComponent/CommonBundle
@@ -47,7 +52,13 @@ Installation:
 add to your autoload:
 
 ```php
-    'CCDNComponent'    => __DIR__.'/../vendor/bundles',
+```sh
+# app/autoload.php
+
+$loader->registerPrefixes(array(
+    'Geshi_'			=> __DIR__.'/../vendor/geshi/lib',
+    'CCDNComponent'		=> __DIR__.'/../vendor/bundles',
+));
 ```
 and then run `bin/vendors install` script.
 
