@@ -2,10 +2,9 @@ CCDNComponent BBCodeBundle README.
 ==================================
  
 
-Notes:  
-------
+## Notes:  
   
-This bundle is for the symfony framework and thusly requires Symfony 2.0.x and PHP 5.3.6
+This bundle is for the symfony framework and requires Symfony 2.0.x and PHP 5.3.6
   
 This project uses Doctrine 2.0.x and so does not require any specific database.
   
@@ -23,56 +22,43 @@ Icons courtesy of http://pc.de/icons/ licensed under http://creativecommons.org/
 
 Other graphics are works of CodeConsortium.
 
-Dependencies:
--------------
+## Description.
 
-[CCDNComponent CommonBundle](https://github.com/codeconsortium/CommonBundle)
-[libgeshi](https://github.com/codeconsortium/geshi)
+You will need to look at [CCDNForum ForumBundle](https://github.com/codeconsortium/CCDNForumForumBundle) and install it along with its dependencies before using this bundle.
 
-Installation:
--------------
+## Features.
 
-1) Download and install the dependencies.
-   
-   You can set deps to include:
+BBCodeBundle Provides the following features:
 
-```sh
-[libgeshi]
-	git=http://github.com/codeconsortium/geshi.git
-	target=/geshi
-	
-[CCDNComponentCommonBundle]
-    git=http://github.com/codeconsortium/CommonBundle.git
-    target=/bundles/CCDNComponent/CommonBundle
 
-[CCDNComponentBBCodeBundle]
-    git=http://github.com/codeconsortium/BBCodeBundle.git
-    target=/bundles/CCDNComponent/BBCodeBundle
-```
-add to your autoload:
 
-```php
-```sh
-# app/autoload.php
+Before installation of this bundle, you can download the [Sandbox](https://github.com/codeconsortium/CCDNForumSandBox) for testing/development and feature review, or alternatively see the product in use at [CodeConsortium](http://www.codeconsortium.com).
 
-$loader->registerPrefixes(array(
-    'Geshi_'			=> __DIR__.'/../vendor/geshi/lib',
-    'CCDNComponent'		=> __DIR__.'/../vendor/bundles',
-));
-```
-and then run `bin/vendors install` script.
+## Documentation.
 
-2) In your AppKernel.php add the following bundles to the registerBundles method array:  
+Documentation can be found in the `Resources/doc/index.md` file in this bundle:
 
-```php
-	new CCDNComponent\CommonBundle\CCDNComponentCommonBundle(),
-	new CCDNComponent\BBCodeBundle\CCDNComponentBBCodeBundle(),
-```
+[Read the Documentation](http://github.com/codeconsortium/BBCodeBundle/blob/master/Resources/doc/index.md).
 
-3) Symlink assets to your public web directory by running this in the command line:
+## Installation.
 
-```sh
-	php app/console assets:install --symlink web/
-```
-	
-Then your done, if you need further help/support, have suggestions or want to contribute please join the community at [www.codeconsortium.com](http://www.codeconsortium.com)
+All the installation instructions are located in [documentation](http://github.com/codeconsortium/BBCodeBundle/blob/master/Resources/doc/Install.md).
+
+## License.
+
+This software is licensed under the MIT license. See the complete license file in the bundle:
+
+	Resources/meta/LICENSE
+
+[Read the License](http://github.com/codeconsortium/BBCodeBundle/blob/master/Resources/meta/LICENSE).
+
+## About.
+
+[CCDNComponent BBCodeBundle](http://github.com/codeconsortium/BBCodeBundle) is free software from [Code Consortium](http://www.codeconsortium.com). 
+See also the list of [contributors](http://github.com/codeconsortium/BBCodeBundle/contributors).
+
+## Reporting an issue or feature request.
+
+Issues and feature requests are tracked in the [Github issue tracker](http://github.com/codeconsortium/BBCodeBundle/issues).
+
+Discussions and debates on the project can be further discussed at [Code Consortium](http://www.codeconsortium.com).
