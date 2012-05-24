@@ -24,13 +24,22 @@ Other graphics are works of CodeConsortium.
 
 ## Description.
 
-You will need to look at [CCDNForum ForumBundle](https://github.com/codeconsortium/CCDNForumForumBundle) and install it along with its dependencies before using this bundle.
+A lexical parser for Bulletin Board code tags within text for any aspect of your site. Converts bulletin board code tags into html.
 
 ## Features.
 
 BBCodeBundle Provides the following features:
 
-
+1. Uses logical lexing to create a symbol table.
+2. Parser converts lexed bb tags into html.
+3. Supports numerous formatting tags such as:
+	1. [B][/B] for Bold
+	2. [U][/U] for Underline.
+	3. [I][/I] for Italics.
+	4. Also include tags for other formatting types.
+4. Includes smilies. 
+5. Includes inline bbcode editor as a Symfony2 form theme. Use anywhere.
+6. Features syntax highlighting for code blocks through GeSHi support.
 
 Before installation of this bundle, you can download the [Sandbox](https://github.com/codeconsortium/CCDNForumSandBox) for testing/development and feature review, or alternatively see the product in use at [CodeConsortium](http://www.codeconsortium.com).
 
