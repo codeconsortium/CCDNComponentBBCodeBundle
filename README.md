@@ -41,7 +41,7 @@ BBCodeBundle Provides the following features:
 5. Includes inline bbcode editor as a Symfony2 form theme. Use anywhere.
 6. Features syntax highlighting for code blocks through GeSHi support.
 
-Before installation of this bundle, you can download the [Sandbox](https://github.com/codeconsortium/CCDNForumSandBox) for testing/development and feature review, or alternatively see the product in use at [CodeConsortium](http://www.codeconsortium.com).
+Before installation of this bundle, you can download the [Sandbox](https://github.com/codeconsortium/CCDNSandBox) for testing/development and feature review, or alternatively see the product in use at [CodeConsortium](http://www.codeconsortium.com).
 
 ## Documentation.
 
