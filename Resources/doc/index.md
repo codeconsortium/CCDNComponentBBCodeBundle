@@ -20,4 +20,4 @@ For more information about translations, check [Symfony documentation](http://sy
 
 ## Installation Documentation:
 
-- [Installing CCDNComponent BBCodeBundle for Symfony 2.0.11](http://github.com/codeconsortium/BBCodeBundle/blob/master/Resources/doc/Install.md).
+- [Installing CCDNComponent BBCodeBundle for Symfony 2.0.11](install.md).
