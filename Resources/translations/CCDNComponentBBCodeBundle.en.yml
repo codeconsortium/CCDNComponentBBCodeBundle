@@ -1,2 +1,15 @@
 bb_code.quote.said: said
 bb_code.code: Code
+
+bb_code.button.style: 'Styles'
+bb_code.button.bold: 'Bold'
+bb_code.button.underline: 'Underline'
+bb_code.button.italic: 'Italics'
+bb_code.button.strike: 'Strike through text.'
+bb_code.button.sub: 'Subscript'
+bb_code.button.sup: 'Superscript'
+bb_code.button.code: 'Add a block of code'
+bb_code.button.quote: 'Add a quotation'
+bb_code.button.url: 'Add a url'
+bb_code.button.image: 'Add an image'
+bb_code.button.smileys: 'Add emoticons'

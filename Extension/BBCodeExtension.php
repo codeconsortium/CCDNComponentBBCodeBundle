@@ -41,6 +41,7 @@ class BBCodeExtension extends \Twig_Extension
 	}
 
 
+
 	/**
 	 *
 	 * @access public
@@ -51,9 +52,11 @@ class BBCodeExtension extends \Twig_Extension
 		return array(
 			'BBCode' => new \Twig_Function_Method($this, 'BBCode'),
 			'BBCodeFetchChoices' => new \Twig_Function_Method($this, 'BBCodeFetchChoices'),
+			'BBCodeFetchGroup' => new \Twig_Function_Method($this, 'BBCodeFetchGroup'),
 			'BBCodeFetchElementIDforTheme' => new \Twig_Function_Method($this, 'BBCodeFetchElementIDforTheme'),
 		);
 	}
+	
 	
 	
 	/**
@@ -65,6 +68,7 @@ class BBCodeExtension extends \Twig_Extension
 	{
 		return 'BBCode';
 	}
+	
 	
 	
 	// Converts BBCode to HTML via breaking down the BBCode tags into lexemes (via lexer method), which are 
@@ -91,6 +95,7 @@ class BBCodeExtension extends \Twig_Extension
 	}
 	
 	
+	
 	/**
 	 *
 	 * @access public
@@ -101,15 +106,15 @@ class BBCodeExtension extends \Twig_Extension
 	{
 		$engine = $this->container->get('ccdn_component_bb_code.engine');	
 
-		$choices =& $engine->get_lexemes();
+		$lexemes = $engine->getLexemes();
 		
-		foreach($choices as $choice_key => $choice)
+		foreach($lexemes as $lexeme_key => $lexeme)
 		{
-			if ($choice['symbol_lexeme'] == $tag)
+			if ($lexeme['symbol_lexeme'] == $tag)
 			{
-				if (array_key_exists('param_choices', $choice))
+				if (array_key_exists('param_choices', $lexeme))
 				{
-					return $choice['param_choices'];
+					return $lexeme['param_choices'];
 				}
 				
 				return array();
@@ -118,6 +123,37 @@ class BBCodeExtension extends \Twig_Extension
 		
 		return array();
 	}
+	
+	
+	
+	/**
+	 *
+	 * @access public
+	 * @param $group
+	 * @return Array()
+	 */
+	public function BBCodeFetchGroup($group)
+	{
+		$engine = $this->container->get('ccdn_component_bb_code.engine');	
+
+		$lexemes = $engine->getLexemes();
+		
+		$found = array();
+		
+		foreach($lexemes as $lexeme_key => $lexeme)
+		{
+			if (array_key_exists('group', $lexeme))
+			{
+				if ($lexeme['group'] == $group)
+				{
+					$found[] = $lexeme;
+				}
+			}
+		}
+		
+		return $found;
+	}
+	
 	
 	
 	/**

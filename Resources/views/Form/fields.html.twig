@@ -1,127 +1,62 @@
 {% block textarea_widget %}
-	{% set attr = attr|merge({ 'class': attr.class|default('') ~ 'widget_textarea widget_bb_editor_textarea'}) %}
+	{% set attr = attr|merge({ 'class': attr.class|default('') ~ 'text-xlarge span8', 'style': attr.style|default('') ~ 'height:250px;'}) %}
 	{% set field_id = BBCodeFetchElementIDforTheme(block('widget_attributes')) %}
 	
-	<div style="vertical-align: top;" class="bb_editor_widget ">
-		<div style="float: left;">
-			<div class="tool_strip_container collapse">
-				<div class="tool_strip">
-{#					<select class="bb_select" class="widget_select">
-					{% set styles = BBCodeFetchChoices('style') %}
-					{% for key, style in styles %}
-						<option value="{{ style }}">{{ key }}</option>
-					{% endfor %}
-					</select>
-#}					<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="B"><b>B</b></button>
-					<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="U"><u>U</u></button>
-					<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="I"><i>i</i></button>
-
-					<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="STRIKE"><strike>S</strike></button>
-
-					<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="SUB"><b><i>x</i></b><sub class="button_script">y</sub></button>
-					<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="SUP"><b><i>x</i></b><sup class="button_script">y</sup></button>
-                                                                                                            
-					<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="CODE" data-has-param="What language?">code</button>
-					<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="QUOTE" data-has-param="Who said this?">quote</button>
-                                                                                                            
-					<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="URL" data-has-param="Add the url here:" data-has-input-prompt="Add a label for this url:">url</button>
-					<button type="button" class="bb_button" data-target-textarea="{{ field_id | raw }}" data-tag="IMG" data-has-param="Add the image url here:" data-has-input-prompt="Add text for image description:">image</button>
-				</div>
-			</div>
-			<textarea {{ block('widget_attributes') }} class="input-xlarge">{{ value }}</textarea>
+	<div class="btn-toolbar hidden" style="clear:both;" data-compat="interactive-js-compat">
+		
+		<div class="btn-group" style="margin-bottom:0px;vertical-align:bottom;">
+			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" data-tip="top" title="{{ 'bb_code.button.style' | trans({}, 'CCDNComponentBBCodeBundle') }}">
+				&para;<i class="icon-font"></i>
+				&nbsp;<span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+				{% set styles = BBCodeFetchChoices('style') %}
+				{% for key, style in styles %}
+					<li><a href="#" data-param="{{ style }}">&para;&nbsp;<span class="{{ style }}">{{ key |title }}</span></a></li>
+				{% endfor %}
+			</ul>
 		</div>
+
+		<button type="button" class="btn" data-target-textarea="{{ field_id | raw }}" data-tag="B" data-tip="top" title="{{ 'bb_code.button.bold' | trans({}, 'CCDNComponentBBCodeBundle') }}"><b>B</b></button>
+		<button type="button" class="btn" data-target-textarea="{{ field_id | raw }}" data-tag="U" data-tip="top" title="{{ 'bb_code.button.underline' | trans({}, 'CCDNComponentBBCodeBundle') }}"><u>U</u></button>
+		<button type="button" class="btn" data-target-textarea="{{ field_id | raw }}" data-tag="I" data-tip="top" title="{{ 'bb_code.button.italic' | trans({}, 'CCDNComponentBBCodeBundle') }}"><i>I</i></button>
+
+		<button type="button" class="btn" data-target-textarea="{{ field_id | raw }}" data-tag="STRIKE" data-tip="top" title="{{ 'bb_code.button.strike' | trans({}, 'CCDNComponentBBCodeBundle') }}"><strike>S</strike></button>
+
+		<button type="button" class="btn" data-target-textarea="{{ field_id | raw }}" data-tag="SUB" data-tip="top" title="{{ 'bb_code.button.sub' | trans({}, 'CCDNComponentBBCodeBundle') }}"><b><i>x</i></b><sub class="button_script">y</sub></button>
+		<button type="button" class="btn" data-target-textarea="{{ field_id | raw }}" data-tag="SUP" data-tip="top" title="{{ 'bb_code.button.sup' | trans({}, 'CCDNComponentBBCodeBundle') }}"><b><i>x</i></b><sup class="button_script">y</sup></button>
+
+		<button type="button" class="btn" data-target-textarea="{{ field_id | raw }}" data-tag="CODE" data-has-param="What language?" data-tip="top" title="{{ 'bb_code.button.code' | trans({}, 'CCDNComponentBBCodeBundle') }}">code</button>
+		<button type="button" class="btn" data-target-textarea="{{ field_id | raw }}" data-tag="QUOTE" data-has-param="Who said this?" data-tip="top" title="{{ 'bb_code.button.quote' | trans({}, 'CCDNComponentBBCodeBundle') }}">quote</button>
+
+		<button type="button" class="btn" data-target-textarea="{{ field_id | raw }}" data-tag="URL" data-has-param="Add the url here:" data-has-input-prompt="Add a label for this url:" data-tip="top" title="{{ 'bb_code.button.url' | trans({}, 'CCDNComponentBBCodeBundle') }}"><i class="icon-globe"></i></button>
+		<button type="button" class="btn" data-target-textarea="{{ field_id | raw }}" data-tag="IMG" data-has-param="Add the image url here:" data-has-input-prompt="Add text for image description:" data-tip="top" title="{{ 'bb_code.button.image' | trans({}, 'CCDNComponentBBCodeBundle') }}"><i class="icon-picture"></i></button>
+		
+		{{ block('smileys') }}
 	</div>
-	<div style="display: inline-block;">
-		<div style="display: inline; float: right; vertical-align: top; border: 1px solid #aaa; overflow: hidden; width: 190px; padding: 3px;">
-		{% spaceless %}
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":smile:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/smile.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":smug:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/smug.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":tongue:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/tongue.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":interest:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/interest.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":cool:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/cool.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":biggrin:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/biggrin.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":laugh:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/laugh.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":lol:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/lol.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":rolleyes:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/rolleyes.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":happyyes:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/happyyes.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":happyno:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/happyno.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":dry:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/dry.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":sweat:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/sweat.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":ty:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/ty.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":unsure:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/unsure.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":goodgrief:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/goodgrief.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":huh:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/huh.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":bleh:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/bleh.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":blink:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/blink.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":hug:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/hug.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":bye:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/bye.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":cry:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/cry.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":mad:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/mad.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":mellow:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/mellow.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":nudgewink:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/nudgewink.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":ohmy:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/ohmy.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":rant:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/rant.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":sad:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/sad.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":sadno:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/sadno.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":sick:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/sick.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":sleep:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/sleep.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":spock:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/spock.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":wink:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/wink.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":tears:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/tears.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":therethere:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/therethere.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":cheekkiss:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/cheekkiss.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":thumbsup:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/thumbsup.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":shy:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/shy.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":chin:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/chin.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":bop:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/bop.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":explode:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/explode.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":fart:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/fart.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":bash:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/bash.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":drool:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/drool.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":excited:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/excited.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":crossbones:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/crossbones.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":cake:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/cake.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":jumpy:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/jumpy.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":slaphead:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/slaphead.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":dunce:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/dunce.gif') }}" alt="smiley" /></a>	
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":knight:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/knight.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":chaplin:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/chaplin.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":huglove:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/huglove.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":rofl:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/rofl.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":sadangel:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/sadangel.gif') }}" alt="smiley" /></a>	
-	{#		<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":cloud9:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/cloud9.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":locked:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/locked.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":arms:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/arms.gif') }}" alt="smiley" /></a>	
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":cupid:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/cupid.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":poke:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/poke.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":drinks:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/drinks.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":stretcher:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/stretcher.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":wave:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/wave.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":ouch:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/ouch.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":crutches:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/crutches.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":sex:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/sex.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":pcwhack:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/pcwhack.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":stamp:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/stamp.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":stereo:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/stereo.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":tomatoes:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/tomatoes.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":what:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/what.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":whip:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/whip.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":wiggle:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/wiggle.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":worthy:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/worthy.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":flowers:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/flowers.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":puke:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/puke.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":baloon:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/baloon.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":banned:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/banned.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":popcorn:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/popcorn.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":bouncy:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/bouncy.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":rip:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/rip.gif') }}" alt="smiley" /></a>	
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":welcome:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/welcome.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":jawdrop:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/jawdrop.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":pirate:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/pirate.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":badday:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/badday.gif') }}" alt="smiley" /></a>
-			<a href="#smiley" data-target-textarea="{{ field_id | raw }}" data-tag=":atomic:"><img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/atomic.gif') }}" alt="smiley" /></a> #}
-		{% endspaceless %}
+	
+    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+{% endblock textarea_widget %}
+
+
+
+{% block smileys %}
+{#	{% set field_id = BBCodeFetchElementIDforTheme(block('widget_attributes')) %}#}
+	
+	<div class="btn-group" style="margin-bottom:0px;vertical-align:bottom;">
+		<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" data-tip="top" title="{{ 'bb_code.button.smileys' | trans({}, 'CCDNComponentBBCodeBundle') }}">
+			<img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/smile.gif') }}" alt="smiley" />
+			<span class="caret"></span>
+		</a>
+		<div class="dropdown-menu pull-right" style="width:650px;">
+		{%- spaceless -%}
+			<ul class="thumbnails row" style="padding:2px;">
+			{%- for key, smiley in BBCodeFetchGroup('smiley') -%}
+				<li style="margin:0px;"><a class="thumbnail" style="margin:2px;{#border:none;#}box-shadow:none;" href="#smiley" data-target-textarea="{{- field_id | raw -}}" data-tag=":{{- smiley['symbol_lexeme'] -}}:">{{- smiley['symbol_html'][0] |raw -}}</a></li>
+			{%- endfor -%}
+			</ul>
+		{%- endspaceless -%}
 		</div>
 	</div>
 	
-{% endblock textarea_widget %}
+{% endblock smileys %}

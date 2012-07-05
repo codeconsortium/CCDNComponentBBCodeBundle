@@ -76,6 +76,17 @@ class BBCodeEngine extends ContainerAware
 	}
 
 
+
+	/**
+	 *
+	 * @access public
+	 */
+	public function getLexemes()
+	{
+		return $this->container->get('ccdn_component_bb_code.lexeme_table')->getLexemes();
+	}
+	
+	
 	
 	/**
 	 *
