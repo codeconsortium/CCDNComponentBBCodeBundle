@@ -14,6 +14,7 @@
 namespace CCDNComponent\BBCodeBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
@@ -37,8 +38,34 @@ class Configuration implements ConfigurationInterface
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
         // more information on that topic.
-
+		$rootNode
+			->children()
+			->end();
+			
+		$this->addEditorSection($rootNode);
 
         return $treeBuilder;
     }
+
+	
+
+	/**
+	 *
+	 * @access private
+	 * @param ArrayNodeDefinition $node
+	 */
+	private function addEditorSection(ArrayNodeDefinition $node)
+	{
+		$node
+			->children()
+				->arrayNode('editor')
+					->addDefaultsIfNotSet()
+					->canBeUnset()
+					->children()
+						->scalarNode('enable')->defaultValue(false)->end()
+					->end()
+				->end()
+			->end();
+	}
+	
 }

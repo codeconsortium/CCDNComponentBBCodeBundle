@@ -39,6 +39,21 @@ class CCDNComponentBBCodeExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+		$this->getEditorSection($container, $config);
     }
+	
+	
+	
+	/**
+	 *
+	 * @access private
+	 * @param $container, $config
+	 */
+	private function getEditorSection($container, $config)
+	{
+		$container->setParameter('ccdn_component_bb_code.editor.enable', $config['editor']['enable']);
+	}
+
 
 }
