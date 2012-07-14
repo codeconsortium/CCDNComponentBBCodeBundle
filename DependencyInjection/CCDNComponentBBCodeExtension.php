@@ -28,7 +28,19 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class CCDNComponentBBCodeExtension extends Extension
 {
-
+	
+	
+	
+    /**
+     * {@inheritDoc}
+     */
+	public function getAlias()
+	{
+		return 'ccdn_component_bb_code';
+	}
+	
+	
+	
     /**
      * {@inheritDoc}
      */
