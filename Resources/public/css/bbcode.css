@@ -23,8 +23,6 @@ div.bb_tag_quote {
 	border: 1px solid #e4e4e4;
 	
 	border-radius:5px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;	
 	overflow: auto;
 }
 
@@ -59,7 +57,7 @@ pre.bb_tag_code {
  * (http://qbnz.com/highlighter/ and http://geshi.org/)
  */
 .bb_code_overall {
-	color: eee;
+	color: #eee;
 	font: 10.2pt monospace;
 }
 .bb_code_overall .de1, .php.bb_code_overall .de2 {/*font: normal normal 1em/1.4em monospace;*/font-family:monospace; margin:0; padding:0; background:none; vertical-align:top;}
