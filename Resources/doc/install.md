@@ -100,3 +100,4 @@ Installation should now be complete!
 If you need further help/support, have suggestions or want to contribute please join the community at [Code Consortium](http://www.codeconsortium.com)
 
 - [Return back to the docs index](index.md).
+- [Configuration Reference](configuration_reference.md).

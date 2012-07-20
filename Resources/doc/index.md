@@ -21,3 +21,4 @@ For more information about translations, check [Symfony documentation](http://sy
 ## Installation Documentation:
 
 - [Installing CCDNComponent BBCodeBundle for Symfony 2.0.11](install.md).
+- [Configuration Reference](configuration_reference.md).

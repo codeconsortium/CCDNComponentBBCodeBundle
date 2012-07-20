@@ -82,7 +82,7 @@ class BBCodeExtension extends \Twig_Extension
 	 * @return string $html
 	 */
 	public function BBCode($input)
-	{
+	{return $input;
 		$engine = $this->container->get('ccdn_component_bb_code.engine');
 		 
 //		$scan_tree 		= $engine->bb_scanner($input);
