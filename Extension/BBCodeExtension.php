@@ -82,16 +82,21 @@ class BBCodeExtension extends \Twig_Extension
 	 * @return string $html
 	 */
 	public function BBCode($input)
-	{return $input;
-		$engine = $this->container->get('ccdn_component_bb_code.engine');
+	{
+		if ($this->container->getParameter('ccdn_component_bb_code.parser.enable'))
+		{
+			$engine = $this->container->get('ccdn_component_bb_code.engine');
 		 
-//		$scan_tree 		= $engine->bb_scanner($input);
-//		$lexeme_tree 	= $engine->bb_lexer($scan_tree, $engine->get_lexemes());
-//		$html 			= $engine->bb_parser($lexeme_tree, $engine->get_lexemes());
+			$scan_tree 		= $engine->bb_scanner($input);
+			$lexeme_tree 	= $engine->bb_lexer($scan_tree, $engine->get_lexemes());
+			$html 			= $engine->bb_parser($lexeme_tree, $engine->get_lexemes());
 
-		$html = $engine->process($input);
+			$html = $engine->process($input);
 		
-		return $html;
+			return $html;
+		} else {
+			return $input;
+		}
 	}
 	
 	

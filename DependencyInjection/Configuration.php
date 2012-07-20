@@ -43,7 +43,8 @@ class Configuration implements ConfigurationInterface
 			->end();
 			
 		$this->addEditorSection($rootNode);
-
+		$this->addParserSection($rootNode);
+		
         return $treeBuilder;
     }
 
@@ -57,12 +58,37 @@ class Configuration implements ConfigurationInterface
 	private function addEditorSection(ArrayNodeDefinition $node)
 	{
 		$node
+			->addDefaultsIfNotSet()
+			->canBeUnset()
 			->children()
 				->arrayNode('editor')
 					->addDefaultsIfNotSet()
 					->canBeUnset()
 					->children()
-						->scalarNode('enable')->defaultValue(false)->end()
+						->scalarNode('enable')->defaultValue(true)->end()
+					->end()
+				->end()
+			->end();
+	}
+	
+	
+
+	/**
+	 *
+	 * @access private
+	 * @param ArrayNodeDefinition $node
+	 */
+	private function addParserSection(ArrayNodeDefinition $node)
+	{
+		$node
+			->addDefaultsIfNotSet()
+			->canBeUnset()
+			->children()
+				->arrayNode('parser')
+					->addDefaultsIfNotSet()
+					->canBeUnset()
+					->children()
+						->scalarNode('enable')->defaultValue(true)->end()
 					->end()
 				->end()
 			->end();

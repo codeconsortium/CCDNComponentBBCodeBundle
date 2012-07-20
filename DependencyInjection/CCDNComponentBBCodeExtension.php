@@ -53,6 +53,7 @@ class CCDNComponentBBCodeExtension extends Extension
         $loader->load('services.yml');
 
 		$this->getEditorSection($container, $config);
+		$this->getParserSection($container, $config);
     }
 	
 	
@@ -65,6 +66,18 @@ class CCDNComponentBBCodeExtension extends Extension
 	private function getEditorSection($container, $config)
 	{
 		$container->setParameter('ccdn_component_bb_code.editor.enable', $config['editor']['enable']);
+	}
+	
+	
+	
+	/**
+	 *
+	 * @access private
+	 * @param $container, $config
+	 */
+	private function getParserSection($container, $config)
+	{
+		$container->setParameter('ccdn_component_bb_code.parser.enable', $config['parser']['enable']);
 	}
 
 
