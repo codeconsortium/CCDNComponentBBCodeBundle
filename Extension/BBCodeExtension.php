@@ -71,19 +71,20 @@ class BBCodeExtension extends \Twig_Extension
 	
 	
 	
-	// Converts BBCode to HTML via breaking down the BBCode tags into lexemes (via lexer method), which are 
-	// then stored in the form of an array, this array is then given to the parser which matches the proper 
-	// pairs to their HTML equivalent. Pairs must have a matching token, matched/unmatched are marked as
-	// so during the lexing process via an reference token.
 	/**
+	 *
+	 * Converts BBCode to HTML via breaking down the BBCode tags into lexemes (via lexer method), which are 
+	 * then stored in the form of an array, this array is then given to the parser which matches the proper 
+	 * pairs to their HTML equivalent. Pairs must have a matching token, matched/unmatched are marked as
+	 * so during the lexing process via an reference token.
 	 *
 	 * @access public
 	 * @param $input
 	 * @return string $html
 	 */
-	public function BBCode($input)
+	public function BBCode($input, $enable)
 	{
-		if ($this->container->getParameter('ccdn_component_bb_code.parser.enable'))
+		if ($this->container->getParameter('ccdn_component_bb_code.parser.enable') && $enable)
 		{
 			$engine = $this->container->get('ccdn_component_bb_code.engine');
 		 
@@ -95,6 +96,9 @@ class BBCodeExtension extends \Twig_Extension
 		
 			return $html;
 		} else {
+			
+			$input = nl2br(htmlentities($input, ENT_QUOTES));
+			
 			return $input;
 		}
 	}
