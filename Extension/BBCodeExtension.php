@@ -94,13 +94,12 @@ class BBCodeExtension extends \Twig_Extension
 
 			$html = $engine->process($input);
 		
-			return $html;
 		} else {
-			
-			$input = nl2br(htmlentities($input, ENT_QUOTES));
-			
-			return $input;
+
+			$html = nl2br(htmlentities($input, ENT_QUOTES));			
 		}
+		
+		return $html;
 	}
 	
 	
