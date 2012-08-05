@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the CCDN BBCodeBundle
+ * This file is part of the CCDNComponent BBCodeBundle
  *
  * (c) CCDN (c) CodeConsortium <http://www.codeconsortium.com/> 
  * 
