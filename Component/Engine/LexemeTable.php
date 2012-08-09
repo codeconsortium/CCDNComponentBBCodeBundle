@@ -40,10 +40,11 @@ class LexemeTable extends ContainerAware
 	/**
 	 *
 	 * @access public
+	 * @param $container
 	 */
-	public function __construct($service_container)
+	public function __construct($container)
 	{
-		$this->container = $service_container;
+		$this->container = $container;
 		
 	}
 	
