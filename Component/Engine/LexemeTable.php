@@ -57,8 +57,8 @@ class LexemeTable extends ContainerAware
 	public function &getLexemes()
 	{
 		
-		$label_said = $this->container->get('translator')->trans('bb_code.quote.said', array(), 'CCDNComponentBBCodeBundle');
-		$label_code = $this->container->get('translator')->trans('bb_code.code', array(), 'CCDNComponentBBCodeBundle');
+		$label_said = $this->container->get('translator')->trans('ccdn_component_bb_code.parser.quote_said', array(), 'CCDNComponentBBCodeBundle');
+		$label_code = $this->container->get('translator')->trans('ccdn_component_bb_code.parser.code', array(), 'CCDNComponentBBCodeBundle');
 		
 		$basePath = $this->container->get('request')->getBasePath();
 		$smileys = $basePath . '/bundles/ccdncomponentbbcode/images/smilies/';
