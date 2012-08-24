@@ -1,10 +1,10 @@
-Installing CCDNComponent BBCodeBundle 1.0
-==========================================
+Installing CCDNComponent BBCodeBundle 1.2
+=========================================
 
 ## Dependencies:
 
-1. [CCDNComponent CommonBundle](https://github.com/codeconsortium/CommonBundle)
-2. [lib-geshi](https://github.com/codeconsortium/lib-geshi)
+1. [CCDNComponent CommonBundle](https://github.com/codeconsortium/CommonBundle/tree/v1.2).
+2. [lib-geshi](https://github.com/codeconsortium/lib-geshi).
 
 ## Installation:
 
@@ -29,7 +29,7 @@ Append the following to end of your deps file (found in the root of your Symfony
 [CCDNComponentBBCodeBundle]
     git=http://github.com/codeconsortium/BBCodeBundle.git
     target=/bundles/CCDNComponent/BBCodeBundle
-
+    version=v1.2
 ```
 
 ### Step 2: Register bundles with autoload.php.
