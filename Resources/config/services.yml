@@ -1,5 +1,5 @@
 parameters:
-    ccdn_component_bb_code.extension.class:         CCDNComponent\BBCodeBundle\Extension\BBCodeExtension
+    ccdn_component_bb_code.extension.class:         CCDNComponent\BBCodeBundle\Component\TwigExtension\BBCodeExtension
 #    bb_code_fetch_choices.extension.class:         CCDNComponent\BBCodeBundle\Extension\BBCodeFetchChoicesExtension
     ccdn_component_bb_code.engine.class:            CCDNComponent\BBCodeBundle\Component\Engine\BBCodeEngine
     ccdn_component_bb_code.lexer.class:             CCDNComponent\BBCodeBundle\Component\Engine\Lexer

@@ -18,7 +18,7 @@
  * Created on 17/12/2011
  */
 
-namespace CCDNComponent\BBCodeBundle\Extension;
+namespace CCDNComponent\BBCodeBundle\Component\TwigExtension;
 
 use CCDNComponent\BBCodeBundle\Engine\BBCodeEngine;
 
