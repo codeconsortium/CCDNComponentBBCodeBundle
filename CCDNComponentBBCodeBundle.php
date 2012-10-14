@@ -22,4 +22,19 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class CCDNComponentBBCodeBundle extends Bundle
 {
+	
+	/**
+	 *
+	 * @access public
+	 */
+	public function boot()
+	{
+		$twig = $this->container->get('twig');	
+		$twig->addGlobal('ccdn_component_bb_code', array(
+			'editor' => array(
+				'enable' => $this->container->getParameter('ccdn_component_bb_code.editor.enable'),
+			),
+		));
+	}
+	
 }

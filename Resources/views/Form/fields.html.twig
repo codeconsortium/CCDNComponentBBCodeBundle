@@ -2,7 +2,7 @@
 	{% set attr = attr|merge({ 'class': attr.class|default('') ~ 'text-xlarge span8 bb-editor', 'style': attr.style|default('') ~ 'height:250px;'}) %}
 	{% set field_id = BBCodeFetchElementIDforTheme(block('widget_attributes')) %}
 	
-	{% if param('ccdn_component_bb_code.editor.enable') == true %}
+{#	{% if ccdn_component_bb_code.editor.enable == true %}
 		<div class="btn-toolbar hidden" style="clear:both;" data-compat="interactive-js-compat">
 		
 			<div class="btn-group" style="margin-bottom:0px;vertical-align:bottom;">
@@ -18,24 +18,24 @@
 				</ul>
 			</div>
 
-			<button type="button" class="btn bb-block" {#onclick="addBlock(event, '{{ field_id | raw }}')"#} data-target-textarea="{{ field_id | raw }}" data-tag="B" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.bold' | trans({}, 'CCDNComponentBBCodeBundle') }}"><b>B</b></button>
-			<button type="button" class="btn bb-block" {#onclick="addBlock(event, '{{ field_id | raw }}')"#} data-target-textarea="{{ field_id | raw }}" data-tag="U" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.underline' | trans({}, 'CCDNComponentBBCodeBundle') }}"><u>U</u></button>
-			<button type="button" class="btn bb-block" {#onclick="addBlock(event, '{{ field_id | raw }}')"#} data-target-textarea="{{ field_id | raw }}" data-tag="I" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.italic' | trans({}, 'CCDNComponentBBCodeBundle') }}"><i>I</i></button>
+			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="B" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.bold' | trans({}, 'CCDNComponentBBCodeBundle') }}"><b>B</b></button>
+			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="U" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.underline' | trans({}, 'CCDNComponentBBCodeBundle') }}"><u>U</u></button>
+			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="I" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.italic' | trans({}, 'CCDNComponentBBCodeBundle') }}"><i>I</i></button>
                                                                                          
-			<button type="button" class="btn bb-block" {#onclick="addBlock({{ field_id | raw }})"#} data-target-textarea="{{ field_id | raw }}" data-tag="STRIKE" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.strike' | trans({}, 'CCDNComponentBBCodeBundle') }}"><strike>S</strike></button>
+			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="STRIKE" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.strike' | trans({}, 'CCDNComponentBBCodeBundle') }}"><strike>S</strike></button>
                                                                                          
-			<button type="button" class="btn bb-block" {#onclick="addBlock({{ field_id | raw }})"#} data-target-textarea="{{ field_id | raw }}" data-tag="SUB" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.sub' | trans({}, 'CCDNComponentBBCodeBundle') }}"><b><i>x</i></b><sub class="button_script">y</sub></button>
-			<button type="button" class="btn bb-block" {#onclick="addBlock({{ field_id | raw }})"#} data-target-textarea="{{ field_id | raw }}" data-tag="SUP" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.sup' | trans({}, 'CCDNComponentBBCodeBundle') }}"><b><i>x</i></b><sup class="button_script">y</sup></button>
+			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="SUB" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.sub' | trans({}, 'CCDNComponentBBCodeBundle') }}"><b><i>x</i></b><sub class="button_script">y</sub></button>
+			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="SUP" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.sup' | trans({}, 'CCDNComponentBBCodeBundle') }}"><b><i>x</i></b><sup class="button_script">y</sup></button>
                                                                                          
-			<button type="button" class="btn bb-block" {#onclick="addBlock({{ field_id | raw }})"#} data-target-textarea="{{ field_id | raw }}" data-tag="CODE" data-ask-param="What language?" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.code' | trans({}, 'CCDNComponentBBCodeBundle') }}">code</button>
-			<button type="button" class="btn bb-block" {#onclick="addBlock({{ field_id | raw }})"#} data-target-textarea="{{ field_id | raw }}" data-tag="QUOTE" data-ask-param="Who said this?" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.quote' | trans({}, 'CCDNComponentBBCodeBundle') }}">quote</button>
+			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="CODE" data-ask-param="What language?" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.code' | trans({}, 'CCDNComponentBBCodeBundle') }}">code</button>
+			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="QUOTE" data-ask-param="Who said this?" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.quote' | trans({}, 'CCDNComponentBBCodeBundle') }}">quote</button>
                                                                                          
-			<button type="button" class="btn bb-block" {#onclick="addBlock({{ field_id | raw }})"#} data-target-textarea="{{ field_id | raw }}" data-tag="URL" data-ask-param="Add the url here:" data-ask-value="Add a label for this url:" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.url' | trans({}, 'CCDNComponentBBCodeBundle') }}"><i class="icon-globe"></i></button>
-			<button type="button" class="btn bb-block" {#onclick="addBlock({{ field_id | raw }})"#} data-target-textarea="{{ field_id | raw }}" data-tag="IMG" data-ask-param="Add the image url here:" data-ask-value="Add text for image description:" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.image' | trans({}, 'CCDNComponentBBCodeBundle') }}"><i class="icon-picture"></i></button>
+			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="URL" data-ask-param="Add the url here:" data-ask-value="Add a label for this url:" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.url' | trans({}, 'CCDNComponentBBCodeBundle') }}"><i class="icon-globe"></i></button>
+			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="IMG" data-ask-param="Add the image url here:" data-ask-value="Add text for image description:" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.image' | trans({}, 'CCDNComponentBBCodeBundle') }}"><i class="icon-picture"></i></button>
 		
 			{{ block('smileys') }}
 		</div>
-	{% endif %}
+	{% endif %}#}
 	
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
 
