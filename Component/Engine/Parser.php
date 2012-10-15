@@ -54,7 +54,7 @@ class Parser
 	/**
 	 *
 	 * @access private
-	 * @param Array $symbol_tree, Array $symbol, string $tag
+	 * @param array $symbol_tree, array $symbol, string $tag
 	 */
 	private function put_param_in_context(&$symbol_tree, &$symbol, &$tag)
 	{					
@@ -124,7 +124,7 @@ class Parser
 	/**
 	 *
 	 * @access public
-	 * @param Array $symbol_tree, Array $lexemes
+	 * @param array $symbol_tree, array $lexemes
 	 * @return string $html
 	 */
 	public function parse(&$symbol_tree, &$lexemes)

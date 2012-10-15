@@ -39,7 +39,7 @@ class Lexer
 	/**
 	 *
 	 * @access private
-	 * @param Array $lexemes, string $lookup
+	 * @param array $lexemes, string $lookup
 	 * @return string $lookup
 	 */
 	private function lookup_lexeme(&$lexemes, $lookup)
@@ -67,8 +67,8 @@ class Lexer
 	/**
 	 *
 	 * @access private
-	 * @param Array $tree, int $depth
-	 * @return Array $tree[]
+	 * @param array $tree, int $depth
+	 * @return array $tree
 	 */
 	private function &get_symbol_tree_branch(&$branch, $depth)
 	{				
@@ -99,7 +99,7 @@ class Lexer
 	/**
 	 *
 	 * @access private
-	 * @param Array $branch, string $lookup
+	 * @param array $branch, string $lookup
 	 * @return int $leaf_key | null
 	 */
 	private function find_my_parent(&$branch, $lookup)
@@ -131,7 +131,7 @@ class Lexer
 	/**
 	 *
 	 * @access private
-	 * @param Array $symbol, Array $lexeme
+	 * @param array $symbol, array $lexeme
 	 * @return string|null
 	 */
 	private function add_param_for_tag(&$symbol, &$lexeme)
@@ -196,8 +196,8 @@ class Lexer
 	/**
 	 *
 	 * @access public
-	 * @param Array $scanTree, Array $lexemes
-	 * @return Array $symbol_tree
+	 * @param array $scanTree, array $lexemes
+	 * @return array $symbol_tree
 	 */
 	public function &process(&$scan_tree, &$lexemes)
 	{
@@ -295,7 +295,7 @@ class Lexer
 	/**
 	 *
 	 * @access private
-	 * @param Array $branch
+	 * @param array $branch
 	 * @return string $output
 	 */
 	private function parse_nested_content(&$branch)
@@ -330,7 +330,7 @@ class Lexer
 	/**
 	 *
 	 * @access private
-	 * @param Array $branch, int $ref_parent, int $ref_child
+	 * @param array $branch, int $ref_parent, int $ref_child
 	 */
 	private function collapse_invalid_nested(&$branch, $ref_parent, $ref_child)
 	{
@@ -358,7 +358,7 @@ class Lexer
 	/**
 	 *
 	 * @access public
-	 * @param Array $symbol_tree, Array $lexeme_table
+	 * @param array $symbol_tree, array $lexeme_table
 	 */
 	public function post_process(&$symbol_tree, &$lexeme_table)
 	{

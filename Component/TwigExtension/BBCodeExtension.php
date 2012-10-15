@@ -45,7 +45,7 @@ class BBCodeExtension extends \Twig_Extension
 	/**
 	 *
 	 * @access public
-	 * @return Array()
+	 * @return array
 	 */
 	public function getFunctions()
 	{
@@ -108,7 +108,7 @@ class BBCodeExtension extends \Twig_Extension
 	 *
 	 * @access public
 	 * @param $tag
-	 * @return Array()
+	 * @return array
 	 */
 	public function BBCodeFetchChoices($tag)
 	{
@@ -138,7 +138,7 @@ class BBCodeExtension extends \Twig_Extension
 	 *
 	 * @access public
 	 * @param $group
-	 * @return Array()
+	 * @return array
 	 */
 	public function BBCodeFetchGroup($group)
 	{

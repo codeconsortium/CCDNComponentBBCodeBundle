@@ -91,7 +91,7 @@ class BBCodeEngine extends ContainerAware
 	/**
 	 *
 	 * @access public
-	 * @return String $html
+	 * @return string $html
 	 */
 	public function process($input)
 	{
