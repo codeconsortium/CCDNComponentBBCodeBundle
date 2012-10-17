@@ -298,7 +298,7 @@ class Lexer
 	 * @param array $branch
 	 * @return string $output
 	 */
-	private function parse_nested_content(&$branch)
+	private function parseNestedContent(&$branch)
 	{
 		$output = '';
 		
@@ -312,7 +312,7 @@ class Lexer
 					{
 						$output .= $leaf['lookup_str'];						
 					} else {					
-						$output .= $this->parse_nested_content($leaf);
+						$output .= $this->parseNestedContent($leaf);
 					}
 				} else {
 					$output .= $leaf;
@@ -341,7 +341,7 @@ class Lexer
 		{
 			for ($key = $refParent + 1; $key < $refChild; $key++)
 			{
-				$content .= $this->parse_nested_content($branch[$key]);
+				$content .= $this->parseNestedContent($branch[$key]);
 			}
 
 			$branch[$refParent + 1] = $content;
