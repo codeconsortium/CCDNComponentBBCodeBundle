@@ -39,7 +39,7 @@ class Parser
 	 *
 	 * @access private
 	 */
-	protected $parser_state_flags = array(
+	protected $parserStateFlags = array(
 		'use_pre_tag' => false,
 		'use_pre_tag_child' => null,
 		'use_nested' => true,
@@ -54,25 +54,25 @@ class Parser
 	/**
 	 *
 	 * @access private
-	 * @param array $symbol_tree, array $symbol, string $tag
+	 * @param array $symbolTree, array $symbol, string $tag
 	 */
-	private function put_param_in_context(&$symbol_tree, &$symbol, &$tag)
+	private function putParamInContext(&$symbolTree, &$symbol, &$tag)
 	{					
 		$param = null;
 		
 		if (array_key_exists('ref_child', $symbol))
 		{
-			if (array_key_exists('tag_param', $symbol_tree[$symbol['ref_child']]))
+			if (array_key_exists('tag_param', $symbolTree[$symbol['ref_child']]))
 			{
-				$param = $symbol_tree[$symbol['ref_child']]['tag_param'];
+				$param = $symbolTree[$symbol['ref_child']]['tag_param'];
 			}
 		}
 		
 		if (array_key_exists('ref_parent', $symbol))
 		{			
-			if (array_key_exists('tag_param', $symbol_tree[$symbol['ref_parent']]))
+			if (array_key_exists('tag_param', $symbolTree[$symbol['ref_parent']]))
 			{
-				$param = $symbol_tree[$symbol['ref_parent']]['tag_param'];				
+				$param = $symbolTree[$symbol['ref_parent']]['tag_param'];				
 			}
 		}
 		
@@ -124,24 +124,24 @@ class Parser
 	/**
 	 *
 	 * @access public
-	 * @param array $symbol_tree, array $lexemes
+	 * @param array $symbolTree, array $lexemes
 	 * @return string $html
 	 */
-	public function parse(&$symbol_tree, &$lexemes)
+	public function parse(&$symbolTree, &$lexemes)
 	{
 		$html = '';
 
-		$use_pre_tag =& $this->parser_state_flags['use_pre_tag'];					// This tags html wraps its content in a <pre> tag, so we don't convert \n to <br> as a result.
-		$use_pre_tag_child =& $this->parser_state_flags['use_pre_tag_child'];		// reference to the tag that initiated this <pre> tag state.
+		$usePreTag =& $this->parserStateFlags['use_pre_tag'];					// This tags html wraps its content in a <pre> tag, so we don't convert \n to <br> as a result.
+		$usePreTagChild =& $this->parserStateFlags['use_pre_tag_child'];		// reference to the tag that initiated this <pre> tag state.
 		
-		$use_parse_geshi =& $this->parser_state_flags['use_parse_geshi'];
-		$use_parse_geshi_parent =& $this->parser_state_flags['use_parse_geshi_parent'];
+		$useParseGeshi =& $this->parserStateFlags['use_parse_geshi'];
+		$useParseGeshiParent =& $this->parserStateFlags['use_parse_geshi_parent'];
 		
-		$last_tag_content = "";
+		$lastTagContent = "";
 		
-		for ($symbol_key = 0; $symbol_key < count($symbol_tree); $symbol_key++)
+		for ($symbolKey = 0; $symbolKey < count($symbolTree); $symbolKey++)
 		{
-			$symbol =& $symbol_tree[$symbol_key];
+			$symbol =& $symbolTree[$symbolKey];
 
 			if (is_array($symbol))
 			{
@@ -161,10 +161,10 @@ class Parser
 							{
 								if ($lexeme['use_pre_tag'] == true)
 								{
-									if ($use_pre_tag == false)
+									if ($usePreTag == false)
 									{
-										$use_pre_tag = true;
-										$use_pre_tag_child = $symbol_tree[$symbol['ref_child']];
+										$usePreTag = true;
+										$usePreTagChild = $symbolTree[$symbol['ref_child']];
 									}
 								}
 							}
@@ -173,11 +173,11 @@ class Parser
 							{
 								if ($lexeme['parse_geshi'] == true)
 								{										
-									if ($use_parse_geshi == false)
+									if ($useParseGeshi == false)
 									{
-										$use_parse_geshi = true;
-//										$use_parse_geshi_child = $symbol_tree[$symbol['ref_child']];
-										$use_parse_geshi_parent = $symbol;
+										$useParseGeshi = true;
+//										$useParseGeshi_child = $symbolTree[$symbol['ref_child']];
+										$useParseGeshiParent = $symbol;
 										
 									}
 								}
@@ -188,20 +188,20 @@ class Parser
 							//
 							
 							// remove any special state flags for closing tags that match prior opened ones.
-							if ($use_pre_tag_child['validation_token'] == $symbol['validation_token'])
+							if ($usePreTagChild['validation_token'] == $symbol['validation_token'])
 							{
-								$use_pre_tag = false;
-								$use_pre_tag_child = null;
+								$usePreTag = false;
+								$usePreTagChild = null;
 							}
 							
-							if ($use_parse_geshi_parent['validation_token'] == $symbol['validation_token'])
+							if ($useParseGeshiParent['validation_token'] == $symbol['validation_token'])
 							{
-								$use_parse_geshi = false;
-								$use_parse_geshi_parent = null;
+								$useParseGeshi = false;
+								$useParseGeshiParent = null;
 							}
 						}
 
-						$this->put_param_in_context($symbol_tree, $symbol, $tag);
+						$this->putParamInContext($symbolTree, $symbol, $tag);
 						
 					} else {
 						// tag has no validation key, so change it from the html token to the lookup str.
@@ -212,9 +212,9 @@ class Parser
 				
 					continue;
 				} else {
-					if (count($symbol_tree[$symbol_key]) > 0)
+					if (count($symbolTree[$symbolKey]) > 0)
 					{
-						$html .= $this->parse($symbol_tree[$symbol_key] , $lexemes);
+						$html .= $this->parse($symbolTree[$symbolKey] , $lexemes);
 						
 						continue;
 					}
@@ -225,15 +225,15 @@ class Parser
 				$tag = $symbol;
 			}
 			
-			//if ($use_parse_geshi == true)
+			//if ($useParseGeshi == true)
 			//{
-			//	if (array_key_exists('tag_param', $use_parse_geshi_parent))
+			//	if (array_key_exists('tag_param', $useParseGeshiParent))
 			//	{
-			//		$lang = $use_parse_geshi_parent['tag_param'];
+			//		$lang = $useParseGeshiParent['tag_param'];
 			//	} else {
-			//		if (array_key_exists('tag_param', $symbol_tree[$use_parse_geshi_parent['ref_child']]))
+			//		if (array_key_exists('tag_param', $symbolTree[$useParseGeshiParent['ref_child']]))
 			//		{
-			//			$lang = $symbol_tree[$use_parse_geshi_parent['ref_child']]['tag_param'];
+			//			$lang = $symbolTree[$useParseGeshiParent['ref_child']]['tag_param'];
 			//		}
 			//	}	
 			//	
@@ -245,7 +245,7 @@ class Parser
 			//	continue;
 			//}
 						
-			if ($use_pre_tag == true)
+			if ($usePreTag == true)
 			{
 				$html .= htmlentities($tag, ENT_QUOTES);
 			} else {
