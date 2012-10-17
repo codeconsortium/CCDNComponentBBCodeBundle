@@ -95,36 +95,20 @@ class BBCodeEngine extends ContainerAware
 	 */
 	public function process($input)
 	{
-		//$scanTree = $this->bbScanner($input);
-		
+		// Scan the input and break it down into possible tags and body text.
 		$regex = '/(\[\/?[\w]{1,10}(?:\=\"[ _,.?!@$%&*()^=\+\-\'\/\w]*\"){0,500}?\])/';
 		
 		$scanTree = preg_split($regex, $input, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
 
-		
+		// Create a symbol tree via the lexer.
 		$symbolTree = $this->lexer->process($scanTree, $this->lexemes);
 						  
 		$this->lexer->post_process($symbolTree, $this->lexemes);
-						
+		
+		// Parse the lexed symbol tree to get an HTML output.
 		$html = $this->parser->parse($symbolTree, $this->lexemes);
 
 		return $html;
 	}
-	
-	
-	/**
-	 *
-	 * @access public
-	 * @param $input
-	 * @return $chunks[]
-	 */
-//	public function &bbScanner($input)
-//	{
-//		$regex = '/(\[\/?[\w]{1,10}(?:\=\"[ _,.?!@$%&*()^=\+\-\'\/\w]*\"){0,500}?\])/';
-//		
-//		$symbols = preg_split($regex, $input, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
-//
-//		return $symbols;		
-//	}
 	
 }
