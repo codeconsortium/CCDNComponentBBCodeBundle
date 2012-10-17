@@ -42,18 +42,18 @@ class Lexer
 	 * @param array $lexemes, string $lookup
 	 * @return string $lookup
 	 */
-	private function lookup_lexeme(&$lexemes, $lookup)
+	private function lookupLexeme(&$lexemes, $lookup)
 	{
-		foreach ($lexemes as $lexeme_key => $lexeme)
+		foreach ($lexemes as $lexemeKey => $lexeme)
 		{
-			foreach ($lexeme['symbol_token'] as $token_key => $token)
+			foreach ($lexeme['symbol_token'] as $tokenKey => $token)
 			{
 				if (preg_match($token, $lookup))
 				{
 					return array(
 						'lookup_str' 	=> $lookup,
-						'lexeme_key'	=> $lexeme_key,
-						'token_key'		=> $token_key,
+						'lexeme_key'	=> $lexemeKey,
+						'token_key'		=> $tokenKey,
 					);
 				}
 			}
@@ -70,27 +70,27 @@ class Lexer
 	 * @param array $tree, int $depth
 	 * @return array $tree
 	 */
-	private function &get_symbol_tree_branch(&$branch, $depth)
+	private function &getSymbolTreeBranch(&$branch, $depth)
 	{				
 		if ($depth < 1)
 		{
 			return $branch;
 		} else {
-			$branch_size = count($branch);
+			$branchSize = count($branch);
 			
-			if ($branch_size < 1)
+			if ($branchSize < 1)
 			{
 				$branch[] = array();
-				$branch_size++;
+				$branchSize++;
 			}
 
-			if ( ! is_array($branch[$branch_size - 1]))
+			if ( ! is_array($branch[$branchSize - 1]))
 			{
 				$branch[] = array();
-				$branch_size++;
+				$branchSize++;
 			}
 			
-			return $this->get_symbol_tree_branch($branch[$branch_size - 1], --$depth);
+			return $this->getSymbolTreeBranch($branch[$branchSize - 1], --$depth);
 		}		
 	}
 	
@@ -100,23 +100,23 @@ class Lexer
 	 *
 	 * @access private
 	 * @param array $branch, string $lookup
-	 * @return int $leaf_key | null
+	 * @return int $leafKey | null
 	 */
-	private function find_my_parent(&$branch, $lookup)
+	private function findMyParent(&$branch, $lookup)
 	{
 		$leaf_count = count($branch);
 		
-		for($leaf_key = --$leaf_count; $leaf_key >= 0; $leaf_key--)
+		for($leafKey = --$leaf_count; $leafKey >= 0; $leafKey--)
 		{
-			if (is_array($branch[$leaf_key]))
+			if (is_array($branch[$leafKey]))
 			{
-				if (array_key_exists('lexeme_key', $branch[$leaf_key]))
+				if (array_key_exists('lexeme_key', $branch[$leafKey]))
 				{
-					if ($branch[$leaf_key]['lexeme_key'] == $lookup['lexeme_key'] && $branch[$leaf_key]['token_key'] == 0)
+					if ($branch[$leafKey]['lexeme_key'] == $lookup['lexeme_key'] && $branch[$leafKey]['token_key'] == 0)
 					{
-						if ( ! array_key_exists('ref_parent', $branch[$leaf_key]))
+						if ( ! array_key_exists('ref_parent', $branch[$leafKey]))
 						{
-							return $leaf_key;
+							return $leafKey;
 						}
 					}
 				}
@@ -134,15 +134,15 @@ class Lexer
 	 * @param array $symbol, array $lexeme
 	 * @return string|null
 	 */
-	private function add_param_for_tag(&$symbol, &$lexeme)
+	private function addParamForTag(&$symbol, &$lexeme)
 	{
-		$lookup_str = $symbol['lookup_str'];
+		$lookupStr = $symbol['lookup_str'];
 		$count = strlen($lexeme['symbol_lexeme']);
 		
 		// /(\[)|(\=)|(\])/
 		$regex = '/(\[([a-zA-Z0-9]{0,' . $count . '})\=)|(\])/';
 		
-		$param = preg_split($regex, $lookup_str, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+		$param = preg_split($regex, $lookupStr, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
 
 		if (is_array($param) && count($param) > 2)
 		{
@@ -156,11 +156,11 @@ class Lexer
 				// list provided for that bb tag type.
 				if (array_key_exists('param_choices', $lexeme))
 				{
-					foreach($lexeme['param_choices'] as $param_choice_key => $param_choice)
+					foreach($lexeme['param_choices'] as $paramChoiceKey => $paramChoice)
 					{
-						if ($param[2] == $param_choice_key)
+						if ($param[2] == $paramChoiceKey)
 						{
-							$symbol['tag_param'] = $param_choice;
+							$symbol['tag_param'] = $paramChoice;
 
 							return;
 						}
@@ -197,18 +197,18 @@ class Lexer
 	 *
 	 * @access public
 	 * @param array $scanTree, array $lexemes
-	 * @return array $symbol_tree
+	 * @return array $symbolTree
 	 */
-	public function &process(&$scan_tree, &$lexemes)
+	public function &process(&$scanTree, &$lexemes)
 	{
-		$symbol_tree = array();
-		$symbol_tree_depth = 0;
+		$symbolTree = array();
+		$symbolTreeDepth = 0;
 		
-		$scan_tree_size = count($scan_tree);
+		$scanTreeSize = count($scanTree);
 
-		for ($scan_key = 0; $scan_key < $scan_tree_size; $scan_key++)
+		for ($scanKey = 0; $scanKey < $scanTreeSize; $scanKey++)
 		{
-			$lookup = $this->lookup_lexeme($lexemes, $scan_tree[$scan_key]);
+			$lookup = $this->lookupLexeme($lexemes, $scanTree[$scanKey]);
 			
 			if (is_array($lookup))
 			{	
@@ -224,30 +224,30 @@ class Lexer
 					// *******************************************************
 					if ($lookup['token_key'] == 1)
 					{
-						$branch = &$this->get_symbol_tree_branch($symbol_tree, $symbol_tree_depth);
+						$branch = &$this->getSymbolTreeBranch($symbolTree, $symbolTreeDepth);
 						
 						// find the parent tag
-						$parent_leaf_key = $this->find_my_parent($branch, $lookup);
+						$parentLeafKey = $this->findMyParent($branch, $lookup);
 						
-						if ($parent_leaf_key !== null)
+						if ($parentLeafKey !== null)
 						{
 							// get the tags params
-							$this->add_param_for_tag($lookup, $lexemes[$lookup['lexeme_key']]);
-							$this->add_param_for_tag($branch[$parent_leaf_key], $lexemes[$branch[$parent_leaf_key]['lexeme_key']]);
+							$this->addParamForTag($lookup, $lexemes[$lookup['lexeme_key']]);
+							$this->addParamForTag($branch[$parentLeafKey], $lexemes[$branch[$parentLeafKey]['lexeme_key']]);
 
 							// interconnect associative lexeme
 							$token = '__' . md5(uniqid(mt_rand(), true)) . '__';
 							$lookup['validation_token'] = $token;
-							$lookup['ref_parent'] = $parent_leaf_key;
+							$lookup['ref_parent'] = $parentLeafKey;
 							
 							// add the lookup array to the branch
 							$branch[] = $lookup;
 							
-							$branch[$parent_leaf_key]['validation_token'] = $token;
-							$branch[$parent_leaf_key]['ref_child'] = (count($branch) - 1);
+							$branch[$parentLeafKey]['validation_token'] = $token;
+							$branch[$parentLeafKey]['ref_child'] = (count($branch) - 1);
 							
 							// nested tags get put in nested arrays.
-							$symbol_tree_depth--;
+							$symbolTreeDepth--;
 							
 							continue;
 						}
@@ -256,9 +256,9 @@ class Lexer
 					// *******************************************************
 					} else {
 						// we go to next nested level
-						$symbol_tree_depth++;
+						$symbolTreeDepth++;
 						
-						$branch = &$this->get_symbol_tree_branch($symbol_tree, $symbol_tree_depth);
+						$branch = &$this->getSymbolTreeBranch($symbolTree, $symbolTreeDepth);
 
 						$branch[] = $lookup;
 						
@@ -269,7 +269,7 @@ class Lexer
 				// *******************************************************	
 				} else {
 					// token is a lonewolf type, not matchable!
-					$branch = &$this->get_symbol_tree_branch($symbol_tree, $symbol_tree_depth);
+					$branch = &$this->getSymbolTreeBranch($symbolTree, $symbolTreeDepth);
 					
 					$token = '__' . md5(uniqid(mt_rand(), true)) . '__';
 					$lookup['validation_token'] = $token;
@@ -280,14 +280,14 @@ class Lexer
 			}
 
 			// correct root tree depth if drops below zero
-			if ($symbol_tree_depth < 0)	{ $symbol_tree_depth = 0; }
+			if ($symbolTreeDepth < 0)	{ $symbolTreeDepth = 0; }
 
-			$branch = &$this->get_symbol_tree_branch($symbol_tree, $symbol_tree_depth);
+			$branch = &$this->getSymbolTreeBranch($symbolTree, $symbolTreeDepth);
 			
-			$branch[] = $scan_tree[$scan_key];
+			$branch[] = $scanTree[$scanKey];
 		}
 		
-		return $symbol_tree;
+		return $symbolTree;
 	}
 	
 	
@@ -304,7 +304,7 @@ class Lexer
 		
 		if (is_array($branch))
 		{
-			foreach ($branch as $leaf_key => $leaf)
+			foreach ($branch as $leafKey => $leaf)
 			{
 				if (is_array($leaf))
 				{
@@ -330,23 +330,23 @@ class Lexer
 	/**
 	 *
 	 * @access private
-	 * @param array $branch, int $ref_parent, int $ref_child
+	 * @param array $branch, int $refParent, int $refChild
 	 */
-	private function collapse_invalid_nested(&$branch, $ref_parent, $ref_child)
+	private function collapseInvalidNested(&$branch, $refParent, $refChild)
 	{
 		$branchSize = count($branch) - 1;
 		$content = '';
 
 		if ($branchSize > 1)
 		{
-			for ($key = $ref_parent + 1; $key < $ref_child; $key++)
+			for ($key = $refParent + 1; $key < $refChild; $key++)
 			{
 				$content .= $this->parse_nested_content($branch[$key]);
 			}
 
-			$branch[$ref_parent + 1] = $content;
+			$branch[$refParent + 1] = $content;
 			
-			for ($key = $ref_parent + 2; $key < $ref_child; $key++)
+			for ($key = $refParent + 2; $key < $refChild; $key++)
 			{
 				unset($branch[$key]);
 			}
@@ -358,11 +358,11 @@ class Lexer
 	/**
 	 *
 	 * @access public
-	 * @param array $symbol_tree, array $lexeme_table
+	 * @param array $symbolTree, array $lexemeTable
 	 */
-	public function post_process(&$symbol_tree, &$lexeme_table)
+	public function postProcess(&$symbolTree, &$lexemeTable)
 	{
-		foreach($symbol_tree as $symbol_key => $symbol)
+		foreach($symbolTree as $symbolKey => $symbol)
 		{
 			if (is_array($symbol))
 			{
@@ -371,15 +371,15 @@ class Lexer
 				if (array_key_exists('lexeme_key', $symbol) && array_key_exists('validation_token', $symbol)
 				&&	array_key_exists('token_key', $symbol) && array_key_exists('ref_child', $symbol))
 				{
-					if (array_key_exists('use_nested', $lexeme_table[$symbol['lexeme_key']]) && $symbol['lexeme_key']['token_key'] == 0)
+					if (array_key_exists('use_nested', $lexemeTable[$symbol['lexeme_key']]) && $symbol['lexeme_key']['token_key'] == 0)
 					{
-						if ($lexeme_table[$symbol['lexeme_key']]['use_nested'] == false)
+						if ($lexemeTable[$symbol['lexeme_key']]['use_nested'] == false)
 						{						
-							$this->collapse_invalid_nested($symbol_tree, $symbol_key, $symbol['ref_child']);
+							$this->collapseInvalidNested($symbolTree, $symbolKey, $symbol['ref_child']);
 						}
 					}
 				} else {
-					$this->post_process($symbol_tree[$symbol_key], $lexeme_table);
+					$this->postProcess($symbolTree[$symbolKey], $lexemeTable);
 				}
 			}
 		}		
