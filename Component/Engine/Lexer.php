@@ -232,8 +232,8 @@ class Lexer
 						if ($parent_leaf_key !== null)
 						{
 							// get the tags params
-							$this->add_param_for_tag(&$lookup, &$lexemes[$lookup['lexeme_key']]);
-							$this->add_param_for_tag(&$branch[$parent_leaf_key], &$lexemes[$branch[$parent_leaf_key]['lexeme_key']]);
+							$this->add_param_for_tag($lookup, $lexemes[$lookup['lexeme_key']]);
+							$this->add_param_for_tag($branch[$parent_leaf_key], $lexemes[$branch[$parent_leaf_key]['lexeme_key']]);
 
 							// interconnect associative lexeme
 							$token = '__' . md5(uniqid(mt_rand(), true)) . '__';
@@ -312,7 +312,7 @@ class Lexer
 					{
 						$output .= $leaf['lookup_str'];						
 					} else {					
-						$output .= $this->parse_nested_content(&$leaf);
+						$output .= $this->parse_nested_content($leaf);
 					}
 				} else {
 					$output .= $leaf;
@@ -341,7 +341,7 @@ class Lexer
 		{
 			for ($key = $ref_parent + 1; $key < $ref_child; $key++)
 			{
-				$content .= $this->parse_nested_content(&$branch[$key]);
+				$content .= $this->parse_nested_content($branch[$key]);
 			}
 
 			$branch[$ref_parent + 1] = $content;
@@ -375,11 +375,11 @@ class Lexer
 					{
 						if ($lexeme_table[$symbol['lexeme_key']]['use_nested'] == false)
 						{						
-							$this->collapse_invalid_nested(&$symbol_tree, $symbol_key, $symbol['ref_child']);
+							$this->collapse_invalid_nested($symbol_tree, $symbol_key, $symbol['ref_child']);
 						}
 					}
 				} else {
-					$this->post_process(&$symbol_tree[$symbol_key], &$lexeme_table);
+					$this->post_process($symbol_tree[$symbol_key], $lexeme_table);
 				}
 			}
 		}		

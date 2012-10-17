@@ -95,12 +95,18 @@ class BBCodeEngine extends ContainerAware
 	 */
 	public function process($input)
 	{
-		$scan_tree 		= &$this->bb_scanner($input);
-		$symbol_tree 	= &$this->lexer->process(&$scan_tree, &$this->lexemes);
-						  $this->lexer->post_process(&$symbol_tree, &$this->lexemes);
+		//$scanTree = $this->bbScanner($input);
+		
+		$regex = '/(\[\/?[\w]{1,10}(?:\=\"[ _,.?!@$%&*()^=\+\-\'\/\w]*\"){0,500}?\])/';
+		
+		$scanTree = preg_split($regex, $input, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+
+		
+		$symbolTree = $this->lexer->process($scanTree, $this->lexemes);
+						  
+		$this->lexer->post_process($symbolTree, $this->lexemes);
 						
-//		echo '<pre>' . print_r(&$symbol_tree, true) . '</pre>'; die();
-		$html 			= $this->parser->parse(&$symbol_tree, &$this->lexemes);
+		$html = $this->parser->parse($symbolTree, $this->lexemes);
 
 		return $html;
 	}
@@ -112,55 +118,13 @@ class BBCodeEngine extends ContainerAware
 	 * @param $input
 	 * @return $chunks[]
 	 */
-	public function &bb_scanner($input)
-	{
-		$chunks = array();
-		$regex = '/(\[)|(\])/';
-		$symbols = preg_split($regex, $input, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
-		$tag_open = false;
-		$current_symbol = '';
-		$str = '';
-		
-		foreach ($symbols as $symbol_key => $symbol)
-		{
-			$current_symbol = $symbol;
-			
-			if ($tag_open)
-			{
-				if ($current_symbol == ']')		// end tag
-				{
-					$str.= $current_symbol;
-					$chunks[] = $str;
-					$str = '';
-					$tag_open = false;
-				} else {				// tag name
-					// check for malformed tags
-					if ($current_symbol == '[')
-					{
-						$chunks[] = $str;
-						$str = $current_symbol;
-					} else {
-						$str.= $current_symbol;
-					}
-				}
-			} else {
-				if ($current_symbol == '[')		// open tag
-				{
-					$str = $current_symbol;
-					$tag_open = true;
-				} else {				// non-tag
-					$chunks[] = $current_symbol;
-				}
-			}
-		}
-		
-		// append any unfinished malformed tags
-		if ($str)
-		{
-			$chunks[] = $str;
-		}
-			
-		return $chunks;
-	}
+//	public function &bbScanner($input)
+//	{
+//		$regex = '/(\[\/?[\w]{1,10}(?:\=\"[ _,.?!@$%&*()^=\+\-\'\/\w]*\"){0,500}?\])/';
+//		
+//		$symbols = preg_split($regex, $input, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+//
+//		return $symbols;		
+//	}
 	
 }

@@ -87,13 +87,8 @@ class BBCodeExtension extends \Twig_Extension
 		if ($this->container->getParameter('ccdn_component_bb_code.parser.enable') && $enable)
 		{
 			$engine = $this->container->get('ccdn_component_bb_code.engine');
-		 
-			$scan_tree 		= $engine->bb_scanner($input);
-			$lexeme_tree 	= $engine->bb_lexer($scan_tree, $engine->get_lexemes());
-			$html 			= $engine->bb_parser($lexeme_tree, $engine->get_lexemes());
-
+			
 			$html = $engine->process($input);
-		
 		} else {
 
 			$html = nl2br(htmlentities($input, ENT_QUOTES));			

@@ -201,7 +201,7 @@ class Parser
 							}
 						}
 
-						$this->put_param_in_context(&$symbol_tree, &$symbol, &$tag);
+						$this->put_param_in_context($symbol_tree, $symbol, $tag);
 						
 					} else {
 						// tag has no validation key, so change it from the html token to the lookup str.
@@ -225,25 +225,25 @@ class Parser
 				$tag = $symbol;
 			}
 			
-			if ($use_parse_geshi == true)
-			{
-				if (array_key_exists('tag_param', $use_parse_geshi_parent))
-				{
-					$lang = $use_parse_geshi_parent['tag_param'];
-				} else {
-					if (array_key_exists('tag_param', $symbol_tree[$use_parse_geshi_parent['ref_child']]))
-					{
-						$lang = $symbol_tree[$use_parse_geshi_parent['ref_child']]['tag_param'];
-					}
-				}	
-				
-				if (strlen($tag) > 1)
-				{
-					$html .= $this->parse_geshi($tag, $lang);	
-				}
-				
-				continue;
-			}
+			//if ($use_parse_geshi == true)
+			//{
+			//	if (array_key_exists('tag_param', $use_parse_geshi_parent))
+			//	{
+			//		$lang = $use_parse_geshi_parent['tag_param'];
+			//	} else {
+			//		if (array_key_exists('tag_param', $symbol_tree[$use_parse_geshi_parent['ref_child']]))
+			//		{
+			//			$lang = $symbol_tree[$use_parse_geshi_parent['ref_child']]['tag_param'];
+			//		}
+			//	}	
+			//	
+			//	if (strlen($tag) > 1 && $lang)
+			//	{
+			//		$html .= $this->parse_geshi($tag, $lang);	
+			//	}
+			//	
+			//	continue;
+			//}
 						
 			if ($use_pre_tag == true)
 			{
