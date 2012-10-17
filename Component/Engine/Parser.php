@@ -44,9 +44,6 @@ class Parser
 		'use_pre_tag_child' => null,
 		'use_nested' => true,
 		'use_nested_child' => null,
-		'use_parse_geshi' => false,
-		'use_parse_geshi_child' => null,
-		'use_parse_geshi_parent' => null,
 	);
 
 
@@ -88,37 +85,6 @@ class Parser
 		}
 	}
 	
-
-	
-	/**
-	 *
-	 * @access private
-	 * @param string $tag, string $lang
-	 * @return string
-	 */
-	private function parse_geshi($tag, $lang)
-	{
-		$geshi = new \Geshi_Geshi($tag, $lang);
-
-
-		$geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 1);
-
-		$geshi->set_header_type(GESHI_HEADER_PRE_TABLE);
-// 		$geshi->set_line_style('background: #1f1f1f; color: #fff;', 'margin-left: 10px; background: #1f1f1f; color: #fff;');
-		
-		$geshi->enable_classes();
-		$geshi->set_overall_class('bb_code_overall');
-		
-//		echo '<pre>' . $geshi->get_stylesheet() . '</pre><hr>'; 
-/*		$geshi->set_keyword_group_style();
-		$geshi->set_keyword_group_style();
-		$geshi->set_keyword_group_style();
-		$geshi->set_keyword_group_style();*/
-//		$geshi->set_overall_class('bb_tag_code');
-
-		return $geshi->parse_code();
-	}
-	
 	
 	
 	/**
@@ -133,9 +99,6 @@ class Parser
 
 		$usePreTag =& $this->parserStateFlags['use_pre_tag'];					// This tags html wraps its content in a <pre> tag, so we don't convert \n to <br> as a result.
 		$usePreTagChild =& $this->parserStateFlags['use_pre_tag_child'];		// reference to the tag that initiated this <pre> tag state.
-		
-		$useParseGeshi =& $this->parserStateFlags['use_parse_geshi'];
-		$useParseGeshiParent =& $this->parserStateFlags['use_parse_geshi_parent'];
 		
 		$lastTagContent = "";
 		
@@ -168,20 +131,7 @@ class Parser
 									}
 								}
 							}
-							
-							if (array_key_exists('parse_geshi', $lexeme))						
-							{
-								if ($lexeme['parse_geshi'] == true)
-								{										
-									if ($useParseGeshi == false)
-									{
-										$useParseGeshi = true;
-//										$useParseGeshi_child = $symbolTree[$symbol['ref_child']];
-										$useParseGeshiParent = $symbol;
-										
-									}
-								}
-							}						
+						
 						} else {
 							//
 							// closing tag stuff
@@ -192,12 +142,6 @@ class Parser
 							{
 								$usePreTag = false;
 								$usePreTagChild = null;
-							}
-							
-							if ($useParseGeshiParent['validation_token'] == $symbol['validation_token'])
-							{
-								$useParseGeshi = false;
-								$useParseGeshiParent = null;
 							}
 						}
 
@@ -224,26 +168,6 @@ class Parser
 				// old text or garbled invalid bb code tags.
 				$tag = $symbol;
 			}
-			
-			//if ($useParseGeshi == true)
-			//{
-			//	if (array_key_exists('tag_param', $useParseGeshiParent))
-			//	{
-			//		$lang = $useParseGeshiParent['tag_param'];
-			//	} else {
-			//		if (array_key_exists('tag_param', $symbolTree[$useParseGeshiParent['ref_child']]))
-			//		{
-			//			$lang = $symbolTree[$useParseGeshiParent['ref_child']]['tag_param'];
-			//		}
-			//	}	
-			//	
-			//	if (strlen($tag) > 1 && $lang)
-			//	{
-			//		$html .= $this->parse_geshi($tag, $lang);	
-			//	}
-			//	
-			//	continue;
-			//}
 						
 			if ($usePreTag == true)
 			{
