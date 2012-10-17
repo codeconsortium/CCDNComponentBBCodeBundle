@@ -57,8 +57,8 @@ class LexemeTable extends ContainerAware
 	public function &getLexemes()
 	{
 		
-		$label_said = $this->container->get('translator')->trans('ccdn_component_bb_code.parser.quote_said', array(), 'CCDNComponentBBCodeBundle');
-		$label_code = $this->container->get('translator')->trans('ccdn_component_bb_code.parser.code', array(), 'CCDNComponentBBCodeBundle');
+		$labelSaid = $this->container->get('translator')->trans('ccdn_component_bb_code.parser.quote_said', array(), 'CCDNComponentBBCodeBundle');
+		$labelCode = $this->container->get('translator')->trans('ccdn_component_bb_code.parser.code', array(), 'CCDNComponentBBCodeBundle');
 		
 		$basePath = $this->container->get('request')->getBasePath();
 		$smileys = $basePath . '/bundles/ccdncomponentbbcode/images/smilies/';
@@ -67,16 +67,41 @@ class LexemeTable extends ContainerAware
 		$this->lexemes = array(
 			array(	'symbol_lexeme' => 'quote',
 					'symbol_token' => array('/(\[QUOTE?(\=[\P{C}\p{Cc}]*)*\])/', '/(\[\/QUOTE\])/'),
-					'symbol_html' => array('</span><div class="bb_box"><div class="bb_tag_head_strip">{{param}} ' . $label_said . ':</div><div class="bb_tag_quote"><pre>', '</pre></div></div><span class="common_body">'),
+					'symbol_html' => array('</span><div class="bb_box"><div class="bb_tag_head_strip">{{param}} ' . $labelSaid . ':</div><pre>', '</pre></div><span class="common_body">'),
 					'use_pre_tag' => true,
+					'accepts_param' => true,
+					'param_required' => false,
 			),
 			array(	'symbol_lexeme' => 'code',
 					'symbol_token' => array('/(\[CODE?(\=[\P{C}\p{Cc}]*)*\])/', '/(\[\/CODE\])/'),
-					'symbol_html' => array('</span><div class="bb_box"><div class="bb_tag_head_strip">' . $label_code . ': {{param}}</div><div class="bb_tag_code">', '</div></div><span class="common_body">'),
+					'symbol_html' => array('</span><div class="bb_box"><div class="bb_tag_head_strip">' . $labelCode . ': {{param}}</div><div class="bb_tag_code">', '</div></div><span class="common_body">'),
 					'use_pre_tag' => true,
 					'use_nested' => false,
-					'parse_geshi' => true,
-			),	
+					'accepts_param' => true,
+					'param_required' => false,
+//					'parse_geshi' => true,
+			),
+			array(	'symbol_lexeme' => 'style',
+					'symbol_token' => array('/(\[STYLE?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/STYLE\])/'),
+					'symbol_html' => array('</span><span class="{{param}}">', '</span><span class="common_body">'),
+					'accepts_param' => true,
+					'param_required' => true,
+					'param_choices' => array('title' => 'bb_tag_style_title', 'heading' => 'bb_tag_style_heading', 'sub section' => 'bb_tag_style_sub_section', 'body' => 'bb_tag_style_body'),
+			),
+            array(	'symbol_lexeme' => 'youtube',
+                    'symbol_token' => array('/(\[YOUTUBE?(\=[\P{C}\p{Cc}]*)*\])/', '/(\[\/YOUTUBE\])/'),
+                    'symbol_html' => array('</span><iframe width="560" height="315" src="http://www.youtube.com/embed/', '" frameborder="0" allowfullscreen></iframe><span class="common_body">'),
+					'accepts_param' => true,
+					'param_required' => true,
+            ),
+            array(	'symbol_lexeme' => 'vimeo',
+                    'symbol_token' => array('/(\[VIMEO?(\=[\P{C}\p{Cc}]*)*\])/', '/(\[\/VIMEO\])/'),
+                    'symbol_html' => array('</span><iframe src="http://player.vimeo.com/video/', '?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="400" height="300" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe><span class="common_body">'),
+					'accepts_param' => true,
+					'param_required' => true,
+            ),
+
+
 			array(	'symbol_lexeme' => 'bold',
 					'symbol_token' => array('/(\[B\])/', '/(\[\/B\])/'),
 					'symbol_html' => array('<b>', '</b>'),
@@ -89,11 +114,7 @@ class LexemeTable extends ContainerAware
 					'symbol_token' => array('/(\[I\])/', '/(\[\/I\])/'),
 					'symbol_html' => array('<i>', '</i>'),
 			),
-			array(	'symbol_lexeme' => 'style',
-					'symbol_token' => array('/(\[STYLE?(\=[a-zA-Z0-9 ]*)*\])/', '/(\[\/STYLE\])/'),
-					'symbol_html' => array('</span><span class="{{param}}">', '</span><span class="common_body">'),
-					'param_choices' => array('title' => 'bb_tag_style_title', 'heading' => 'bb_tag_style_heading', 'sub section' => 'bb_tag_style_sub_section', 'body' => 'bb_tag_style_body'),
-			),
+
 			array(	'symbol_lexeme' => 'subscript',
 					'symbol_token' => array('/(\[SUB\])/', '/(\[\/SUB\])/'),
 					'symbol_html' => array('<sub>', '</sub>'),
@@ -116,14 +137,6 @@ class LexemeTable extends ContainerAware
 					'symbol_html' => array('<img class="bb_tag_img" src="{{param}}" alt="User contributed image: ', '">'),
 					'param_is_url' => true,
 			),
-            array(	'symbol_lexeme' => 'youtube',
-                    'symbol_token' => array('/(\[YOUTUBE?(\=[\P{C}\p{Cc}]*)*\])/', '/(\[\/YOUTUBE\])/'),
-                    'symbol_html' => array('</span><iframe width="560" height="315" src="http://www.youtube.com/embed/', '" frameborder="0" allowfullscreen></iframe><span class="common_body">'),
-            ),
-            array(	'symbol_lexeme' => 'vimeo',
-                    'symbol_token' => array('/(\[VIMEO?(\=[\P{C}\p{Cc}]*)*\])/', '/(\[\/VIMEO\])/'),
-                    'symbol_html' => array('</span><iframe src="http://player.vimeo.com/video/', '?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="400" height="300" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe><span class="common_body">'),
-            ),
 
 			//
 			// Smileys
@@ -430,90 +443,90 @@ class LexemeTable extends ContainerAware
 
 
 
-		array(
-			'symbol_lexeme' => 'crutches',
-			'symbol_token' => array('/\:crutches\:/'),
-			'symbol_html' => array('<img src="' . $smileys . 'crutches.gif" alt="Crutches">'),
-			'group' => 'smiley',
-		),
-		array(
-			'symbol_lexeme' => 'sadangel',
-			'symbol_token' => array('/\:sadangel\:/'),
-			'symbol_html' => array('<img src="' . $smileys . 'sadangel.gif" alt="Sad angel">'),
-			'group' => 'smiley',
-		),
-		array(
-			'symbol_lexeme' => 'pcwhack',
-			'symbol_token' => array('/\:pcwhack\:/'),
-			'symbol_html' => array('<img src="' . $smileys . 'pcwhack.gif" alt="PC whack">'),
-			'group' => 'smiley',
-		),
-		array(
-			'symbol_lexeme' => 'fart',
-			'symbol_token' => array('/\:fart\:/'),
-			'symbol_html' => array('<img src="' . $smileys . 'fart.gif" alt="Fart">'),
-			'group' => 'smiley',
-		),
-		array(
-			'symbol_lexeme' => 'jumpy',
-			'symbol_token' => array('/\:jumpy\:/'),
-			'symbol_html' => array('<img src="' . $smileys . 'jumpy.gif" alt="Jumpy">'),
-			'group' => 'smiley',
-		),
-		array(
-			'symbol_lexeme' => 'slaphead',
-			'symbol_token' => array('/\:slaphead\:/'),
-			'symbol_html' => array('<img src="' . $smileys . 'slaphead.gif" alt="Slap head">'),
-			'group' => 'smiley',
-		),
-		array(
-			'symbol_lexeme' => 'knight',
-			'symbol_token' => array('/\:knight\:/'),
-			'symbol_html' => array('<img src="' . $smileys . 'knight.gif" alt="Knight">'),
-			'group' => 'smiley',
-		),
-		array(
-			'symbol_lexeme' => 'worthy',
-			'symbol_token' => array('/\:worthy\:/'),
-			'symbol_html' => array('<img src="' . $smileys . 'worthy.gif" alt="Worthy">'),
-			'group' => 'smiley',
-		),
-		array(
-			'symbol_lexeme' => 'drinks',
-			'symbol_token' => array('/\:drinks\:/'),
-			'symbol_html' => array('<img src="' . $smileys . 'drinks.gif" alt="Drinks">'),
-			'group' => 'smiley',
-		),
-		array(
-			'symbol_lexeme' => 'cloud9',
-			'symbol_token' => array('/\:cloud9\:/'),
-			'symbol_html' => array('<img src="' . $smileys . 'cloud9.gif" alt="Cloud 9">'),
-			'group' => 'smiley',
-		),
-		array(
-			'symbol_lexeme' => 'tomatoes',
-			'symbol_token' => array('/\:tomatoes\:/'),
-			'symbol_html' => array('<img src="' . $smileys . 'tomatoes.gif" alt="Tomatoes">'),
-			'group' => 'smiley',
-		),
-		array(
-			'symbol_lexeme' => 'stretcher',
-			'symbol_token' => array('/\:stretcher\:/'),
-			'symbol_html' => array('<img src="' . $smileys . 'stretcher.gif" alt="Stretcher">'),
-			'group' => 'smiley',
-		),
-		array(
-			'symbol_lexeme' => 'baloon',
-			'symbol_token' => array('/\:baloon\:/'),
-			'symbol_html' => array('<img src="' . $smileys . 'baloon.gif" alt="Baloon">'),
-			'group' => 'smiley',
-		),
-		array(
-			'symbol_lexeme' => 'wave',
-			'symbol_token' => array('/\:wave\:/'),
-			'symbol_html' => array('<img src="' . $smileys . 'wave.gif" alt="Wave">'),
-			'group' => 'smiley',
-		),
+			array(
+				'symbol_lexeme' => 'crutches',
+				'symbol_token' => array('/\:crutches\:/'),
+				'symbol_html' => array('<img src="' . $smileys . 'crutches.gif" alt="Crutches">'),
+				'group' => 'smiley',
+			),
+			array(
+				'symbol_lexeme' => 'sadangel',
+				'symbol_token' => array('/\:sadangel\:/'),
+				'symbol_html' => array('<img src="' . $smileys . 'sadangel.gif" alt="Sad angel">'),
+				'group' => 'smiley',
+			),
+			array(
+				'symbol_lexeme' => 'pcwhack',
+				'symbol_token' => array('/\:pcwhack\:/'),
+				'symbol_html' => array('<img src="' . $smileys . 'pcwhack.gif" alt="PC whack">'),
+				'group' => 'smiley',
+			),
+			array(
+				'symbol_lexeme' => 'fart',
+				'symbol_token' => array('/\:fart\:/'),
+				'symbol_html' => array('<img src="' . $smileys . 'fart.gif" alt="Fart">'),
+				'group' => 'smiley',
+			),
+			array(
+				'symbol_lexeme' => 'jumpy',
+				'symbol_token' => array('/\:jumpy\:/'),
+				'symbol_html' => array('<img src="' . $smileys . 'jumpy.gif" alt="Jumpy">'),
+				'group' => 'smiley',
+			),
+			array(
+				'symbol_lexeme' => 'slaphead',
+				'symbol_token' => array('/\:slaphead\:/'),
+				'symbol_html' => array('<img src="' . $smileys . 'slaphead.gif" alt="Slap head">'),
+				'group' => 'smiley',
+			),
+			array(
+				'symbol_lexeme' => 'knight',
+				'symbol_token' => array('/\:knight\:/'),
+				'symbol_html' => array('<img src="' . $smileys . 'knight.gif" alt="Knight">'),
+				'group' => 'smiley',
+			),
+			array(
+				'symbol_lexeme' => 'worthy',
+				'symbol_token' => array('/\:worthy\:/'),
+				'symbol_html' => array('<img src="' . $smileys . 'worthy.gif" alt="Worthy">'),
+				'group' => 'smiley',
+			),
+			array(
+				'symbol_lexeme' => 'drinks',
+				'symbol_token' => array('/\:drinks\:/'),
+				'symbol_html' => array('<img src="' . $smileys . 'drinks.gif" alt="Drinks">'),
+				'group' => 'smiley',
+			),
+			array(
+				'symbol_lexeme' => 'cloud9',
+				'symbol_token' => array('/\:cloud9\:/'),
+				'symbol_html' => array('<img src="' . $smileys . 'cloud9.gif" alt="Cloud 9">'),
+				'group' => 'smiley',
+			),
+			array(
+				'symbol_lexeme' => 'tomatoes',
+				'symbol_token' => array('/\:tomatoes\:/'),
+				'symbol_html' => array('<img src="' . $smileys . 'tomatoes.gif" alt="Tomatoes">'),
+				'group' => 'smiley',
+			),
+			array(
+				'symbol_lexeme' => 'stretcher',
+				'symbol_token' => array('/\:stretcher\:/'),
+				'symbol_html' => array('<img src="' . $smileys . 'stretcher.gif" alt="Stretcher">'),
+				'group' => 'smiley',
+			),
+			array(
+				'symbol_lexeme' => 'baloon',
+				'symbol_token' => array('/\:baloon\:/'),
+				'symbol_html' => array('<img src="' . $smileys . 'baloon.gif" alt="Baloon">'),
+				'group' => 'smiley',
+			),
+			array(
+				'symbol_lexeme' => 'wave',
+				'symbol_token' => array('/\:wave\:/'),
+				'symbol_html' => array('<img src="' . $smileys . 'wave.gif" alt="Wave">'),
+				'group' => 'smiley',
+			),
 
 			
 			
