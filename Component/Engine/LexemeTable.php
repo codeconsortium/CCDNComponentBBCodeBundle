@@ -74,7 +74,7 @@ class LexemeTable extends ContainerAware
 		$labelSaid = $this->container->get('translator')->trans('ccdn_component_bb_code.parser.quote_said', array(), 'CCDNComponentBBCodeBundle');
 		$labelCode = $this->container->get('translator')->trans('ccdn_component_bb_code.parser.code', array(), 'CCDNComponentBBCodeBundle');
 		
-		$basePath = $this->container->get('request')->getBasePath();
+		$basePath = dirname($_SERVER["REQUEST_URI"]); //$this->container->get('request')->getBasePath();
 		$smileys = $basePath . '/bundles/ccdncomponentbbcode/images/smilies/';
 		
 		// 

@@ -32,12 +32,27 @@ class BBCodeExtension extends \Twig_Extension
 	
 	/**
 	 *
+	 * @access protected
+	 */
+	protected $engine;
+	
+	/**
+	 *
+	 * @access protected
+	 */
+	protected $enable;	
+	
+	/**
+	 *
 	 * @access public
 	 * @param $container
 	 */
 	public function __construct($container)
 	{
 		$this->container = $container;
+		
+		$this->engine = $this->container->get('ccdn_component_bb_code.engine');
+		$this->enable = $this->container->getParameter('ccdn_component_bb_code.parser.enable');
 	}
 
 
@@ -82,13 +97,11 @@ class BBCodeExtension extends \Twig_Extension
 	 * @param $input
 	 * @return string $html
 	 */
-	public function BBCode($input, $enable)
+	public function BBCode($input, $enableOnDemand)
 	{
-		if ($this->container->getParameter('ccdn_component_bb_code.parser.enable') && $enable)
+		if ($this->enable && $enableOnDemand)
 		{
-			$engine = $this->container->get('ccdn_component_bb_code.engine');
-			
-			$html = $engine->process($input);
+			$html = $this->engine->process($input);
 		} else {
 
 			$html = nl2br(htmlentities($input, ENT_QUOTES));			
@@ -107,9 +120,7 @@ class BBCodeExtension extends \Twig_Extension
 	 */
 	public function BBCodeFetchChoices($tag)
 	{
-		$engine = $this->container->get('ccdn_component_bb_code.engine');	
-
-		$lexemes = $engine->getLexemes();
+		$lexemes = $this->engine->getLexemes();
 		
 		foreach($lexemes as $lexeme_key => $lexeme)
 		{
@@ -137,9 +148,7 @@ class BBCodeExtension extends \Twig_Extension
 	 */
 	public function BBCodeFetchGroup($group)
 	{
-		$engine = $this->container->get('ccdn_component_bb_code.engine');	
-
-		$lexemes = $engine->getLexemes();
+		$lexemes = $this->engine->getLexemes();
 		
 		$found = array();
 		
