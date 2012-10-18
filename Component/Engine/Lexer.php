@@ -40,7 +40,7 @@ class Lexer
 	 *
 	 * @access private
 	 * @param array $lexemes, string $lookup
-	 * @return string $lookup
+	 * @return array $lookup
 	 */
 	private function lookupLexeme(&$lexemes, $lookup)
 	{
@@ -289,6 +289,12 @@ class Lexer
 		
 		return $symbolTree;
 	}
+	
+	
+	//
+	// DO NOT USE BELOW
+	// This may be removed in a future version.
+	//
 	
 	
 
