@@ -38,6 +38,8 @@ class Lexer
 	
 	/**
 	 *
+	 * Matches a lookup str against the lexemes until a match is found.
+	 *
 	 * @access private
 	 * @param array $lexemes, string $lookup
 	 * @return array $lookup
@@ -65,6 +67,8 @@ class Lexer
 	
 	
 	/**
+	 *
+	 * Returns the branch of the associative array at the given branch and depth.
 	 *
 	 * @access private
 	 * @param array $tree, int $depth
@@ -106,7 +110,7 @@ class Lexer
 	{
 		$leafCount = count($branch);
 		
-		for($leafKey = --$leafCount; $leafKey >= 0; $leafKey--)
+		for ($leafKey = --$leafCount; $leafKey >= 0; $leafKey--)
 		{
 			if (is_array($branch[$leafKey]))
 			{
@@ -192,6 +196,15 @@ class Lexer
 	}
 	
 
+	public function &process(&$scanTree, &$lexemes)
+	{
+		$symbolTree = $this->createLexedTree($scanTree, $lexemes);
+		
+		$this->postProcess($symbolTree, $lexemes);
+
+		return $symbolTree;
+	}
+
 	
 	/**
 	 *
@@ -199,7 +212,7 @@ class Lexer
 	 * @param array $scanTree, array $lexemes
 	 * @return array $symbolTree
 	 */
-	public function &process(&$scanTree, &$lexemes)
+	private function &createLexedTree(&$scanTree, &$lexemes)
 	{
 		$symbolTree = array();
 		$symbolTreeDepth = 0;
@@ -289,14 +302,9 @@ class Lexer
 		
 		return $symbolTree;
 	}
-	
-	
-	//
-	// DO NOT USE BELOW
-	// This may be removed in a future version.
-	//
-	
-	
+
+
+
 
 	/**
 	 *

@@ -102,8 +102,6 @@ class BBCodeEngine extends ContainerAware
 		// Create a symbol tree via the lexer.
 		$symbolTree = $this->lexer->process($scanTree, $this->lexemes);
 						  
-		//$this->lexer->postProcess($symbolTree, $this->lexemes);
-		
 		// Parse the lexed symbol tree to get an HTML output.
 		$html = $this->parser->parse($symbolTree, $this->lexemes);
 
