@@ -104,9 +104,9 @@ class Lexer
 	 */
 	private function findMyParent(&$branch, $lookup)
 	{
-		$leaf_count = count($branch);
+		$leafCount = count($branch);
 		
-		for($leafKey = --$leaf_count; $leafKey >= 0; $leafKey--)
+		for($leafKey = --$leafCount; $leafKey >= 0; $leafKey--)
 		{
 			if (is_array($branch[$leafKey]))
 			{
