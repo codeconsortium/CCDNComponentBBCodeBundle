@@ -55,11 +55,11 @@ class LexemeTable extends ContainerAware
 	 */
 	public function &getLexemes()
 	{
-		if (! $this->lexemes)
+		if ( ! $this->lexemes)
 		{
 			$this->lexemes = $this->process();
 		}
-		//echo '<pre>' . print_r($this->lexemes, true) . '</pre>'; die();
+
 		return $this->lexemes;
 	}
 	
