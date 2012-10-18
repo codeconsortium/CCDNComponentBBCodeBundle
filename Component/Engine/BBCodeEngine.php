@@ -33,16 +33,12 @@ use Symfony\Component\DependencyInjection\ContainerAware;
  */
 class BBCodeEngine extends ContainerAware
 {
-
-	
 	
 	/**
 	 * 
 	 * @access private
 	 */
-	protected $lexemes;
-
-	
+	protected $lexemeTable;
 	
 	/**
 	 *
@@ -50,29 +46,32 @@ class BBCodeEngine extends ContainerAware
 	 */
 	protected $lexer;
 	
-	
-	
 	/**
 	 *
 	 * @access protected
 	 */
 	protected $parser;
 	
-	
+	/**
+	 * 
+	 * @access private
+	 */
+	protected $lexemes;	
 	
 	/**
 	 *
 	 * @access private
-	 * @param $container
+	 * @param $lexemeTable, $lexer, $parser
 	 */
-	public function __construct($container)
-	{
-		$this->container = $container;
-
-		$this->lexemes = $this->container->get('ccdn_component_bb_code.lexeme_table')->getLexemes();
+	public function __construct($lexemeTable, $lexer, $parser)
+	{	
+		$this->lexemeTable = $lexemeTable;
 		
-		$this->lexer = $this->container->get('ccdn_component_bb_code.lexer');
-		$this->parser = $this->container->get('ccdn_component_bb_code.parser');
+		$this->lexer = $lexer;
+		
+		$this->parser = $parser;
+		
+		$this->lexemes = $lexemeTable->getLexemes();
 	}
 
 
@@ -83,7 +82,7 @@ class BBCodeEngine extends ContainerAware
 	 */
 	public function getLexemes()
 	{
-		return $this->container->get('ccdn_component_bb_code.lexeme_table')->getLexemes();
+		return $this->lexemes;
 	}
 	
 	

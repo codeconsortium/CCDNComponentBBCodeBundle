@@ -20,7 +20,7 @@ services:
 #            - { name: twig.extension }
     ccdn_component_bb_code.engine:
         class: %ccdn_component_bb_code.engine.class%
-        arguments: [@service_container]
+        arguments: [@ccdn_component_bb_code.lexeme_table, @ccdn_component_bb_code.lexer, @ccdn_component_bb_code.parser]
     ccdn_component_bb_code.lexer:
         class: %ccdn_component_bb_code.lexer.class%
     #   arguments: [@service_container]

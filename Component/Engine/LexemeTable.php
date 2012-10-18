@@ -110,7 +110,7 @@ class LexemeTable extends ContainerAware
 					'accepts_param' => true,
 					'param_required' => true,
             ),
-			array(	'symbol_lexeme' => 'image',
+			array(	'symbol_lexeme' => 'img',
 					'symbol_token' => array('/(\[IMG?(\=(.*?)*)\])/', '/(\[\/IMG\])/'),
 					'symbol_html' => array('<img class="bb_tag_img" src="{{param}}" alt="User contributed image: ', '">'),
 					'group' => 'asset',
