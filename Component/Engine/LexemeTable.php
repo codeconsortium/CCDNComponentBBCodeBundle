@@ -59,7 +59,7 @@ class LexemeTable extends ContainerAware
 		{
 			$this->lexemes = $this->process();
 		}
-		
+		//echo '<pre>' . print_r($this->lexemes, true) . '</pre>'; die();
 		return $this->lexemes;
 	}
 	
@@ -97,7 +97,7 @@ class LexemeTable extends ContainerAware
 					'symbol_token' => array('/(\[CODE?(\=[\P{C}\p{Cc}]*)*\])/', '/(\[\/CODE\])/'),
 					'symbol_html' => array('</span><div class="bb_box"><div class="bb_tag_head_strip">' . $labelCode . ': {{param}}</div><div class="bb_tag_code">', '</div></div><span class="common_body">'),
 					'group' => 'block',
-					'black_list' => array('groups' => array('asset', 'format', 'smiley'), 'tags' => array()),
+					'black_list' => array('groups' => array('*'), 'tags' => array()),
 					'white_list' => array('groups' => array(), 'tags' => array()),
 					'use_pre_tag' => true,
 					'use_nested' => false,
@@ -139,7 +139,7 @@ class LexemeTable extends ContainerAware
 					'symbol_token' => array('/(\[URL?(\=(.*?)*)\])/', '/(\[\/URL\])/'),
 					'symbol_html' => array('<a href="{{param}}" target="_blank">', '</a>'),
 					'group' => 'format',
-					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array()),
+					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array('url')),
 					'white_list' => array('groups' => array('smiley', 'format'), 'tags' => array()),
 					'param_is_url' => true,
 			),	
@@ -765,7 +765,54 @@ class LexemeTable extends ContainerAware
 		
 		foreach($lexemes as $key => &$lexeme)
 		{
+			// Count the tokens
 			$lexeme['token_count'] = count($lexeme['symbol_token']);
+			
+			if ($lexeme['token_count'] > 1)
+			{
+				$lexeme['allowed_nestable'] = array();
+
+				if ( ! array_key_exists('black_list', $lexeme)) {
+					$lexeme['black_list'] = array();
+				}
+				if ( ! array_key_exists('groups', $lexeme['black_list'])) {
+					$lexeme['black_list']['groups'] = array();		
+				}
+				if ( ! array_key_exists('tags', $lexeme['black_list'])) {
+					$lexeme['black_list']['tags'] = array();
+				}
+				if ( ! array_key_exists('white_list', $lexeme)) {
+					$lexeme['white_list'] = array();
+				}
+				if ( ! array_key_exists('groups', $lexeme['white_list'])) {
+					$lexeme['white_list']['groups'] = array();			
+				}
+				if ( ! array_key_exists('tags', $lexeme['white_list'])) {
+					$lexeme['white_list']['tags'] = array();
+				}
+			
+				// Compile the list of 'allowed_nestable'
+				foreach($lexemes as $nestable)
+				{
+					// 
+					// By default all tags can have nested content.
+					// If a black list is defined, everything on the black-list is prevented from being nested.
+					// If a white list is defined, groups on the white-list will override the black-list except individual tags.
+					// To override a blacklisted group for a single tag, white list the tag. 
+					//
+					if (((! in_array($nestable['group'], $lexeme['black_list']['groups'])
+					&&	 ! in_array('*', $lexeme['black_list']['groups'])
+					&&	 ! in_array('*', $lexeme['black_list']['tags']))
+					|| (   in_array($nestable['group'], $lexeme['white_list']['groups'])
+					||	   in_array($nestable['symbol_lexeme'], $lexeme['white_list']['tags'])
+					||	   in_array('*', $lexeme['white_list']['groups'])
+					||	   in_array('*', $lexeme['white_list']['tags'])))
+					&&	 ! in_array($nestable['symbol_lexeme'], $lexeme['black_list']['tags']))
+					{
+						$lexeme['allowed_nestable'][] = $nestable['symbol_lexeme'];				
+					}
+				}
+			}
 		}
 		
 		return $lexemes;

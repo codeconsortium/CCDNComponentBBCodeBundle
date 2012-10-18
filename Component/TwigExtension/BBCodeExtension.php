@@ -122,7 +122,7 @@ class BBCodeExtension extends \Twig_Extension
 	{
 		$lexemes = $this->engine->getLexemes();
 		
-		foreach($lexemes as $lexeme_key => $lexeme)
+		foreach($lexemes as $lexeme)
 		{
 			if ($lexeme['symbol_lexeme'] == $tag)
 			{
