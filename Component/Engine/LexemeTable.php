@@ -48,13 +48,27 @@ class LexemeTable extends ContainerAware
 		
 	}
 	
-	
 	/**
 	 *
 	 * @access public
 	 * @return Array $lexemes
 	 */
 	public function &getLexemes()
+	{
+		if (! $this->lexemes)
+		{
+			$this->lexemes = $this->process();
+		}
+		
+		return $this->lexemes;
+	}
+	
+	/**
+	 *
+	 * @access public
+	 * @return Array $lexemes
+	 */
+	public function &process()
 	{
 		
 		$labelSaid = $this->container->get('translator')->trans('ccdn_component_bb_code.parser.quote_said', array(), 'CCDNComponentBBCodeBundle');
@@ -68,7 +82,7 @@ class LexemeTable extends ContainerAware
 		// If a black list is defined, everything on the black-list is prevented from being nested.
 		// If a white list is defined, everything on the white-list will override the black-list.
 		//
-		$this->lexemes = array(
+		$lexemes = array(
 			array(	'symbol_lexeme' => 'quote',
 					'symbol_token' => array('/(\[QUOTE?(\=[\P{C}\p{Cc}]*)*\])/', '/(\[\/QUOTE\])/'),
 					'symbol_html' => array('</span><div class="bb_box"><div class="bb_tag_head_strip">{{param}} ' . $labelSaid . ':</div><pre>', '</pre></div><span class="common_body">'),
@@ -749,12 +763,12 @@ class LexemeTable extends ContainerAware
 
 		);
 		
-		foreach($this->lexemes as $key => &$lexeme)
+		foreach($lexemes as $key => &$lexeme)
 		{
 			$lexeme['token_count'] = count($lexeme['symbol_token']);
 		}
 		
-		return $this->lexemes;
+		return $lexemes;
 	}
 	
 }
