@@ -199,8 +199,8 @@ class Lexer
 	public function &process(&$scanTree, &$lexemes)
 	{
 		$symbolTree = $this->createLexedTree($scanTree, $lexemes);
-		
-		$this->postProcess($symbolTree, $lexemes);
+		//echo '<pre>' . print_r($symbolTree, true) . '</pre>'; 
+		//$this->postProcess($symbolTree, $lexemes);
 
 		return $symbolTree;
 	}
