@@ -118,7 +118,7 @@ class LexemeTable extends ContainerAware
 			'CODE' => array(
 					'symbol_lexeme' => 'CODE',
 					'symbol_token' => array('/^\[CODE?(\=[\P{C}\p{Cc}]*)*\]$/', '/^\[\/CODE\]$/'),
-					'symbol_html' => array('</span><div class="bb_box"><div class="bb_tag_head_strip">' . $labelCode . ': {{param}}</div><pre>', '</pre></div><span class="common_body">'),
+					'symbol_html' => array('</span><div class="bb_box"><div class="bb_tag_head_strip">' . $labelCode . ': {{param}}</div><pre class="prettyprint linenums">', '</pre></div><span class="common_body">'),
 					'group' => 'block',
 					'black_list' => array('groups' => array('*'), 'tags' => array()),
 					'white_list' => array('groups' => array(), 'tags' => array()),
