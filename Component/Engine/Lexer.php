@@ -253,7 +253,6 @@ class Lexer
 							if (array_key_exists('accepts_param', $lexeme))
 							{
 								// get the tags params
-								$this->addParamForTag($lookup, $lexeme);
 								$this->addParamForTag($parentSymbol, $parentLexeme);
 							}
 
@@ -281,6 +280,12 @@ class Lexer
 					// 		OPENING TAG
 					// *******************************************************
 					} else {
+						if (array_key_exists('accepts_param', $lexeme))
+						{
+							// get the tags params
+							$this->addParamForTag($lookup, $lexeme);
+						}
+						
 						if ($this->scanAheadForChild($lexeme)) // Don't bother nesting deeper if it has no/interlaced child.
 						{
 							$this->symbolTreeDepth++;
@@ -295,6 +300,12 @@ class Lexer
 				//		SINGULAR TAGS
 				// *******************************************************	
 				} else {
+					if (array_key_exists('accepts_param', $lexeme))
+					{
+						// get the tags params
+						$this->addParamForTag($lookup, $lexeme);
+					}
+						
 					// token is a lonewolf type, not matchable!				
 					$token = '_' . uniqid() . '_';
 					$lookup['validation_token'] = $token;

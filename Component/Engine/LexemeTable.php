@@ -130,8 +130,8 @@ class LexemeTable extends ContainerAware
 			
             'YOUTUBE' => array(
 					'symbol_lexeme' => 'YOUTUBE',
-                    'symbol_token' => array('/^(\[YOUTUBE?(\=[\P{C}\p{Cc}]*)*\])$/', '/^(\[\/YOUTUBE\])$/'),
-                    'symbol_html' => array('</span><iframe width="560" height="315" src="http://www.youtube.com/embed/', '" frameborder="0" allowfullscreen></iframe><span class="common_body">'),
+                    'symbol_token' => array('/^(\[YOUTUBE?(\=[\P{C}\p{Cc}]*)*\])$/'),
+                    'symbol_html' => array('</span><iframe width="560" height="315" src="http://www.youtube.com/embed/{{param}}" frameborder="0" allowfullscreen></iframe><span class="common_body">'),
 					'group' => 'asset',
 					'black_list' => array('groups' => array('*'), 'tags' => array()),
 					'white_list' => array('groups' => array(), 'tags' => array()),
@@ -140,8 +140,8 @@ class LexemeTable extends ContainerAware
             ),
             'VIMEO' => array(
 					'symbol_lexeme' => 'VIMEO',
-                    'symbol_token' => array('/^(\[VIMEO?(\=[\P{C}\p{Cc}]*)*\])$/', '/^(\[\/VIMEO\])$/'),
-                    'symbol_html' => array('</span><iframe src="http://player.vimeo.com/video/', '?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="400" height="300" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe><span class="common_body">'),
+                    'symbol_token' => array('/^(\[VIMEO?(\=[\P{C}\p{Cc}]*)*\])$/'),
+                    'symbol_html' => array('</span><iframe src="http://player.vimeo.com/video/{{param}}?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="400" height="300" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe><span class="common_body">'),
 					'group' => 'asset',
 					'black_list' => array('groups' => array('*'), 'tags' => array()),
 					'white_list' => array('groups' => array(), 'tags' => array()),
