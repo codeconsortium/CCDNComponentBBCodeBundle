@@ -106,7 +106,7 @@ class Lexer
 		$lookupStr = $symbol['lookup_str'];
 		$count = strlen($lexeme['symbol_lexeme']);
 		
-		$regex = '/^(\[\/?[A-Z]{1,' . $count . '}="([ _,.?!@#$%&*()^=\+\-\'\/\w]*)"{0,500}?:?\])$/';
+		$regex = '/^(\[\/?[A-Z0-9]{1,' . $count . '}="([ _,.?!@#$%&*()^=\+\-\'\/\w]*)"{0,500}?:?\])$/';
 		
 		$param = preg_split($regex, $lookupStr, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
 

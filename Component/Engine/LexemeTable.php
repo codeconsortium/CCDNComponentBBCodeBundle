@@ -106,7 +106,7 @@ class LexemeTable extends ContainerAware
 		$lexemes = array(
 			'QUOTE' => array(
 					'symbol_lexeme' => 'QUOTE',
-					'symbol_token' => array('/^(\[QUOTE?(\=[\P{C}\p{Cc}]*)*\])$/', '/^(\[\/QUOTE\])$/'),
+					'symbol_token' => array('/^\[QUOTE?(\=[\P{C}\p{Cc}]*)*\]$/', '/^\[\/QUOTE\]$/'),
 					'symbol_html' => array('</span><div class="bb_box"><div class="bb_tag_head_strip">{{param}} ' . $labelSaid . ':</div><pre>', '</pre></div><span class="common_body">'),
 					'group' => 'block',
 					'black_list' => array('groups' => array('asset'), 'tags' => array('CODE')),
@@ -117,7 +117,7 @@ class LexemeTable extends ContainerAware
 			),
 			'CODE' => array(
 					'symbol_lexeme' => 'CODE',
-					'symbol_token' => array('/^(\[CODE?(\=[\P{C}\p{Cc}]*)*\])$/', '/^(\[\/CODE\])$/'),
+					'symbol_token' => array('/^\[CODE?(\=[\P{C}\p{Cc}]*)*\]$/', '/^\[\/CODE\]$/'),
 					'symbol_html' => array('</span><div class="bb_box"><div class="bb_tag_head_strip">' . $labelCode . ': {{param}}</div><pre>', '</pre></div><span class="common_body">'),
 					'group' => 'block',
 					'black_list' => array('groups' => array('*'), 'tags' => array()),
@@ -130,7 +130,7 @@ class LexemeTable extends ContainerAware
 			
             'YOUTUBE' => array(
 					'symbol_lexeme' => 'YOUTUBE',
-                    'symbol_token' => array('/^(\[YOUTUBE?(\=[\P{C}\p{Cc}]*)*\])$/'),
+                    'symbol_token' => array('/^\[YOUTUBE?(\=[\P{C}\p{Cc}]*)*\]$/'),
                     'symbol_html' => array('</span><iframe width="560" height="315" src="http://www.youtube.com/embed/{{param}}" frameborder="0" allowfullscreen></iframe><span class="common_body">'),
 					'group' => 'asset',
 					'black_list' => array('groups' => array('*'), 'tags' => array()),
@@ -140,7 +140,7 @@ class LexemeTable extends ContainerAware
             ),
             'VIMEO' => array(
 					'symbol_lexeme' => 'VIMEO',
-                    'symbol_token' => array('/^(\[VIMEO?(\=[\P{C}\p{Cc}]*)*\])$/'),
+                    'symbol_token' => array('/^\[VIMEO?(\=[\P{C}\p{Cc}]*)*\]$/'),
                     'symbol_html' => array('</span><iframe src="http://player.vimeo.com/video/{{param}}?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="400" height="300" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe><span class="common_body">'),
 					'group' => 'asset',
 					'black_list' => array('groups' => array('*'), 'tags' => array()),
@@ -150,7 +150,7 @@ class LexemeTable extends ContainerAware
             ),
 			'IMG' => array(	
 					'symbol_lexeme' => 'IMG',
-					'symbol_token' => array('/^(\[IMG?(\=(.*?)*)\])$/', '/^(\[\/IMG\])$/'),
+					'symbol_token' => array('/^\[IMG?(\=(.*?)*)\]$/', '/^\[\/IMG\]$/'),
 					'symbol_html' => array('<img class="bb_tag_img" src="{{param}}" alt="User contributed image: ', '">'),
 					'group' => 'asset',
 					'black_list' => array('groups' => array('*'), 'tags' => array()),
@@ -159,9 +159,44 @@ class LexemeTable extends ContainerAware
 			),
 
 
+//			'STYLE' => array(
+//					'symbol_lexeme' => 'STYLE',
+//					'symbol_token' => array('/^\[STYLE?(\=[a-zA-Z0-9 ]*)*\]$/', '/^\[\/STYLE\]$/'),
+//					'symbol_html' => array('</span><span class="{{param}}">', '</span><span class="common_body">'),
+//					'group' => 'format',
+//					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array()),
+//					'white_list' => array('groups' => array('smiley', 'format'), 'tags' => array()),
+//					'accepts_param' => true,
+//					'param_required' => true,
+//					'param_choices' => array('title' => 'bb_tag_style_title', 'heading' => 'bb_tag_style_heading', 'sub section' => 'bb_tag_style_sub_section', 'body' => 'bb_tag_style_body'),
+//			),
+			'H1' => array(
+					'symbol_lexeme' => 'H1',
+					'symbol_token' => array('/^\[H1\]$/', '/^\[\/H1\]$/'),
+					'symbol_html' => array('</span><h1>', '</h1><span class="common_body">'),
+					'group' => 'format',
+					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array()),
+					'white_list' => array('groups' => array('format'), 'tags' => array('IMG')),
+			),
+			'H2' => array(
+					'symbol_lexeme' => 'H2',
+					'symbol_token' => array('/^\[H2\]$/', '/^\[\/H2\]$/'),
+					'symbol_html' => array('</span><h2>', '</h2><span class="common_body">'),
+					'group' => 'format',
+					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array()),
+					'white_list' => array('groups' => array('format'), 'tags' => array('IMG')),
+			),
+			'H3' => array(
+					'symbol_lexeme' => 'H3',
+					'symbol_token' => array('/^\[H3\]$/', '/^\[\/H3\]$/'),
+					'symbol_html' => array('</span><h3>', '</h3><span class="common_body">'),
+					'group' => 'format',
+					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array()),
+					'white_list' => array('groups' => array('format'), 'tags' => array('IMG')),
+			),
 			'URL' => array(
 					'symbol_lexeme' => 'URL',
-					'symbol_token' => array('/^(\[URL?(\=(.*?)*)\])$/', '/^(\[\/URL\])$/'),
+					'symbol_token' => array('/^\[URL?(\=(.*?)*)\]$/', '/^\[\/URL\]$/'),
 					'symbol_html' => array('<a href="{{param}}" target="_blank">', '</a>'),
 					'group' => 'format',
 					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array('URL')),
@@ -170,22 +205,33 @@ class LexemeTable extends ContainerAware
 					'param_required' => true,
 					'param_is_url' => true,
 			),	
-			'STYLE' => array(
-					'symbol_lexeme' => 'STYLE',
-					'symbol_token' => array('/^(\[STYLE?(\=[a-zA-Z0-9 ]*)*\])$/', '/^(\[\/STYLE\])$/'),
-					'symbol_html' => array('</span><span class="{{param}}">', '</span><span class="common_body">'),
+			'UL' => array(
+					'symbol_lexeme' => 'UL',
+					'symbol_token' => array('/^\[UL\]$/', '/^\[\/UL\]$/'),
+					'symbol_html' => array('</span><ul>', '</ul><span class="common_body">'),
 					'group' => 'format',
-					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array()),
-					'white_list' => array('groups' => array('smiley', 'format'), 'tags' => array()),
-					'accepts_param' => true,
-					'param_required' => true,
-					'param_choices' => array('title' => 'bb_tag_style_title', 'heading' => 'bb_tag_style_heading', 'sub section' => 'bb_tag_style_sub_section', 'body' => 'bb_tag_style_body'),
+					'black_list' => array('groups' => array('*'), 'tags' => array()),
+					'white_list' => array('groups' => array(), 'tags' => array('LI')),
 			),
-			
-			
+			'OL' => array(
+					'symbol_lexeme' => 'OL',
+					'symbol_token' => array('/^\[OL\]$/', '/^\[\/OL\]$/'),
+					'symbol_html' => array('</span><ol>', '</ol><span class="common_body">'),
+					'group' => 'format',
+					'black_list' => array('groups' => array('*'), 'tags' => array()),
+					'white_list' => array('groups' => array(), 'tags' => array('LI')),
+			),
+			'LI' => array(
+					'symbol_lexeme' => 'LI',
+					'symbol_token' => array('/^\[LI\]$/', '/^\[\/LI\]$/'),
+					'symbol_html' => array('</span><li>', '</li><span class="common_body">'),
+					'group' => 'format',
+					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array('H1', 'H2', 'H3')),
+					'white_list' => array('groups' => array('smiley', 'format'), 'tags' => array('IMG')),
+			),
 			'B' => array(
 					'symbol_lexeme' => 'B',
-					'symbol_token' => array('/^(\[B\])$/', '/^(\[\/B\])$/'),
+					'symbol_token' => array('/^\[B\]$/', '/^\[\/B\]$/'),
 					'symbol_html' => array('<b>', '</b>'),
 					'group' => 'format',
 					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array()),
@@ -193,7 +239,7 @@ class LexemeTable extends ContainerAware
 			),
 			'U' => array(
 					'symbol_lexeme' => 'U',
-					'symbol_token' => array('/^(\[U\])$/', '/^(\[\/U\])$/'),
+					'symbol_token' => array('/^\[U\]$/', '/^\[\/U\]$/'),
 					'symbol_html' => array('<u>', '</u>'),
 					'group' => 'format',
 					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array()),
@@ -201,7 +247,7 @@ class LexemeTable extends ContainerAware
 			),
 			'I' => array(
 					'symbol_lexeme' => 'I',
-					'symbol_token' => array('/^(\[I\])$/', '/^(\[\/I\])$/'),
+					'symbol_token' => array('/^\[I\]$/', '/^\[\/I\]$/'),
 					'symbol_html' => array('<i>', '</i>'),
 					'group' => 'format',
 					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array()),
@@ -209,7 +255,7 @@ class LexemeTable extends ContainerAware
 			),
 			'SUB' => array(
 					'symbol_lexeme' => 'SUB',
-					'symbol_token' => array('/^(\[SUB\])$/', '/^(\[\/SUB\])$/'),
+					'symbol_token' => array('/^\[SUB\]$/', '/^\[\/SUB\]$/'),
 					'symbol_html' => array('<sub>', '</sub>'),
 					'group' => 'format',
 					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array()),
@@ -217,7 +263,7 @@ class LexemeTable extends ContainerAware
 			),
 			'SUP' => array(
 					'symbol_lexeme' => 'SUP',
-					'symbol_token' => array('/^(\[SUP\])$/', '/^(\[\/SUP\])$/'),
+					'symbol_token' => array('/^\[SUP\]$/', '/^\[\/SUP\]$/'),
 					'symbol_html' => array('<sup>', '</sup>'),
 					'group' => 'format',
 					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array()),
@@ -225,7 +271,7 @@ class LexemeTable extends ContainerAware
 			),
 			'STRIKE' => array(
 					'symbol_lexeme' => 'STRIKE',
-					'symbol_token' => array('/^(\[STRIKE\])$/', '/^(\[\/STRIKE\])$/'),
+					'symbol_token' => array('/^\[STRIKE\]$/', '/^\[\/STRIKE\]$/'),
 					'symbol_html' => array('<del>', '</del>'),
 					'group' => 'format',
 					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array()),

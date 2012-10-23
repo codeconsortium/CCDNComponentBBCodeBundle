@@ -71,7 +71,7 @@ class BBCodeEngine extends ContainerAware
 	public function process($input)
 	{
 		// Scan the input and break it down into possible tags and body text.
-		$regex = '/(\[(?:\/|:)?[A-Z]{1,10}(?:="[ _,.?!@#$%&*()^=\+\-\'\/\w]*"){0,500}?:?\])/';
+		$regex = '/(\[(?:\/|:)?[A-Z0-9]{1,10}(?:="[ _,.?!@#$%&*()^=\+\-\'\/\w]*"){0,500}?:?\])/';
 		
 		$scanTree = preg_split($regex, $input, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
 
