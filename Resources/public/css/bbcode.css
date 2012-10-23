@@ -37,9 +37,9 @@ div.bb_tag_code {
 	padding: 0;
 	overflow: auto;
 
-/*	background: #f7faef url(../images/bb_codetag_background.png) repeat;*/
-	background: #1f1f1f;
+	background: #f9fcff;
 	border: 1px solid #e4e4e4;
+	border-radius:5px;
 }
 
 pre.bb_tag_code {
@@ -51,51 +51,6 @@ pre.bb_tag_code {
 /*	font: small/16px "Andale Mono", mono, Courier, "Courier New";
 	white-space: pre;*/
 }
-
-/**
- * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
- * (http://qbnz.com/highlighter/ and http://geshi.org/)
- */
-.bb_code_overall {
-	color: #eee;
-	font: 10.2pt monospace;
-}
-.bb_code_overall .de1, .php.bb_code_overall .de2 {/*font: normal normal 1em/1.4em monospace;*/font-family:monospace; margin:0; padding:0; background:none; vertical-align:top;}
-.bb_code_overall  {font-family:monospace; color: #fff;}
-.bb_code_overall .imp {font-weight: bold; color: #f00;}
-.bb_code_overall li, .php.bb_code_overall .li1 {background: #1f1f1f; color: #fff;}
-.bb_code_overall .ln {width:1px;text-align:right;margin:0;padding:0 2px;vertical-align:top;}
-.bb_code_overall .li2 {margin-left: 10px; background: #1f1f1f; color: #fff;}
-.bb_code_overall .kw1 {color: #ea9c77;}											/* if/else/for/foreach/continue/break/return/while/do/switch */
-.bb_code_overall .kw2 {color: #a7d462; font-weight: bold;} 						/* class/function/public/private/protected/<?php/?> */
-.bb_code_overall .kw3 {color: #e1d796;} 										/* int/double/real/static including built in functions*/
-.bb_code_overall .kw4 {color: #4b9be8; font-weight: bold;}						/* null/false/true */
-.bb_code_overall .co1 {color: #bbb; font-style: italic;}						/* inline comments and comment blocks */
-.bb_code_overall .co2 {color: #4b9be8; font-style: italic;}						/* pre processor directives */
-.bb_code_overall .co3 {color: #f00; font-style: italic;} 						/* UNKOWN */
-.bb_code_overall .co4 {color: #bbb; font-style: italic;}						/* DocBlocks */
-.bb_code_overall .coMULTI {color: #bbb; font-style: italic;}					/* UNKNOWN */
-.bb_code_overall .es0 {color: #fff; font-weight: bold;}							/* UNKNOWN */
-.bb_code_overall .es1 {color: #eec974; font-weight: bold;}						/* \n\r */
-.bb_code_overall .es2 {color: #fff; font-weight: bold;}							/* UNKNOWN */
-.bb_code_overall .es3 {color: #fff; font-weight: bold;}							/* UNKNOWN */
-.bb_code_overall .es4 {color: #fff; font-weight: bold;}							/* UNKNOWN */
-.bb_code_overall .es5 {color: #eec974; font-weight: bold; font-style: italic;}	/* \0 */
-.bb_code_overall .es6 {color: #fff; font-weight: bold;}							/* UNKNOWN */
-.bb_code_overall .es_h {color: #fff; font-weight: bold;}						/* UNKNOWN */
-.bb_code_overall .br0 {color: #fff;}											/* brackets */
-.bb_code_overall .sy0 {color: #ea9c77;}											/* selectors ;,&= -> < > . -- ++ = */
-.bb_code_overall .sy1 {color: #ea9c77; font-weight: bold;}						/* ?> */
-.bb_code_overall .st0 {color: #75ba53;}											/* strings */
-.bb_code_overall .st_h {color: #75ba53;}
-.bb_code_overall .nu0 {color: #4b9be8;}											/* numbers */
-.bb_code_overall .nu8 {color: #4b9be8;}
-.bb_code_overall .nu12 {color: #4b9be8;}
-.bb_code_overall .nu19 {color: #4b9be8;}
-.bb_code_overall .me1 {color: #99caff;}											/* methods */
-.bb_code_overall .me2 {color: #ac6f3b;}
-.bb_code_overall .re0 {color: #4b9be8;}											/* variables */
-.bb_code_overall span.xtra { display:block; }
 
 /*
  *

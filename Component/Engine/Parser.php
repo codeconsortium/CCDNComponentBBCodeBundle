@@ -33,11 +33,10 @@ use Symfony\Component\DependencyInjection\ContainerAware;
  */
 class Parser
 {
-	
-	
+
 	/**
 	 *
-	 * @access private
+	 * @access protected
 	 */
 	protected $parserStateFlags = array(
 		'use_pre_tag' => false,
@@ -45,15 +44,29 @@ class Parser
 		'use_nested' => true,
 		'use_nested_child' => null,
 	);
-
-
+	
+	/**
+	 *
+	 * @access protected
+	 */
+	protected $lexemeTable;
+	
+	/**
+	 *
+	 * @access public
+	 * @param LexemeTable $lexemeTable
+	 */
+	public function setLexemeTable($lexemeTable)
+	{
+		$this->lexemeTable = $lexemeTable;
+	}
 
 	/**
 	 *
-	 * @access private
+	 * @access protected
 	 * @param array $symbolTree, array $symbol, string $tag
 	 */
-	private function putParamInContext(&$symbolTree, &$symbol, &$tag)
+	protected function putParamInContext(&$symbolTree, &$symbol, &$tag)
 	{					
 		$param = null;
 		
@@ -82,35 +95,36 @@ class Parser
 		if ($param)		
 		{
 			$tag = str_replace('{{param}}', htmlentities($param, ENT_QUOTES), $tag);
+		} else {
+			$tag = str_replace('{{param}}', '', $tag);
 		}
 	}
-	
-	
 	
 	/**
 	 *
 	 * @access public
-	 * @param array $symbolTree, array $lexemes
+	 * @param $symbolTree
 	 * @return string $html
 	 */
-	public function parse(&$symbolTree, &$lexemes)
+	public function parse(&$symbolTree)
 	{
 		$html = '';
-
+		$lastTagContent = '';
+		$symbolTreeSize = count($symbolTree);
+		
 		$usePreTag =& $this->parserStateFlags['use_pre_tag'];					// This tags html wraps its content in a <pre> tag, so we don't convert \n to <br> as a result.
 		$usePreTagChild =& $this->parserStateFlags['use_pre_tag_child'];		// reference to the tag that initiated this <pre> tag state.
+
 		
-		$lastTagContent = "";
-		
-		for ($symbolKey = 0; $symbolKey < count($symbolTree); $symbolKey++)
+		for ($symbolTreeKey = 0; $symbolTreeKey < $symbolTreeSize; $symbolTreeKey++)
 		{
-			$symbol =& $symbolTree[$symbolKey];
+			$symbol =& $symbolTree[$symbolTreeKey];
 
 			if (is_array($symbol))
 			{
 				if (array_key_exists('lexeme_key', $symbol))
 				{
-					$lexeme =& $lexemes[$symbol['lexeme_key']];
+					$lexeme = $this->lexemeTable->getLexeme($symbol['lexeme_key']);
 					
 					if (array_key_exists('validation_token', $symbol))
 					{
@@ -131,7 +145,6 @@ class Parser
 									}
 								}
 							}
-						
 						} else {
 							//
 							// closing tag stuff
@@ -156,9 +169,9 @@ class Parser
 				
 					continue;
 				} else {
-					if (count($symbolTree[$symbolKey]) > 0)
+					if (count($symbol) > 0)
 					{
-						$html .= $this->parse($symbolTree[$symbolKey] , $lexemes);
+						$html .= $this->parse($symbol);
 						
 						continue;
 					}

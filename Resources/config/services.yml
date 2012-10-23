@@ -23,10 +23,8 @@ services:
         arguments: [@ccdn_component_bb_code.lexeme_table, @ccdn_component_bb_code.lexer, @ccdn_component_bb_code.parser]
     ccdn_component_bb_code.lexer:
         class: %ccdn_component_bb_code.lexer.class%
-    #   arguments: [@service_container]
     ccdn_component_bb_code.parser:
         class: %ccdn_component_bb_code.parser.class%
-    #    arguments: [@service_container]
     ccdn_component_bb_code.lexeme_table:
         class: %ccdn_component_bb_code.lexeme_table.class%
         arguments: [@service_container]

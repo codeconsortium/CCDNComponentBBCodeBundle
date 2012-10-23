@@ -11,17 +11,6 @@
  * file that was distributed with this source code.
  */
 
-/*
- * Created by Reece Fowell 
- * <me at reecefowell dot com> 
- * <reece at codeconsortium dot com>
- * Created on 17/12/2011
- *
- * Note: use of ENT_SUBSTITUTE in htmlentities requires PHP 5.4.0, and so
- * PHP versions below won't use it, so it was commented out, and can be
- * uncommented if you are using PHP 5.4.0 and above only.
-*/
-
 namespace CCDNComponent\BBCodeBundle\Component\Engine;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
@@ -68,24 +57,11 @@ class BBCodeEngine extends ContainerAware
 		$this->lexemeTable = $lexemeTable;
 		
 		$this->lexer = $lexer;
+		$this->lexer->setLexemeTable($this->lexemeTable);
 		
 		$this->parser = $parser;
-		
-		$this->lexemes = $lexemeTable->getLexemes();
-	}
-
-
-
-	/**
-	 *
-	 * @access public
-	 */
-	public function getLexemes()
-	{
-		return $this->lexemes;
-	}
-	
-	
+		$this->parser->setLexemeTable($this->lexemeTable);
+	}	
 	
 	/**
 	 *
@@ -95,15 +71,15 @@ class BBCodeEngine extends ContainerAware
 	public function process($input)
 	{
 		// Scan the input and break it down into possible tags and body text.
-		$regex = '/(\[(?:\/|:)?[\w]{1,10}(?:="[ _,.?!@#$%&*()^=\+\-\'\/\w]*"){0,500}?:?\])/';
+		$regex = '/(\[(?:\/|:)?[A-Z]{1,10}(?:="[ _,.?!@#$%&*()^=\+\-\'\/\w]*"){0,500}?:?\])/';
 		
 		$scanTree = preg_split($regex, $input, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
 
 		// Create a symbol tree via the lexer.
-		$symbolTree = $this->lexer->process($scanTree, $this->lexemes);
+		$symbolTree = $this->lexer->process($scanTree);
 						  
 		// Parse the lexed symbol tree to get an HTML output.
-		$html = $this->parser->parse($symbolTree, $this->lexemes);
+		$html = $this->parser->parse($symbolTree);
 
 		return $html;
 	}

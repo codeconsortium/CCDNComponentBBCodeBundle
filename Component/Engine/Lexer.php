@@ -16,11 +16,7 @@
  * <me at reecefowell dot com> 
  * <reece at codeconsortium dot com>
  * Created on 17/12/2011
- *
- * Note: use of ENT_SUBSTITUTE in htmlentities requires PHP 5.4.0, and so
- * PHP versions below won't use it, so it was commented out, and can be
- * uncommented if you are using PHP 5.4.0 and above only.
-*/
+ */
 
 namespace CCDNComponent\BBCodeBundle\Component\Engine;
 
@@ -34,84 +30,138 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 class Lexer
 {
 	
-	
+	/**
+	 *
+	 * @access protected
+	 */
+	protected $lexemes;
+
+	/**
+	 *
+	 * @access protected
+	 */
+	protected $scanTree;
+
+	/**
+	 *
+	 * @access protected
+	 */
+	protected $scanTreeKey;
+
+	/**
+	 *
+	 * @access protected
+	 */
+	protected $scanTreeSize;
+
+	/**
+	 *
+	 * @access protected
+	 */
+	protected $symbolTreeDepth;
 	
 	/**
 	 *
-	 * Matches a lookup str against the lexemes until a match is found.
-	 *
-	 * @access private
-	 * @param array $lexemes, string $lookup
-	 * @return array $lookup
+	 * @access protected
 	 */
-	private function lookupLexeme(&$lexemes, $lookup)
+	protected $lexemeTable;
+	
+	/**
+	 *
+	 * @access public
+	 * @param LexemeTable $lexemeTable
+	 */
+	public function setLexemeTable($lexemeTable)
 	{
-		foreach ($lexemes as $lexemeKey => $lexeme)
-		{
-			foreach ($lexeme['symbol_token'] as $tokenKey => $token)
-			{
-				if (preg_match($token, $lookup))
-				{
-					return array(
-						'lookup_str' 	=> $lookup,
-						'lexeme_key'	=> $lexemeKey,
-						'token_key'		=> $tokenKey,
-					);
-				}
-			}
-		}
-		
-		return $lookup;
+		$this->lexemeTable = $lexemeTable;
 	}
 	
-	
-	
 	/**
 	 *
-	 * Returns the branch of the associative array at the given branch and depth.
-	 *
-	 * @access private
-	 * @param array $tree, int $depth
-	 * @return array $tree
+	 * @access public
+	 * @param &$scanTree
 	 */
-	private function &getSymbolTreeBranch(&$branch, $depth)
-	{				
-		if ($depth < 1)
+	public function &process(&$scanTree)
+	{
+		$this->scanTree = $scanTree;
+		$this->scanTreeKey = 0;
+		$this->scanTreeSize = count($scanTree);
+		
+		$this->symbolTreeDepth = 0;
+		
+		$symbolTree = $this->processLexing(null);
+		$this->processInvalidNesting($symbolTree, $tmp);
+		
+		return $symbolTree;
+	}
+
+	/**
+	 *
+	 * @access protected
+	 * @param array $symbol, array $lexeme
+	 * @return string|null
+	 */
+	protected function addParamForTag(&$symbol, &$lexeme)
+	{
+		$lookupStr = $symbol['lookup_str'];
+		$count = strlen($lexeme['symbol_lexeme']);
+		
+		$regex = '/^(\[\/?[A-Z]{1,' . $count . '}="([ _,.?!@#$%&*()^=\+\-\'\/\w]*)"{0,500}?:?\])$/';
+		
+		$param = preg_split($regex, $lookupStr, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+
+		if (is_array($param) && count($param) > 1)
 		{
-			return $branch;
-		} else {
-			$branchSize = count($branch);
-			
-			if ($branchSize < 1)
+			// This section is for tags with multiple choices for a param, in such cases the
+			// param provided must match one from the list provided for that bb tag type.
+			if (array_key_exists('param_choices', $lexeme))
 			{
-				$branch[] = array();
-				$branchSize++;
+				foreach($lexeme['param_choices'] as $paramChoiceKey => $paramChoice)
+				{
+					if ($param[1] == $paramChoiceKey)
+					{
+						$symbol['tag_param'] = $paramChoice;
+
+						return;
+					}
+				}
+				
+				return;
 			}
 
-			if ( ! is_array($branch[$branchSize - 1]))
+			if (array_key_exists('param_is_url', $lexeme))
 			{
-				$branch[] = array();
-				$branchSize++;
-			}
+				if ($lexeme['param_is_url'] == true)
+				{			
+					$protocol = preg_split('/^(http|https|ftp)\:\/\//', $param[1], null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+				
+					if ($protocol[0] == 'http' || $protocol[0] == 'https' || $protocol[0] == 'ftp')
+					{
+						$symbol['tag_param'] = $param[1];
+					} else {
+						$symbol['tag_param'] = 'http://' . $param[1];
+					}
+					
+					return;
+				}
+			} 
 			
-			return $this->getSymbolTreeBranch($branch[$branchSize - 1], --$depth);
+			$symbol['tag_param'] = $param[1];
 		}		
 	}
-	
-	
-	
+
 	/**
 	 *
-	 * @access private
+	 * @access protected
 	 * @param array $branch, string $lookup
 	 * @return int $leafKey | null
 	 */
-	private function findMyParent(&$branch, $lookup)
+	protected function findMyParent($branch, $lookup)
 	{
 		$leafCount = count($branch);
-		
+
 		for ($leafKey = --$leafCount; $leafKey >= 0; $leafKey--)
-		{
+		{		 
 			if (is_array($branch[$leafKey]))
 			{
 				if (array_key_exists('lexeme_key', $branch[$leafKey]))
@@ -129,274 +179,201 @@ class Lexer
 		
 		return null;
 	}
-	
-	
-	
+		
 	/**
 	 *
-	 * @access private
-	 * @param array $symbol, array $lexeme
-	 * @return string|null
+	 * @access protected
+	 * @param $lexeme
+	 * @return bool
 	 */
-	private function addParamForTag(&$symbol, &$lexeme)
-	{
-		$lookupStr = $symbol['lookup_str'];
-		$count = strlen($lexeme['symbol_lexeme']);
+	protected function scanAheadForChild($lexeme)
+	{	
+		$scanAheadKey = $this->scanTreeKey + 1;
 		
-		// /(\[)|(\=)|(\])/
-		$regex = '/(\[([a-zA-Z0-9]{0,' . $count . '})\=)|(\])/';
-		
-		$param = preg_split($regex, $lookupStr, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
-
-		if (is_array($param) && count($param) > 2)
+		for (; $this->scanTreeKey < $this->scanTreeSize; $scanAheadKey++)
 		{
-			$len = strlen($param[0]);
-			
-			if (substr($param[0], $len - 1, $len)  == '=')
-			{
-				
-				// this section is for tags with multiple choices for a param,
-				// in such cases the param provided must match one from the 
-				// list provided for that bb tag type.
-				if (array_key_exists('param_choices', $lexeme))
-				{
-					foreach($lexeme['param_choices'] as $paramChoiceKey => $paramChoice)
-					{
-						if ($param[2] == $paramChoiceKey)
-						{
-							$symbol['tag_param'] = $paramChoice;
-
-							return;
-						}
-					}
-					
-					return;
-				}
-
-				if (array_key_exists('param_is_url', $lexeme))
-				{
-					if ($lexeme['param_is_url'] == true)
-					{			
-						$protocol = preg_split('/(http|https|ftp)/', $param[2], null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
-					
-						if ($protocol[0] == "http" || $protocol[0] == "https" || $protocol[0] == "ftp")
-						{
-							$symbol['tag_param'] = $param[2];
-						} else {
-							$symbol['tag_param'] = 'http://' . $param[2];
-						}
-						
-						return;
-					}
-				} 
-				
-				$symbol['tag_param'] = $param[2];
-			}
-		}		
-	}
-	
-
-	public function &process(&$scanTree, &$lexemes)
-	{
-		$symbolTree = $this->createLexedTree($scanTree, $lexemes);
-		//echo '<pre>' . print_r($symbolTree, true) . '</pre>'; 
-		//$this->postProcess($symbolTree, $lexemes);
-
-		return $symbolTree;
-	}
-
-	
-	/**
-	 *
-	 * @access public
-	 * @param array $scanTree, array $lexemes
-	 * @return array $symbolTree
-	 */
-	private function &createLexedTree(&$scanTree, &$lexemes)
-	{
-		$symbolTree = array();
-		$symbolTreeDepth = 0;
-		
-		$scanTreeSize = count($scanTree);
-
-		for ($scanKey = 0; $scanKey < $scanTreeSize; $scanKey++)
-		{
-			$lookup = $this->lookupLexeme($lexemes, $scanTree[$scanKey]);
+			$lookup = $this->lexemeTable->lookup($this->scanTree[$scanAheadKey]);
 			
 			if (is_array($lookup))
-			{	
-				// *******************************************************
-				//		PAIRED TAGS
-				// *******************************************************
-				// does token have matching closing tokens in the lexemes? 
-				// (could be a one off, like a smiley [i.e; no closing tag required])
-				if ($lexemes[$lookup['lexeme_key']]['token_count'] > 1)
+			{
+				$lexemeAhead = $this->lexemeTable->getLexeme($lookup['lexeme_key']);	
+				
+				if ($lookup['token_key'] == 1)
+				{
+					if ($lexemeAhead['symbol_lexeme'] == $lexeme['symbol_lexeme'])
+					{
+						return true;
+					} else {
+						return false;
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 *
+	 * @access protected
+	 * @param array $lookup
+	 * @return array $symbolTree
+	 */
+	protected function processLexing($lookup)
+	{
+		$symbolTree = array();
+		
+		if ($lookup != null) {
+			$symbolTree[] = $lookup;
+		}
+
+		for (; $this->scanTreeKey < $this->scanTreeSize;$this->scanTreeKey++)
+		{			
+			$lookup = $this->lexemeTable->lookup($this->scanTree[$this->scanTreeKey]);
+			
+			if (is_array($lookup))
+			{
+				$lexeme = $this->lexemeTable->getLexeme($lookup['lexeme_key']);
+				
+				// Paired Tags
+				if ($lexeme['token_count'] > 1)
 				{
 					// *******************************************************
 					// 		CLOSING TAG
 					// *******************************************************
 					if ($lookup['token_key'] == 1)
 					{
-						$branch = &$this->getSymbolTreeBranch($symbolTree, $symbolTreeDepth);
-						
-						// find the parent tag
-						$parentLeafKey = $this->findMyParent($branch, $lookup);
-						
+						$parentLeafKey = $this->findMyParent($symbolTree, $lookup);
+
 						if ($parentLeafKey !== null)
 						{
-							// get the tags params
-							$this->addParamForTag($lookup, $lexemes[$lookup['lexeme_key']]);
-							$this->addParamForTag($branch[$parentLeafKey], $lexemes[$branch[$parentLeafKey]['lexeme_key']]);
+							$parentSymbol =& $symbolTree[$parentLeafKey];
+							$parentLexeme = $this->lexemeTable->getLexeme($parentSymbol['lexeme_key']);
+							
+							if (array_key_exists('accepts_param', $lexeme))
+							{
+								// get the tags params
+								$this->addParamForTag($lookup, $lexeme);
+								$this->addParamForTag($parentSymbol, $parentLexeme);
+							}
 
-							// interconnect associative lexeme
-							$token = '__' . md5(uniqid(mt_rand(), true)) . '__';
-							$lookup['validation_token'] = $token;
+							// Establish associative lexeme relationship.
+							$validationToken = '__' . uniqid() . '__';
+							
+							$lookup['validation_token'] = $validationToken;
 							$lookup['ref_parent'] = $parentLeafKey;
 							
 							// add the lookup array to the branch
-							$branch[] = $lookup;
+		    				$symbolTree[] = $lookup;
+
+							$parentSymbol['validation_token'] = $validationToken;
+							$parentSymbol['ref_child'] = (count($symbolTree) - 1);
 							
-							$branch[$parentLeafKey]['validation_token'] = $token;
-							$branch[$parentLeafKey]['ref_child'] = (count($branch) - 1);
-							
-							// nested tags get put in nested arrays.
-							$symbolTreeDepth--;
-							
+							if ($this->symbolTreeDepth > 0) {
+			    				$this->symbolTreeDepth--;
+		    						    				
+			    				return $symbolTree;
+			    			}
+			
 							continue;
 						}
 					// *******************************************************
 					// 		OPENING TAG
 					// *******************************************************
 					} else {
-						// we go to next nested level
-						$symbolTreeDepth++;
+						if ($this->scanAheadForChild($lexeme)) // Don't bother nesting deeper if it has no/interlaced child.
+						{
+							$this->symbolTreeDepth++;
+							$this->scanTreeKey++; // Manually inc to avoid infinite recursion due to for(loop) post inc. 
 						
-						$branch = &$this->getSymbolTreeBranch($symbolTree, $symbolTreeDepth);
-
-						$branch[] = $lookup;
+							$symbolTree[] = $this->processLexing($lookup);
 						
-						continue;
+							continue;						
+						}
 					} // end check for determining open or closing tags
 				// *******************************************************
 				//		SINGULAR TAGS
 				// *******************************************************	
 				} else {
-					// token is a lonewolf type, not matchable!
-					$branch = &$this->getSymbolTreeBranch($symbolTree, $symbolTreeDepth);
-					
-					$token = '__' . md5(uniqid(mt_rand(), true)) . '__';
+					// token is a lonewolf type, not matchable!				
+					$token = '_' . uniqid() . '_';
 					$lookup['validation_token'] = $token;
-					$branch[] = $lookup;
-					
-					continue;
+
 				} // end token matchable type check
 			}
-
-			// correct root tree depth if drops below zero
-			if ($symbolTreeDepth < 0)	{ $symbolTreeDepth = 0; }
-
-			$branch = &$this->getSymbolTreeBranch($symbolTree, $symbolTreeDepth);
 			
-			$branch[] = $scanTree[$scanKey];
+			$symbolTree[] = $lookup;			
 		}
 		
 		return $symbolTree;
-	}
-
-
-
-
-	/**
-	 *
-	 * @access private
-	 * @param array $branch
-	 * @return string $output
-	 */
-	private function parseNestedContent(&$branch)
-	{
-		$output = '';
-		
-		if (is_array($branch))
-		{
-			foreach ($branch as $leafKey => $leaf)
-			{
-				if (is_array($leaf))
-				{
-					if (array_key_exists('lookup_str', $leaf))
-					{
-						$output .= $leaf['lookup_str'];						
-					} else {					
-						$output .= $this->parseNestedContent($leaf);
-					}
-				} else {
-					$output .= $leaf;
-				}
-			}	
-		} else {
-			$output .= $branch;
-		}
-		
-		return $output;
-	}
-	
-	
+	}		
 	
 	/**
 	 *
-	 * @access private
-	 * @param array $branch, int $refParent, int $refChild
+	 * Invalidates nested tags that are not on the allowed_nestable
+	 * list for the parent tag by dropping its validation_token.
+	 *
+	 * @access protected
+	 * @param array &$symbolTree, mixed[] $parentSymbol
 	 */
-	private function collapseInvalidNested(&$branch, $refParent, $refChild)
+	protected function processInvalidNesting(&$symbolTree, &$parentSymbol)
 	{
-		$branchSize = count($branch) - 1;
-		$content = '';
+		$lastSymbol =& $parentSymbol;
+		$symbolTreeSize = count($symbolTree);
 
-		if ($branchSize > 1)
+		for ($symbolKey = 0; $symbolKey < $symbolTreeSize; $symbolKey++)
 		{
-			for ($key = $refParent + 1; $key < $refChild; $key++)
-			{
-				$content .= $this->parseNestedContent($branch[$key]);
-			}
-
-			$branch[$refParent + 1] = $content;
+			$symbol =& $symbolTree[$symbolKey];
 			
-			for ($key = $refParent + 2; $key < $refChild; $key++)
-			{
-				unset($branch[$key]);
-			}
-		}
-	}
-	
-	
-	
-	/**
-	 *
-	 * @access public
-	 * @param array $symbolTree, array $lexemeTable
-	 */
-	public function postProcess(&$symbolTree, &$lexemeTable)
-	{
-		foreach($symbolTree as $symbolKey => $symbol)
-		{
 			if (is_array($symbol))
 			{
-				// if nesting is not allowed inside of this lexeme then parse it to the
-				// collapsing method to crush it down into its original unlexed form.
-				if (array_key_exists('lexeme_key', $symbol) && array_key_exists('validation_token', $symbol)
-				&&	array_key_exists('token_key', $symbol) && array_key_exists('ref_child', $symbol))
-				{
-					if (array_key_exists('use_nested', $lexemeTable[$symbol['lexeme_key']]) && $symbol['lexeme_key']['token_key'] == 0)
+				// We know its an array, but is it a lexeme? or nested content? And has it already been invalidated?
+				if (array_key_exists('validation_token', $symbol))
+				{			
+					$currentLexeme = $this->lexemeTable->getLexeme($symbol['lexeme_key']);
+					
+					if ($parentSymbol != null && is_array($parentSymbol))
+					{				
+						// Check limitations of parent node?
+						if (array_key_exists('validation_token', $parentSymbol))
+						{
+							// Does parent symbols lexeme have an allowed_nestable?
+							$parentLexeme = $this->lexemeTable->getLexeme($parentSymbol['lexeme_key']);
+	                    
+							if (array_key_exists('allowed_nestable', $parentLexeme))
+							{
+								if ( ! in_array($currentLexeme['symbol_lexeme'], $parentLexeme['allowed_nestable']))
+								{
+									unset($symbol['validation_token']);
+								
+									if ($currentLexeme['token_count'] > 1)
+									{
+										unset($symbolTree[$symbol['ref_child']]['validation_token']);
+									}
+								}
+							}						
+						}
+					}			
+					
+					// Opening tag? (and still valid?)
+					if ($currentLexeme['token_count'] > 1 && array_key_exists('validation_token', $symbol))
 					{
-						if ($lexemeTable[$symbol['lexeme_key']]['use_nested'] == false)
-						{						
-							$this->collapseInvalidNested($symbolTree, $symbolKey, $symbol['ref_child']);
+						if ($symbol['token_key'] == 0)
+						{
+							$lastSymbol =& $symbol;							
+						} else { // Closing tag?
+							$lastSymbol =& $parentSymbol; // Revert back to parent to test allowed_nestable against.
 						}
 					}
 				} else {
-					$this->postProcess($symbolTree[$symbolKey], $lexemeTable);
+					if ( ! array_key_exists('lexeme_key', $symbol))
+					{
+						// If not a lexeme, must be nested content.
+						$this->processInvalidNesting($symbol, $lastSymbol);				
+					}
 				}
 			}
-		}		
+		}
 	}
 	
 }
