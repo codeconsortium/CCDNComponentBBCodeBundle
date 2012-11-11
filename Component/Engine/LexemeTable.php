@@ -36,6 +36,11 @@ class LexemeTable extends ContainerAware
 	 */
 	protected $container;
 	
+	/**
+	 *
+	 * @access protected
+	 */
+	protected $tablePreWarmed = false;
 	
 	/**
 	 *
@@ -46,7 +51,7 @@ class LexemeTable extends ContainerAware
 	{
 		$this->container = $container;
 
-		$this->process();		
+		//$this->process();		
 	}
 
 	
@@ -84,6 +89,20 @@ class LexemeTable extends ContainerAware
 		return $lookupStr;
 	}
 	
+	/**
+	 *
+	 * @access public
+	 * Warms up the lexeme table via some pre-processing.
+	 */
+	public function prepare()
+	{
+		if ( ! $this->tablePreWarmed)
+		{
+			$this->process();
+			
+			$this->tablePreWarmed = true;			
+		}
+	}
 	
 	/**
 	 *
@@ -95,7 +114,7 @@ class LexemeTable extends ContainerAware
 		$labelSaid = $this->container->get('translator')->trans('ccdn_component_bb_code.parser.quote_said', array(), 'CCDNComponentBBCodeBundle');
 		$labelCode = $this->container->get('translator')->trans('ccdn_component_bb_code.parser.code', array(), 'CCDNComponentBBCodeBundle');
 		
-		$basePath = dirname($_SERVER['REQUEST_URI']); //$this->container->get('request')->getBasePath();
+		$basePath = $this->container->get('request')->getBasePath();
 		$smileys = $basePath . '/bundles/ccdncomponentbbcode/images/smilies/';
 		
 		// 

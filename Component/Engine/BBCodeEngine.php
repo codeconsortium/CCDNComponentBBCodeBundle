@@ -50,7 +50,7 @@ class BBCodeEngine extends ContainerAware
 	/**
 	 *
 	 * @access private
-	 * @param $lexemeTable, $lexer, $parser
+	 * @param $lexemeTable, Lexer $lexer, Parser $parser
 	 */
 	public function __construct($lexemeTable, $lexer, $parser)
 	{	
@@ -75,6 +75,9 @@ class BBCodeEngine extends ContainerAware
 		
 		$scanTree = preg_split($regex, $input, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
 
+		// Warm up the lexeme table.
+		$this->lexemeTable->prepare();
+		
 		// Create a symbol tree via the lexer.
 		$symbolTree = $this->lexer->process($scanTree);
 						  
