@@ -18,7 +18,7 @@
     },
     "minimum-stability": "dev",
     "autoload": {
-        "psr-0": { "CCDNComponent\BBCodeBundle": "" }
+        "psr-0": { "CCDNComponent\\BBCodeBundle": "" }
     },
     "target-dir": "CCDNComponent/BBCodeBundle"
 }
