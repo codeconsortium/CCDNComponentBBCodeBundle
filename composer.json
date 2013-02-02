@@ -1,9 +1,9 @@
 {
-    "name": "ccdn-forum/bb-code-bundle",
+    "name": "codeconsortium/ccdn-component-bb-code-bundle",
     "type": "symfony-bundle",
     "description": "CCDN Forum BBCode bundle",
     "keywords": ["forum", "board"],
-    "homepage": "http://github.com/codeconsortium/BBCodeBundle",
+    "homepage": "http://github.com/codeconsortium/CCDNComponentBBCodeBundle",
     "license": "MIT",
     "authors": [
         {
