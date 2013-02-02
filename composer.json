@@ -2,7 +2,7 @@
     "name": "codeconsortium/ccdn-component-bb-code-bundle",
     "type": "symfony-bundle",
     "description": "CCDN Component BBCode Bundle",
-    "keywords": ["forum", "board"],
+    "keywords": ["ccdn", "codeconsortium", "bulletin code", "BB code", "markup", "parser"],
     "homepage": "http://github.com/codeconsortium/CCDNComponentBBCodeBundle",
     "license": "MIT",
     "authors": [
