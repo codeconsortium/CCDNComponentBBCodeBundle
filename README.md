@@ -9,9 +9,11 @@ This bundle is for the symfony framework and requires Symfony 2.1.x and PHP 5.4
 
 This file is part of the CCDNComponent BBCodeBundle
 
-(c) CCDN (c) [CodeConsortium](http://www.codeconsortium.com/)
+&copy; CCDN &copy; [CodeConsortium](http://www.codeconsortium.com/)
 
-Available on [github](http://www.github.com/codeconsortium/CCDNComponentBBCodeBundle)
+Available on:
+* [Github](http://www.github.com/codeconsortium/CCDNComponentBBCodeBundle)
+* [Packagist](https://packagist.org/packages/codeconsortium/ccdn-component-bb-code-bundle)
 
 Icons courtesy of [PC.de Icons](http://pc.de/icons/) licensed under [Creative Commons](http://creativecommons.org/licenses/by/3.0/).
 Theme and Sprite graphics courtesy of [twitter bootstrap](http://twitter.github.com/bootstrap/index.html) and [GLYPHICONS](http://glyphicons.com/).
