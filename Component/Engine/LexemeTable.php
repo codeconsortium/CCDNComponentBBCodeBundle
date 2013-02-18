@@ -71,11 +71,13 @@ class LexemeTable extends ContainerAware
 	 */
 	public function lookup($lookupStr)
 	{
+		$lookupStrCanonical = strtoupper($lookupStr);
+		
 		foreach ($this->lexemes as $lexemeKey => $lexeme)
 		{
 			foreach ($lexeme['symbol_token'] as $tokenKey => $token)
 			{
-				if (preg_match($token, $lookupStr))
+				if (preg_match($token, $lookupStrCanonical))
 				{
 					return array(
 						'lookup_str' 	=> $lookupStr,
@@ -126,9 +128,9 @@ class LexemeTable extends ContainerAware
 			'QUOTE' => array(
 					'symbol_lexeme' => 'QUOTE',
 					'symbol_token' => array('/^\[QUOTE?(\=[\P{C}\p{Cc}]*)*\]$/', '/^\[\/QUOTE\]$/'),
-					'symbol_html' => array('</span><div class="bb_box"><div class="bb_tag_head_strip">{{param}} ' . $labelSaid . ':</div><pre>', '</pre></div><span class="common_body">'),
+					'symbol_html' => array('<div class="bb_box"><div class="bb_tag_head_strip">{{param}} ' . $labelSaid . ':</div><pre>', '</pre></div>'),
 					'group' => 'block',
-					'black_list' => array('groups' => array('asset'), 'tags' => array('CODE')),
+					'black_list' => array('groups' => array('asset'), 'tags' => array('CODE', 'YOUTUBE', 'VIMEO')),
 					'white_list' => array('groups' => array('format', 'smiley'), 'tags' => array()),
 					'use_pre_tag' => true,
 					'accepts_param' => true,
@@ -137,7 +139,7 @@ class LexemeTable extends ContainerAware
 			'CODE' => array(
 					'symbol_lexeme' => 'CODE',
 					'symbol_token' => array('/^\[CODE?(\=[\P{C}\p{Cc}]*)*\]$/', '/^\[\/CODE\]$/'),
-					'symbol_html' => array('</span><div class="bb_box"><div class="bb_tag_head_strip">' . $labelCode . ': {{param}}</div><pre class="prettyprint linenums">', '</pre></div><span class="common_body">'),
+					'symbol_html' => array('<div class="bb_box"><div class="bb_tag_head_strip">' . $labelCode . ': {{param}}</div><pre class="prettyprint linenums">', '</pre></div>'),
 					'group' => 'block',
 					'black_list' => array('groups' => array('*'), 'tags' => array()),
 					'white_list' => array('groups' => array(), 'tags' => array()),
@@ -150,7 +152,7 @@ class LexemeTable extends ContainerAware
             'YOUTUBE' => array(
 					'symbol_lexeme' => 'YOUTUBE',
                     'symbol_token' => array('/^\[YOUTUBE?(\=[\P{C}\p{Cc}]*)*\]$/'),
-                    'symbol_html' => array('</span><iframe width="560" height="315" src="http://www.youtube.com/embed/{{param}}" frameborder="0" allowfullscreen></iframe><span class="common_body">'),
+                    'symbol_html' => array('<iframe width="560" height="315" src="http://www.youtube.com/embed/{{param}}" frameborder="0" allowfullscreen></iframe>'),
 					'group' => 'asset',
 					'black_list' => array('groups' => array('*'), 'tags' => array()),
 					'white_list' => array('groups' => array(), 'tags' => array()),
@@ -160,8 +162,8 @@ class LexemeTable extends ContainerAware
             'VIMEO' => array(
 					'symbol_lexeme' => 'VIMEO',
                     'symbol_token' => array('/^\[VIMEO?(\=[\P{C}\p{Cc}]*)*\]$/'),
-                    'symbol_html' => array('</span><iframe src="http://player.vimeo.com/video/{{param}}?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="400" height="300" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe><span class="common_body">'),
-					'group' => 'asset',
+                    'symbol_html' => array('<iframe src="http://player.vimeo.com/video/{{param}}?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="400" height="300" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>'),
+					'group' => 'block',
 					'black_list' => array('groups' => array('*'), 'tags' => array()),
 					'white_list' => array('groups' => array(), 'tags' => array()),
 					'accepts_param' => true,
@@ -171,7 +173,7 @@ class LexemeTable extends ContainerAware
 					'symbol_lexeme' => 'IMG',
 					'symbol_token' => array('/^\[IMG?(\=(.*?)*)\]$/', '/^\[\/IMG\]$/'),
 					'symbol_html' => array('<img class="bb_tag_img" src="{{param}}" alt="User contributed image: ', '">'),
-					'group' => 'asset',
+					'group' => 'block',
 					'black_list' => array('groups' => array('*'), 'tags' => array()),
 					'white_list' => array('groups' => array(), 'tags' => array()),
 					'param_is_url' => true,
@@ -181,7 +183,7 @@ class LexemeTable extends ContainerAware
 //			'STYLE' => array(
 //					'symbol_lexeme' => 'STYLE',
 //					'symbol_token' => array('/^\[STYLE?(\=[a-zA-Z0-9 ]*)*\]$/', '/^\[\/STYLE\]$/'),
-//					'symbol_html' => array('</span><span class="{{param}}">', '</span><span class="common_body">'),
+//					'symbol_html' => array('</span><span class="{{param}}">', '</span><span>'),
 //					'group' => 'format',
 //					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array()),
 //					'white_list' => array('groups' => array('smiley', 'format'), 'tags' => array()),
@@ -192,7 +194,7 @@ class LexemeTable extends ContainerAware
 			'H1' => array(
 					'symbol_lexeme' => 'H1',
 					'symbol_token' => array('/^\[H1\]$/', '/^\[\/H1\]$/'),
-					'symbol_html' => array('</span><h1>', '</h1><span class="common_body">'),
+					'symbol_html' => array('<h1>', '</h1>'),
 					'group' => 'format',
 					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array()),
 					'white_list' => array('groups' => array('format'), 'tags' => array('IMG')),
@@ -200,7 +202,7 @@ class LexemeTable extends ContainerAware
 			'H2' => array(
 					'symbol_lexeme' => 'H2',
 					'symbol_token' => array('/^\[H2\]$/', '/^\[\/H2\]$/'),
-					'symbol_html' => array('</span><h2>', '</h2><span class="common_body">'),
+					'symbol_html' => array('<h2>', '</h2>'),
 					'group' => 'format',
 					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array()),
 					'white_list' => array('groups' => array('format'), 'tags' => array('IMG')),
@@ -208,7 +210,7 @@ class LexemeTable extends ContainerAware
 			'H3' => array(
 					'symbol_lexeme' => 'H3',
 					'symbol_token' => array('/^\[H3\]$/', '/^\[\/H3\]$/'),
-					'symbol_html' => array('</span><h3>', '</h3><span class="common_body">'),
+					'symbol_html' => array('<h3>', '</h3>'),
 					'group' => 'format',
 					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array()),
 					'white_list' => array('groups' => array('format'), 'tags' => array('IMG')),
@@ -227,7 +229,7 @@ class LexemeTable extends ContainerAware
 			'UL' => array(
 					'symbol_lexeme' => 'UL',
 					'symbol_token' => array('/^\[UL\]$/', '/^\[\/UL\]$/'),
-					'symbol_html' => array('</span><ul>', '</ul><span class="common_body">'),
+					'symbol_html' => array('<ul>', '</ul>'),
 					'group' => 'format',
 					'black_list' => array('groups' => array('*'), 'tags' => array()),
 					'white_list' => array('groups' => array(), 'tags' => array('LI')),
@@ -235,7 +237,7 @@ class LexemeTable extends ContainerAware
 			'OL' => array(
 					'symbol_lexeme' => 'OL',
 					'symbol_token' => array('/^\[OL\]$/', '/^\[\/OL\]$/'),
-					'symbol_html' => array('</span><ol>', '</ol><span class="common_body">'),
+					'symbol_html' => array('<ol>', '</ol>'),
 					'group' => 'format',
 					'black_list' => array('groups' => array('*'), 'tags' => array()),
 					'white_list' => array('groups' => array(), 'tags' => array('LI')),
@@ -243,7 +245,7 @@ class LexemeTable extends ContainerAware
 			'LI' => array(
 					'symbol_lexeme' => 'LI',
 					'symbol_token' => array('/^\[LI\]$/', '/^\[\/LI\]$/'),
-					'symbol_html' => array('</span><li>', '</li><span class="common_body">'),
+					'symbol_html' => array('<li>', '</li>'),
 					'group' => 'format',
 					'black_list' => array('groups' => array('block', 'asset'), 'tags' => array('H1', 'H2', 'H3')),
 					'white_list' => array('groups' => array('smiley', 'format'), 'tags' => array('IMG')),

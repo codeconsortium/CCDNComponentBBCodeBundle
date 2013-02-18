@@ -33,7 +33,6 @@ use Symfony\Component\DependencyInjection\ContainerAware;
  */
 class Parser
 {
-
 	/**
 	 *
 	 * @access protected
@@ -186,7 +185,7 @@ class Parser
 			{
 				$html .= htmlentities($tag, ENT_QUOTES);
 			} else {
-				$html .= nl2br(htmlentities($tag, ENT_QUOTES));
+				$html .= '<span>' . nl2br(htmlentities($tag, ENT_QUOTES)) . '</span>';
 			}
 		}
 
