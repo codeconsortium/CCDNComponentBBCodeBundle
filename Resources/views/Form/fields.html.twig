@@ -1,7 +1,6 @@
-{% block textarea_widget %}
-	{% set attr = attr|merge({ 'class': attr.class|default('') ~ 'text-xlarge span8 bb-editor', 'style': attr.style|default('') ~ 'height:250px;'}) %}
+{% block bb_editor_widget %}
+	{% set attr = attr|merge({ 'class': attr.class|default('') ~ 'text-xlarge span10 bb-editor', 'style': attr.style|default('') ~ 'height:250px;'}) %}
 	{% set field_id = BBCodeFetchElementIDforTheme(block('widget_attributes')) %}
-	
 {#	{% if ccdn_component_bb_code.editor.enable == true %}
 		<div class="btn-toolbar hidden" style="clear:both;" data-compat="interactive-js-compat">
 		
@@ -39,7 +38,7 @@
 	
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
 
-{% endblock textarea_widget %}
+{% endblock bb_editor_widget %}
 
 
 

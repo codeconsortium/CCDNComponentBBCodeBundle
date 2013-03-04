@@ -7,10 +7,11 @@ Installing CCDNComponent BBCodeBundle 1.x
 
 ## Installation:
 
-Installation takes only 2 steps:
+Installation takes only 3 steps:
 
 1. Download and install dependencies via Composer.
-2. Register bundles with AppKernel.php.
+2. Register bundles with 'AppKernel.php'.
+3. Register BB Code Editor Form Theme.
 
 ### Step 1: Download and install dependencies via Composer.
 
@@ -36,7 +37,7 @@ command from the directory where your ``composer.json`` file is located:
 $ php composer.phar update
 ```
 
-### Step 2: Register bundles with AppKernel.php.
+### Step 2: Register bundles with 'AppKernel.php'.
 
 Now, Composer will automatically download all required files, and install them
 for you. All that is left to do is to update your ``AppKernel.php`` file, and
@@ -51,6 +52,30 @@ public function registerBundles()
 		...
 	);
 }
+```
+
+### Step 3: Register BB Code Editor Form Theme.
+
+Add this to your app/config/config.yml:
+
+``` yml
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+    form:
+        resources:
+            - 'CCDNComponentBBCodeBundle:Form:fields.html.twig'
+```
+
+### Translations
+
+If you wish to use default texts provided in this bundle, you have to make sure you have translator enabled in your config.
+
+``` yaml
+# app/config/config.yml
+
+framework:
+    translator: ~
 ```
 
 ## Next Steps.

@@ -6,6 +6,7 @@ parameters:
     ccdn_component_bb_code.lexer.class:             CCDNComponent\BBCodeBundle\Component\Engine\Lexer
     ccdn_component_bb_code.parser.class:            CCDNComponent\BBCodeBundle\Component\Engine\Parser
     ccdn_component_bb_code.lexeme_table.class:      CCDNComponent\BBCodeBundle\Component\Engine\LexemeTable
+    ccdn_component_bb_code.form.type.bb_editor.class: CCDNComponent\BBCodeBundle\Form\Type\BBEditorType
 
 services:
     ccdn_component_bb_code.component.twig_extension.parse_bb:
@@ -28,3 +29,10 @@ services:
     ccdn_component_bb_code.lexeme_table:
         class: %ccdn_component_bb_code.lexeme_table.class%
         arguments: [@service_container]
+
+    ccdn_component_bb_code.form.type.bb_editor:
+        class: %ccdn_component_bb_code.form.type.bb_editor.class%
+        arguments: []
+        tags:
+            - { name: "form.type", alias: "bb_editor" }
+    
