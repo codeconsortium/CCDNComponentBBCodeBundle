@@ -1,5 +1,6 @@
 parameters:
-    
+
+    # Service Parameters defined in app/config    
     ccdn_component_bb_code.component.twig_extension.parse_bb.class:    CCDNComponent\BBCodeBundle\Component\TwigExtension\BBCodeExtension
 #    bb_code_fetch_choices.extension.class:         CCDNComponent\BBCodeBundle\Extension\BBCodeFetchChoicesExtension
     ccdn_component_bb_code.engine.class:            CCDNComponent\BBCodeBundle\Component\Engine\BBCodeEngine
@@ -9,23 +10,32 @@ parameters:
     ccdn_component_bb_code.form.type.bb_editor.class: CCDNComponent\BBCodeBundle\Form\Type\BBEditorType
 
 services:
+
     ccdn_component_bb_code.component.twig_extension.parse_bb:
         class: %ccdn_component_bb_code.component.twig_extension.parse_bb.class%
         arguments: [@service_container]
         tags:
             - { name: twig.extension }
+
 #    bb_code_fetch_choices.extension:
 #        class: %bb_code_fetch_choices.extension.class%
 #        arguments: [@service_container]
 #        tags:
 #            - { name: twig.extension }
+
     ccdn_component_bb_code.engine:
         class: %ccdn_component_bb_code.engine.class%
-        arguments: [@ccdn_component_bb_code.lexeme_table, @ccdn_component_bb_code.lexer, @ccdn_component_bb_code.parser]
+        arguments:
+            - @ccdn_component_bb_code.lexeme_table
+            - @ccdn_component_bb_code.lexer
+            - @ccdn_component_bb_code.parser
+
     ccdn_component_bb_code.lexer:
         class: %ccdn_component_bb_code.lexer.class%
+
     ccdn_component_bb_code.parser:
         class: %ccdn_component_bb_code.parser.class%
+
     ccdn_component_bb_code.lexeme_table:
         class: %ccdn_component_bb_code.lexeme_table.class%
         arguments: [@service_container]

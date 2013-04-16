@@ -28,57 +28,109 @@ use Symfony\Component\Config\FileLocator;
  */
 class CCDNComponentBBCodeExtension extends Extension
 {
-	
-	
-	
     /**
-     * {@inheritDoc}
+	 *
+     * @access public
+	 * @return string
      */
 	public function getAlias()
 	{
 		return 'ccdn_component_bb_code';
 	}
 	
-	
-	
     /**
-     * {@inheritDoc}
+     *
+     * @access public
+	 * @param array $config
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
      */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-
+		
+		// Class file namespaces.
+        $this
+	        ->getFormSection($config, $container)
+			->getComponentSection($config, $container)
+		;
+			
+		// Configuration stuff.
+		$this
+			->getEditorSection($config, $container)
+			->getParserSection($config, $container)
+		;
+		
+		// Load Service definitions.
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-
-		$this->getEditorSection($container, $config);
-		$this->getParserSection($container, $config);
     }
+		
+    /**
+     *
+     * @access private
+	 * @param array $config
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+	 * @return \CCDNComponent\BBCodeBundle\DependencyInjection\CCDNComponentBBCodeExtension
+     */
+    private function getFormSection(array $config, ContainerBuilder $container)
+    {
+        $container->setParameter('ccdn_message_message.form.type.bb_editor.class', $config['form']['type']['bb_editor']['class']);
+		
+		return $this;
+	}
+
+    /**
+     *
+     * @access private
+	 * @param array $config
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+	 * @return \CCDNComponent\BBCodeBundle\DependencyInjection\CCDNComponentBBCodeExtension
+     */
+    private function getComponentSection(array $config, ContainerBuilder $container)
+    {
+//	    ccdn_component_bb_code.component.twig_extension.parse_bb.class:    CCDNComponent\BBCodeBundle\Component\TwigExtension\BBCodeExtension
+//	    ccdn_component_bb_code.component.twig_extension.fetch_bb_tags.class:         CCDNComponent\BBCodeBundle\Extension\BBCodeFetchChoicesExtension
+//	    ccdn_component_bb_code.component.engine.bootstrap.class:            CCDNComponent\BBCodeBundle\Component\Engine\BBCodeEngine
+//	    ccdn_component_bb_code.component.engine.lexer.class:             CCDNComponent\BBCodeBundle\Component\Engine\Lexer
+//	    ccdn_component_bb_code.component.engine.parser.class:            CCDNComponent\BBCodeBundle\Component\Engine\Parser
+//	    ccdn_component_bb_code.component.engine.lexeme_table.class:      CCDNComponent\BBCodeBundle\Component\Engine\LexemeTable
+//	    ccdn_component_bb_code.form.type.bb_editor.class: CCDNComponent\BBCodeBundle\Form\Type\BBEditorType
+//        $container->setParameter('ccdn_component_bb_code.component.twig_extension.parse_bb.class', $config['component']['engine']['parse_bb']['class']);		
+//        $container->setParameter('ccdn_component_bb_code.component.twig_extension.fetch_bb_tags.class', $config['component']['engine']['fetch_bb_tags']['class']);		
+//        $container->setParameter('ccdn_component_bb_code.component.engine.bootstrap.class', $config['component']['engine']['bootstrap']['class']);		
+//        $container->setParameter('ccdn_component_bb_code.component.engine.lexer.class', $config['component']['engine']['lexer']['class']);		
+//        $container->setParameter('ccdn_component_bb_code.component.engine.parser.class', $config['component']['engine']['parser']['class']);		
+//        $container->setParameter('ccdn_component_bb_code.component.engine.lexeme_table.class', $config['component']['engine']['lexeme_table']['class']);		
+		
+		return $this;
+	}
 	
-	
-	
-	/**
-	 *
-	 * @access private
-	 * @param $container, $config
-	 */
-	private function getEditorSection($container, $config)
+    /**
+     *
+     * @access private
+	 * @param array $config
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+	 * @return \CCDNComponent\BBCodeBundle\DependencyInjection\CCDNComponentBBCodeExtension
+     */
+	private function getEditorSection(array $config, ContainerBuilder $container)
 	{
 		$container->setParameter('ccdn_component_bb_code.editor.enable', $config['editor']['enable']);
+		
+		return $this;
 	}
 	
-	
-	
-	/**
-	 *
-	 * @access private
-	 * @param $container, $config
-	 */
-	private function getParserSection($container, $config)
+    /**
+     *
+     * @access private
+	 * @param array $config
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+	 * @return \CCDNComponent\BBCodeBundle\DependencyInjection\CCDNComponentBBCodeExtension
+     */
+	private function getParserSection(array $config, ContainerBuilder $container)
 	{
 		$container->setParameter('ccdn_component_bb_code.parser.enable', $config['parser']['enable']);
+		
+		return $this;
 	}
-
-
 }

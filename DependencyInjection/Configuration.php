@@ -28,32 +28,125 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 class Configuration implements ConfigurationInterface
 {
     /**
-     * {@inheritDoc}
+     *
+	 * @access public
+	 * @return \Symfony\Component\Config\Definition\Builder\TreeBuilder
      */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('bb_code');
+        $rootNode = $treeBuilder->root('ccdn_component_bb_code');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
 		$rootNode
 			->children()
 			->end();
-			
-		$this->addEditorSection($rootNode);
-		$this->addParserSection($rootNode);
+
+		// Class file namespaces.
+		$this
+			->addFormSection($rootNode)
+//			->addComponentSection($rootNode)
+		;
+		
+		// Configuration stuff.			
+		$this
+			->addEditorSection($rootNode)
+			->addParserSection($rootNode)
+		;
 		
         return $treeBuilder;
     }
-
 	
+    /**
+     *
+     * @access private
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+	 * @return \CCDNComponent\BBCodeBundle\DependencyInjection\Configuration
+     */
+    private function addFormSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('form')
+                    ->addDefaultsIfNotSet()
+                    ->canBeUnset()
+                    ->children()
+                        ->arrayNode('type')
+		                    ->addDefaultsIfNotSet()
+		                    ->canBeUnset()
+                            ->children()
+		                        ->arrayNode('bb_editor')
+				                    ->addDefaultsIfNotSet()
+				                    ->canBeUnset()
+		                            ->children()
+										->scalarNode('class')->defaultValue('CCDNComponent\BBCodeBundle\Form\Type\BBEditorFormType')->end()							
+									->end()
+								->end()
+							->end()
+						->end()
+					->end()
+				->end()
+			->end()
+		;
+		
+		return $this;
+	}
+	
+    /**
+     *
+     * @access private
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+	 * @return \CCDNComponent\BBCodeBundle\DependencyInjection\Configuration
+     */
+    private function addComponentSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('component')
+                    ->addDefaultsIfNotSet()
+                    ->canBeUnset()
+                    ->children()
+		                ->arrayNode('twig_extension')
+		                    ->addDefaultsIfNotSet()
+		                    ->canBeUnset()
+		                    ->children()
+				                ->arrayNode('unread_message_count')
+				                    ->addDefaultsIfNotSet()
+				                    ->canBeUnset()
+				                    ->children()
+										->scalarNode('class')->defaultValue('CCDNMessage\MessageBundle\Component\TwigExtension\UnreadMessageCountExtension')->end()							
+									->end()		
+								->end()
+				                ->arrayNode('folder_list')
+				                    ->addDefaultsIfNotSet()
+				                    ->canBeUnset()
+				                    ->children()
+										->scalarNode('class')->defaultValue('CCDNMessage\MessageBundle\Component\TwigExtension\FolderListExtension')->end()							
+									->end()		
+								->end()
+							->end()
+						->end()
+		                ->arrayNode('flood_control')
+		                    ->addDefaultsIfNotSet()
+		                    ->canBeUnset()
+		                    ->children()
+								->scalarNode('class')->defaultValue('CCDNMessage\MessageBundle\Component\FloodControl')->end()							
+							->end()
+						->end()
+					->end()
+				->end()
+			->end()
+		;
+		
+		return $this;
+	}
 
 	/**
 	 *
 	 * @access private
 	 * @param ArrayNodeDefinition $node
+	 * @return \CCDNComponent\BBCodeBundle\DependencyInjection\Configuration
 	 */
 	private function addEditorSection(ArrayNodeDefinition $node)
 	{
@@ -68,7 +161,10 @@ class Configuration implements ConfigurationInterface
 						->scalarNode('enable')->defaultValue(true)->end()
 					->end()
 				->end()
-			->end();
+			->end()
+		;
+		
+		return $this;
 	}
 	
 	
@@ -77,6 +173,7 @@ class Configuration implements ConfigurationInterface
 	 *
 	 * @access private
 	 * @param ArrayNodeDefinition $node
+	 * @return \CCDNComponent\BBCodeBundle\DependencyInjection\Configuration
 	 */
 	private function addParserSection(ArrayNodeDefinition $node)
 	{
@@ -91,7 +188,9 @@ class Configuration implements ConfigurationInterface
 						->scalarNode('enable')->defaultValue(true)->end()
 					->end()
 				->end()
-			->end();
+			->end()
+		;
+		
+		return $this;
 	}
-	
 }
