@@ -45,6 +45,12 @@ class Lexer
 		static::$lexemeTable = $lexemeTable;
 	}
 	
+	/**
+	 * 
+	 * @access public
+	 * @param array $scanChunks
+	 * @return array
+	 */
 	public function process($scanChunks)
 	{		
 		static::$scanChunks = $scanChunks;
@@ -60,10 +66,11 @@ class Lexer
 	
 	/**
 	 *
-	 * @access public
-	 * @param $tree
+	 * @access protected
+	 * @param NodeTreeInterface $parent
+	 * @param NodeInterface $node
 	 */
-	public function lexify($parent = null, $node = null)
+	protected function lexify($parent = null, $node = null)
 	{	
 		$tree = static::$lexemeTable->createNodeTree();
 		

@@ -30,16 +30,25 @@ class LexemeTable extends ContainerAware
 {
 	/**
 	 *
-	 * @access protected
+	 * @var array $lexemes
 	 */
 	protected $lexemes;
 
 
 	/**
 	 *
-	 * @access protected
+	 * Fully-qualified-namespace for PlainText Lexeme type.
+	 * 
+	 * @var string $plainText
 	 */
 	protected $plainText;
+	
+	/**
+	 *
+	 * Fully-qualified-namespace for NodeTree type.
+	 * 
+	 * @var string $tree
+	 */
 	protected $tree;
 	
 	/**
@@ -51,6 +60,10 @@ class LexemeTable extends ContainerAware
 		$this->setTable();		
 	}
 
+	/**
+	 * 
+	 * @access public
+	 */
 	public function setTable()
 	{
 		$this->lexemes = array(
@@ -82,6 +95,10 @@ class LexemeTable extends ContainerAware
 		$this->tree = '\CCDNComponent\BBCodeBundle\Component\Node\Tree\NodeTree';
 	}
 	
+	/**
+	 * 
+	 * @access public
+	 */
 	public function setup()
 	{
 		foreach($this->lexemes as $lexeme) {
@@ -90,16 +107,32 @@ class LexemeTable extends ContainerAware
 		}
 	}
 	
+	/**
+	 * 
+	 * @access public
+	 * @return array
+	 */
 	public function getClassesArray()
 	{
 		return $this->lexemes;
 	}
 	
+	/**
+	 * 
+	 * @access public
+	 * @return NodeTreeInterface
+	 */
 	public function createNodeTree()
 	{
 		return new $this->tree();
 	}
 	
+	/**
+	 * 
+	 * @access public
+	 * @param string $lookupStr
+	 * @return LexmeInterface
+	 */
 	public function lookup($lookupStr)
 	{
 		$lookupStrCanonical = strtoupper($lookupStr);

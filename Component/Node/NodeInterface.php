@@ -30,16 +30,78 @@ namespace CCDNComponent\BBCodeBundle\Component\Node;
  */
 interface NodeInterface
 {
+	/**
+	 * 
+	 * Set the node that owns this node.
+	 * 
+	 * @access public
+	 * @param NodeInterface $node
+	 */
 	public function setNodeParent(NodeInterface $node);
+	
+	/**
+	 * 
+	 * Get the node that owns this node.
+	 * 
+	 * @access public
+	 * @return NodeInterface
+	 */
 	public function getNodeParent();
 	
+	/**
+	 * 
+	 * @access public
+	 * @param bool
+	 */
 	public function hasNodeParent();
 	
+	/**
+	 * 
+	 * Set the node that precedes this node.
+	 * 
+	 * @access public
+	 * @param NodeInterface $node
+	 */
 	public function setNodePrevious(NodeInterface $node);
+	
+	/**
+	 * 
+	 * Get the node that precedes this node.
+	 * 
+	 * @access public
+	 * @return NodeInterface
+	 */
 	public function getNodePrevious();
+	
+	/**
+	 * 
+	 * @access public
+	 * @param bool
+	 */
 	public function hasNodePrevious();
 	
+	/**
+	 * 
+	 * Set the node that follows this node.
+	 * 
+	 * @access public
+	 * @param NodeInterface $node
+	 */
 	public function setNodeNext(NodeInterface $node);
+	
+	/**
+	 * 
+	 * Get the node that follows this node.
+	 * 
+	 * @access public
+	 * @return NodeInterface
+	 */
 	public function getNodeNext();
+	
+	/**
+	 * 
+	 * @access public
+	 * @param bool
+	 */
 	public function hasNodeNext();
 }

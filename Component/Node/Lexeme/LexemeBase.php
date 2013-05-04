@@ -32,18 +32,70 @@ use CCDNComponent\BBCodeBundle\Component\Node\Lexeme\LexemeBaseStatic;
  */
 abstract class LexemeBase extends LexemeBaseStatic implements LexemeInterface, NodeInterface
 {
+	/**
+	 * 
+	 * Usually a randomly generated hash string
+	 * that both pairs of 2 matching nodes will have.
+	 * 
+	 * @var string $id
+	 */
 	protected $id = null;
+	
+	/**
+	 * 
+	 * The string for the given lexeme matched against.
+	 * 
+	 * @var string $lexingMatch
+	 */
 	protected $lexingMatch = '';
+	
+	/**
+	 * 
+	 * The index of the token which we matched from
+	 * the lexemes regular expression patterns.
+	 * 
+	 * @var int $tokenIdex
+	 */
 	protected $tokenIndex = 0;
+	
+	/**
+	 * 
+	 * A reference point to another node that has been 
+	 * paired with this one on the same branch of the tree.
+	 * 
+	 * @var NodeInterface $matchingNode
+	 */
 	protected $matchingNode = null;
+	
+	/**
+	 * 
+	 * A check list will go through setting to true for each
+	 * item as we do some validation checks. We will check 
+	 * them all later during rendering to decide if to render.
+	 * 
+	 * @var array $validators
+	 */ 
 	protected $validators = array(
 		'param' => false,
 		'pairing' => false,
 		'nestable' => false,
 	);
 	
+	/**
+	 * 
+	 * A list of parameters that we have successfully extracted.
+	 * 
+	 * You will have to write your own extractParameters() method for this.
+	 * 
+	 * @var array $parameters
+	 */
 	protected $parameters = array();
 	
+	/**
+	 * 
+	 * @access public
+	 * @param string $lexingMatch
+	 */
 	public function __construct($lexingMatch)
 	{
 		$this->lexingMatch = $lexingMatch;
@@ -60,16 +112,31 @@ abstract class LexemeBase extends LexemeBaseStatic implements LexemeInterface, N
 		}
 	}
 	
+	/**
+	 * 
+	 * @access public
+	 * @return int
+	 */
 	public function getId()
 	{
 		return $this->id;
 	}
 	
+	/**
+	 * 
+	 * @access public
+	 * @return bool
+	 */
 	public function isOpeningTag()
 	{
 		return ($this->tokenIndex < 1 ? true : false);
 	}
 	
+	/**
+	 * 
+	 * @access public
+	 * @return bool
+	 */
 	public function isClosingTag()
 	{
 		return ($this->tokenIndex > 0 ? true : false);
@@ -85,7 +152,14 @@ abstract class LexemeBase extends LexemeBaseStatic implements LexemeInterface, N
 		return $this->lexingMatch;
 	}
 	
-	
+	/**
+	 * 
+	 * Sets the matching node paired with this one.
+	 * 
+	 * @access public
+	 * @param NodeInterface $node
+	 * @param string $id
+	 */
 	public function setMatchingNode(LexemeInterface $node, $id)
 	{
 		$this->matchingNode = $node;
@@ -93,6 +167,11 @@ abstract class LexemeBase extends LexemeBaseStatic implements LexemeInterface, N
 		$this->id = $id;
 	}
 	
+	/**
+	 * 
+	 * @access public
+	 * @return bool
+	 */
 	public function hasMatchingNode()
 	{
 		$match = $this->matchingNode;
@@ -108,11 +187,29 @@ abstract class LexemeBase extends LexemeBaseStatic implements LexemeInterface, N
 		return false;
 	}
 	
+	/**
+	 * 
+	 * Returns the matching node paired with this one.
+	 * 
+	 * @access public
+	 * @return NodeInterface
+	 */
 	public function getMatchingNode()
 	{
 		return $this->matchingNode;
 	}
 	
+	/**
+	 * 
+	 * Use the param $checkMatching to further cascade the
+	 * check to the partner node linked in via $this->matchingNode.
+	 * 
+	 * This cascading requires the check to prevent an infinite recursion.
+	 * 
+	 * @access public
+	 * @param bool $checkMatching
+	 * @return bool
+	 */
 	public function isValid($checkMatching = false)
 	{
 		if (! $this->validators['param']) {
@@ -137,19 +234,35 @@ abstract class LexemeBase extends LexemeBaseStatic implements LexemeInterface, N
 
 		return true;
 	}
-	
 
-	
+	/**
+	 * 
+	 * @access public
+	 * @return bool
+	 */
 	public function areAllParametersValid()
 	{
 		return true;
 	}
 	
+	/**
+	 * 
+	 * @access public
+	 * @return bool
+	 */
 	public function extractParameters()
 	{
-		
+		return true;
 	}
 	
+	/**
+	 * 
+	 * Runs all necessary checks to determine if this
+	 * lexeme is valid and checks them off as it goes.
+	 * 
+	 * @access public
+	 * @param NodeInterface $lastValid
+	 */
 	public function cascadeValidate(NodeInterface $lastValid = null)
 	{
 		$this->extractParameters();
@@ -177,36 +290,77 @@ abstract class LexemeBase extends LexemeBaseStatic implements LexemeInterface, N
 		}
 	}
 	
+	/**
+	 * 
+	 * Sets this validation item from the checklist off as passing.
+	 * 
+	 * @access public
+	 */
 	public function passValidationForParam()
 	{
 		$this->validators['param'] = true;
 	}
 	
+	/**
+	 * 
+	 * @access public
+	 * @return bool
+	 */
 	public function getValidationIsParamPassing()
 	{
 		return $this->validators['param'];
 	}
 	
+	/**
+	 * 
+	 * Sets this validation item from the checklist off as passing.
+	 * 
+	 * @access public
+	 */
 	public function passValidationForPairing()
 	{
 		$this->validators['pairing'] = true;
 	}
 	
+	/**
+	 * 
+	 * @access public
+	 * @return bool
+	 */
 	public function getValidationIsPairingPassing()
 	{
 		return $this->validators['pairing'];
 	}
 	
+	/**
+	 * 
+	 * Sets this validation item from the checklist off as passing.
+	 * 
+	 * @access public
+	 */
 	public function passValidationForNestable()
 	{
 		$this->validators['nestable'] = true;
 	}
 	
+	/**
+	 * 
+	 * @access public
+	 * @return bool
+	 */
 	public function getValidationIsNestablePassing()
 	{
 		return $this->validators['nestable'];
 	}
 	
+	/**
+	 * 
+	 * When debugging, call on dump() to view contents of
+	 * nodes recursively from the root node of the tree.
+	 * 
+	 * @access public
+	 * @return string
+	 */
 	public function dump()
 	{
 		$out = '<br><ul>';
@@ -221,6 +375,14 @@ abstract class LexemeBase extends LexemeBaseStatic implements LexemeInterface, N
 		return $out . '</ul>';
 	}
 	
+	/**
+	 * 
+	 * Will return an array of errors concering why
+	 * this lexeme is unable to render itself.
+	 * 
+	 * @access public
+	 * @return string
+	 */
 	public function getErrors()
 	{
 		$errors = array();
@@ -246,6 +408,14 @@ abstract class LexemeBase extends LexemeBaseStatic implements LexemeInterface, N
 		return $errors;
 	}
 	
+	/**
+	 * 
+	 * Renders an array of errors concering why
+	 * this lexeme is unable to render itself.
+	 * 
+	 * @access public
+	 * @return string
+	 */
 	public function renderErrors()
 	{
 		$errors = $this->getErrors();
@@ -258,13 +428,16 @@ abstract class LexemeBase extends LexemeBaseStatic implements LexemeInterface, N
 		
 		$message = '<ul>' . $message . '</ul>';
 		
-		//return '<span class="bb_invalid_tag hint--bottom hint--error hint--rounded" data-hint="' . $message . '">' . htmlentities($this->lexingMatch, ENT_QUOTES) . '</span>';
 		return '<span class="bb_invalid_tag" data-tip="bottom" title data-original-title="' . $message . '">' . htmlentities($this->lexingMatch, ENT_QUOTES) . '</span>';
 	}
 	
 	/**
 	 * 
+	 * Renders the html from the $lexingHtml index matching
+	 * this nodes index from the $lexingPatterns index.
+	 * 
 	 * @access public
+	 * @return string
 	 */
 	public function cascadeRender()
 	{	

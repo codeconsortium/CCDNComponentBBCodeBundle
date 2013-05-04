@@ -31,6 +31,10 @@ use CCDNComponent\BBCodeBundle\Component\Node\NodeBase;
  */
 abstract class LexemeBaseStatic extends NodeBase
 {
+	/**
+	 * 
+	 * @var object $lexemeTable
+	 */
 	protected static $lexemeTable;
 
 	/**
@@ -38,14 +42,39 @@ abstract class LexemeBaseStatic extends NodeBase
 	 * @var bool $isLexable
 	 */
 	protected static $isLexable = true;
+	
+	/**
+	 * 
+	 * @var bool $isStandalone
+	 */
 	protected static $isStandalone = true;
+	
+	/**
+	 * 
+	 * @var int $tokenCount
+	 */
 	protected static $tokenCount = 0;
 	
+	/**
+	 * 
+	 * @access public
+	 * @param string $lexingMatch
+	 * @return LexemeInterface
+	 */
 	public static function createInstance($lexingMatch)
 	{
 		return new static($lexingMatch);
 	}
 	
+	/**
+	 * 
+	 * Set the lexeme table object that we will need
+	 * for checking allowed lexemes and also returning
+	 * new node instances of a given type.
+	 * 
+	 * @access public
+	 * @param $lexemeTable
+	 */
 	public static function setLexemeTable($lexemeTable)
 	{
 		static::$lexemeTable = $lexemeTable;
@@ -121,6 +150,15 @@ abstract class LexemeBaseStatic extends NodeBase
 		return static::$tokenCount;
 	}
 	
+	/**
+	 * 
+	 * As we extend the NodeBase, we must state if we are
+	 * a tree node or a lexeme node, which is important
+	 * during both validation and rendering cascading.
+	 * 
+	 * @access public
+	 * @return bool
+	 */
 	public static function isTree()
 	{
 		return false;
@@ -135,7 +173,17 @@ abstract class LexemeBaseStatic extends NodeBase
 	{
 		return static::$isStandalone;
 	}
-		
+	
+	/**
+	 * 
+	 * Will check the input string against the array of lexing
+	 * patterns in the form of regex strings to find a match. 
+	 * Returns true immediately when match is found.
+	 * 
+	 * @access public
+	 * @param string $lookupStr
+	 * @return bool
+	 */
 	public static function isPatternMatch($lookupStr)
 	{
 		$canonicalLookupStr = strtoupper($lookupStr);
@@ -197,6 +245,13 @@ abstract class LexemeBaseStatic extends NodeBase
 		);
 	}
 	
+	/**
+	 * 
+	 * Sets up to initial operations that only need
+	 * to be run once and stored in a static context.
+	 * 
+	 * @access public
+	 */
 	public static function warmup()
 	{
 		static::$tokenCount = count(static::$lexingPattern);
@@ -206,6 +261,12 @@ abstract class LexemeBaseStatic extends NodeBase
 	
 	/**
 	 *
+	 * Goes through the list of available lexemes and
+	 * checks them against white and black lists for
+	 * this given lexeme, if it is determined it is
+	 * allowed, then it is appended to the array of
+	 * allowed lexemes.
+	 * 
 	 * @access public
 	 */
 	public static function compileAllowedSubNodeList()

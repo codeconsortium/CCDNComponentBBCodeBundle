@@ -55,7 +55,10 @@ class BBCodeEngine extends ContainerAware
 	/**
 	 *
 	 * @access private
-	 * @param $lexemeTable, Lexer $lexer, Parser $parser
+	 * @param LexemeTable $lexemeTable
+	 * @param Scanner $scanner
+	 * @param Lexer $lexer
+	 * @param Parser $parser
 	 */
 	public function __construct($lexemeTable, $scanner, $lexer, $parser)
 	{	

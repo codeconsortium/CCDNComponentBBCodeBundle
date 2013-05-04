@@ -42,6 +42,12 @@ class Scanner
 		static::$lexemeTable = $lexemeTable;
 	}
 
+	/**
+	 * 
+	 * @access public
+	 * @param string $input
+	 * @return array
+	 */
 	public function process($input)
 	{
 		$scanChunks = $this->scan($input);
@@ -49,7 +55,13 @@ class Scanner
 		return $scanChunks;
 	}
 
-	public function scan($input)
+	/**
+	 * 
+	 * @access protected
+	 * @param string $input
+	 * @return array
+	 */
+	protected function scan($input)
 	{
 		// Scan the input and break it down into possible tags and body text.
 		$symbols = '\d\w _,.?!@#$%&*()^=:\+\-\'\/';

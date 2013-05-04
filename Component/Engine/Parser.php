@@ -42,6 +42,12 @@ class Parser
 		static::$lexemeTable = $lexemeTable;
 	}
 
+	/**
+	 * 
+	 * @access public
+	 * @param array $tree
+	 * @return string
+	 */
 	public function process($tree)
 	{
 		$html = $this->parse($tree);
@@ -49,7 +55,13 @@ class Parser
 		return '<div class="bb_wrapper"><pre>' . $html . '</pre></div>';
 	}
 
-	public function parse($tree)
+	/**
+	 * 
+	 * @access protected
+	 * @param array $tree
+	 * @return string
+	 */
+	protected function parse($tree)
 	{
 		return $tree->cascadeRender();
 	}

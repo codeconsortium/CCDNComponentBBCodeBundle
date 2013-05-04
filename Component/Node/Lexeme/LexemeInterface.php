@@ -13,6 +13,8 @@
 
 namespace CCDNComponent\BBCodeBundle\Component\Node\Lexeme;
 
+use CCDNComponent\BBCodeBundle\Component\Node\Lexeme\LexemeInterface;
+use CCDNComponent\BBCodeBundle\Component\Node\NodeInterface;
 /**
  *
  * @category CCDNComponent
@@ -25,111 +27,186 @@ namespace CCDNComponent\BBCodeBundle\Component\Node\Lexeme;
  *
  */
 interface LexemeInterface
-{
+{	
 	/**
-	 *
+	 * 
 	 * @access public
-	 * @return string
+	 * @param string $lexingMatch
 	 */
-	public static function getCanonicalLexemeName();
-	
-	/**
-	 *
-	 * @access public
-	 * @return string
-	 */
-	public static function getCanonicalGroupName();
-	
-	/**
-	 *
-	 * @access public
-	 * @return string
-	 */
-	public static function getCanonicalTokenName();
+	public function __construct($lexingMatch);
 	
 	/**
 	 * 
 	 * @access public
 	 * @return int
 	 */
-	public static function getTokenCount();
-	
-	/**
-	 *
-	 * @access public
-	 * @return string
-	 */
-	public static function getScanPattern();
-	
-	/**
-	 *
-	 * @access public
-	 * @return string
-	 */
-	public static function getLexingPattern();
-	
-//	/**
-//	 *
-//	 * @access public
-//	 * @return bool
-//	 */
-//	public function isParameterAccepted();
-//	
-//	/**
-//	 *
-//	 * @access public
-//	 * @return bool
-//	 */
-//	public function isParameterRequired();
-//	
-//	/**
-//	 *
-//	 * @access public
-//	 * @return bool
-//	 */
-//	public function isParameterValid();
-//	
-//	public function cascadeRender();
+	public function getId();
 	
 	/**
 	 * 
 	 * @access public
-	 * @param \CCDNComponent\BBCodeBundle\Component\Lexemes\LexemeInterface
 	 * @return bool
 	 */
-	public static function childAllowed(LexemeInterface $lexeme);
+	public function isOpeningTag();
 	
+	/**
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function isClosingTag();
+
 	/**
 	 *
 	 * @access public
+	 * @return string
 	 */
-	public static function compileAllowedSubNodeList();
+	public function getLexingMatch();
 	
 	/**
-	 *
+	 * 
+	 * Sets the matching node paired with this one.
+	 * 
 	 * @access public
-	 * @return array
+	 * @param NodeInterface $node
+	 * @param string $id
 	 */
-	public static function subNodeGroupWhiteList();
+	public function setMatchingNode(LexemeInterface $node, $id);
 	
 	/**
-	 *
+	 * 
 	 * @access public
-	 * @return array
+	 * @return bool
 	 */
-	public static function subNodeGroupBlackList();
+	public function hasMatchingNode();
 	
 	/**
-	 *
+	 * 
+	 * Returns the matching node paired with this one.
+	 * 
 	 * @access public
-	 * @return array
+	 * @return NodeInterface
 	 */
-	public static function subNodeWhiteList();
+	public function getMatchingNode();
 	
 	/**
-	 *
+	 * 
+	 * Use the param $checkMatching to further cascade the
+	 * check to the partner node linked in via $this->matchingNode.
+	 * 
+	 * This cascading requires the check to prevent an infinite recursion.
+	 * 
 	 * @access public
-	 * @return array
+	 * @param bool $checkMatching
+	 * @return bool
 	 */
-	public static function subNodeBlackList();
+	public function isValid($checkMatching = false);
+
+	/**
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function areAllParametersValid();
+	
+	/**
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function extractParameters();
+	/**
+	 * 
+	 * Runs all necessary checks to determine if this
+	 * lexeme is valid and checks them off as it goes.
+	 * 
+	 * @access public
+	 * @param NodeInterface $lastValid
+	 */
+	public function cascadeValidate(NodeInterface $lastValid = null);
+	
+	/**
+	 * 
+	 * Sets this validation item from the checklist off as passing.
+	 * 
+	 * @access public
+	 */
+	public function passValidationForParam();
+	
+	/**
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function getValidationIsParamPassing();
+	
+	/**
+	 * 
+	 * Sets this validation item from the checklist off as passing.
+	 * 
+	 * @access public
+	 */
+	public function passValidationForPairing();
+	
+	/**
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function getValidationIsPairingPassing();
+	
+	/**
+	 * 
+	 * Sets this validation item from the checklist off as passing.
+	 * 
+	 * @access public
+	 */
+	public function passValidationForNestable();
+	
+	/**
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function getValidationIsNestablePassing();
+	
+	/**
+	 * 
+	 * When debugging, call on dump() to view contents of
+	 * nodes recursively from the root node of the tree.
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function dump();
+	
+	/**
+	 * 
+	 * Will return an array of errors concering why
+	 * this lexeme is unable to render itself.
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getErrors();
+	
+	/**
+	 * 
+	 * Renders an array of errors concering why
+	 * this lexeme is unable to render itself.
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function renderErrors();
+	
+	/**
+	 * 
+	 * Renders the html from the $lexingHtml index matching
+	 * this nodes index from the $lexingPatterns index.
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function cascadeRender();
 }

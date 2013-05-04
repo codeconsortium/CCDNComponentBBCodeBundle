@@ -30,7 +30,22 @@ use CCDNComponent\BBCodeBundle\Component\Node\NodeBase;
  */
 class NodeTree extends NodeBase implements NodeTreeInterface, NodeInterface
 {
+	/**
+	 * 
+	 * An array of nodes, may be lexemes or more
+	 * nodetrees all implementing NodeInterface.
+	 * 
+	 * @var array $nodes
+	 */
 	protected $nodes;
+	
+	/**
+	 * 
+	 * A manual counter we increase for each node, to
+	 * save doing a count() call on the node array.
+	 * 
+	 * @var int $index
+	 */
 	protected $index = 0;
 	
 	public function __construct()
@@ -38,16 +53,39 @@ class NodeTree extends NodeBase implements NodeTreeInterface, NodeInterface
 		$this->nodes = array();
 	}
 	
+	/**
+	 * 
+	 * As we extend the NodeBase, we must state if we are
+	 * a tree node or a lexeme node, which is important
+	 * during both validation and rendering cascading.
+	 * 
+	 * @access public
+	 * @return bool
+	 */
 	public static function isTree()
 	{
 		return true;
 	}
 	
+	/**
+	 * 
+	 * Returns the nodes array.
+	 * 
+	 * @access public
+	 * @return array
+	 */
 	public function getNodes()
 	{
 		return $this->nodes;
 	}
 	
+	/**
+	 * 
+	 * Add a new object implementing NodeInterface to the node array.
+	 * 
+	 * @access public
+	 * @param NodeInterface $node
+	 */
 	public function addNode(NodeInterface $node)
 	{	
 		$this->nodes[] = $node;
@@ -71,6 +109,15 @@ class NodeTree extends NodeBase implements NodeTreeInterface, NodeInterface
 		$this->index++;
 	}
 	
+	/**
+	 * 
+	 * Compare the specified $node against the first
+	 * node in this tree. Matches will be assumed by
+	 * the values returned by both CanonicalLexemeNames.
+	 * 
+	 * @access public
+	 * @param NodeInterface $node
+	 */
 	public function nodeMatchesFirst(NodeInterface $node)
 	{
 		$first = $this->nodes[0];
@@ -84,6 +131,13 @@ class NodeTree extends NodeBase implements NodeTreeInterface, NodeInterface
 		return false;
 	}
 	
+	/**
+	 * 
+	 * Returns the first node of the array.
+	 * 
+	 * @access public
+	 * @return NodeInterface
+	 */
 	public function getNodeFirst()
 	{
 		if ($this->index > 0) {
@@ -93,6 +147,13 @@ class NodeTree extends NodeBase implements NodeTreeInterface, NodeInterface
 		}
 	}
 	
+	/**
+	 * 
+	 * Returns the last node of the array.
+	 * 
+	 * @access public
+	 * @return NodeInterface
+	 */
 	public function getNodeLast()
 	{
 		if ($this->index > 0) {
@@ -102,6 +163,15 @@ class NodeTree extends NodeBase implements NodeTreeInterface, NodeInterface
 		}
 	}
 	
+	/**
+	 * 
+	 * Cascades the validation process through each node.
+	 * Sub NodeTrees will cascade further, and Lexemes
+	 * will self validate.
+	 * 
+	 * @access public
+	 * @param NodeInterface $parentNode
+	 */
 	public function cascadeValidate(NodeInterface $parentNode = null)
 	{
 		foreach ($this->nodes as $node) {
@@ -125,6 +195,15 @@ class NodeTree extends NodeBase implements NodeTreeInterface, NodeInterface
 		}
 	}
 	
+	/**
+	 * 
+	 * Cascades the rendering process through each node.
+	 * Sub NodeTrees will cascade further, and Lexemes
+	 * will self render.
+	 * 
+	 * @access public
+	 * @return string
+	 */
 	public function cascadeRender()
 	{
 		$output = '';
@@ -136,12 +215,23 @@ class NodeTree extends NodeBase implements NodeTreeInterface, NodeInterface
 		return $output;
 	}
 	
+	/**
+	 * 
+	 * Cascades dumping process through each node.
+	 * Sub NodeTrees will cascade further, and Lexemes
+	 * will self dump.
+	 * 
+	 * Use this for debugging purposes ONLY!
+	 * 
+	 * @access public
+	 * @return string
+	 */
 	public function dump()
 	{
 		$out = '<br><ol>';
 		
-//		$out .= '<li><strong>Tree</strong></li>';
-		$out .= '<li><strong>Has Parent?</strong> ' . $this->hasNodeParent() . '</li>';
+		//$out .= '<li><strong>Tree</strong></li>';
+		//$out .= '<li><strong>Has Parent?</strong> ' . $this->hasNodeParent() . '</li>';
 		
 		foreach ($this->nodes as $node) {
 			$out .= '<li>' . $node->dump() . '</li>';
@@ -152,6 +242,13 @@ class NodeTree extends NodeBase implements NodeTreeInterface, NodeInterface
 		return $out;
 	}
 	
+	/**
+	 * 
+	 * Entry point for cascading array dump.
+	 * 
+	 * @access public
+	 * @return string
+	 */
 	public function dumpDie()
 	{
 		echo $this->dump();

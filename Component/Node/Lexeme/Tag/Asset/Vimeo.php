@@ -49,27 +49,67 @@ class Vimeo extends LexemeBase implements LexemeInterface
 	
 	/**
 	 * 
-	 * @var bool $isParameterAccepted
+	 * 1) First level index should match the token
+	 *    index that the parameter will be found in.
+	 * 2) Second level index should specify the
+	 *    order of the parameter.
+	 *
+	 * @var array $parametersAcceptedOnToken
 	 */
 	protected static $parametersAcceptedOnToken = array(0 => array(0 => 'video_id'));
 		
 	/**
+	 *
+	 * These parameters will be mandatory. All parameters
+	 * specified here must also be reflected in the above
+	 * $parametersAcceptedOnToken and the index must match
+	 * must match the same index for each parameter in
+	 * before mentioned $parametersAcceptedOnToken.
 	 * 
-	 * @var bool $isParameterRequired
+	 * 1) First level index should match the token
+	 *    index that the parameter will be found in.
+	 * 2) Second level index should specify the
+	 *    order of the parameter.
+	 *
+	 * @var array $parametersRequiredOnToken
 	 */
 	protected static $parametersRequiredOnToken = array(0 => array(0 => 'video_id'));
 
+	/**
+	 * 
+	 * Specify wether this tag is paired with another for 
+	 * a successful lexing/validation match to take place.
+	 * 
+	 * @var bool $isStandalone
+	 */
 	protected static $isStandalone = true;
 	
 	/**
+	 * 
+	 * Regular expressions to match against the
+	 * scan chunk during lexing process. The order
+	 * must match the $lexingHtml variable.
 	 * 
 	 * @var array $lexingPattern
 	 */
 	protected static $lexingPattern = array('/^\[VIMEO?(\=(.*?)*)\]$/');
 	
+	/**
+	 * 
+	 * HTML to output at the index of the matching regular
+	 * expression found in the $lexingPattern variable.
+	 * 
+	 * Indexes between $lexingPattern and $lexingHtml must match.
+	 * 
+	 * @var array $lexingHtml
+	 */
 	protected static $lexingHtml = array('<iframe src="http://player.vimeo.com/video/{{ param[0] }}?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="400" height="300" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');
 	
 	/**
+	 * 
+	 * Specifies the array of other lexemes that
+	 * are permitted to be valid and rendered between
+	 * a matching pair of this particular lexeme.
 	 * 
 	 * @var array $allowedNestable
 	 */
@@ -100,6 +140,11 @@ class Vimeo extends LexemeBase implements LexemeInterface
 		return false;
 	}
 
+	/**
+	 * 
+	 * @access public
+	 * @return bool
+	 */
 	public function areAllParametersValid()
 	{
 		if (array_key_exists(0, $this->parameters)) {
@@ -113,7 +158,11 @@ class Vimeo extends LexemeBase implements LexemeInterface
 	
 	/**
 	 * 
+	 * Renders the html from the $lexingHtml index matching
+	 * this nodes index from the $lexingPatterns index.
+	 * 
 	 * @access public
+	 * @return string
 	 */
 	public function cascadeRender()
 	{	
