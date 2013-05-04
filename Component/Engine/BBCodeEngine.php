@@ -13,8 +13,6 @@
 
 namespace CCDNComponent\BBCodeBundle\Component\Engine;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
-
 /**
  *
  * @category CCDNComponent
@@ -26,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
  * @link     https://github.com/codeconsortium/CCDNComponentBBCodeBundle
  *
  */
-class BBCodeEngine extends ContainerAware
+class BBCodeEngine
 {
     /**
      *

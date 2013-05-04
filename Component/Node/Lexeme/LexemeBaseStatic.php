@@ -57,6 +57,20 @@ abstract class LexemeBaseStatic extends NodeBase
 
     /**
      *
+     * Sets up to initial operations that only need
+     * to be run once and stored in a static context.
+     *
+     * @access public
+     */
+    public static function warmup()
+    {
+        static::$tokenCount = count(static::$lexingPattern);
+
+        static::compileAllowedSubNodeList();
+    }
+	
+    /**
+     *
      * @access public
      * @param  string          $lexingMatch
      * @return LexemeInterface
@@ -243,20 +257,6 @@ abstract class LexemeBaseStatic extends NodeBase
         return array(
 
         );
-    }
-
-    /**
-     *
-     * Sets up to initial operations that only need
-     * to be run once and stored in a static context.
-     *
-     * @access public
-     */
-    public static function warmup()
-    {
-        static::$tokenCount = count(static::$lexingPattern);
-
-        static::compileAllowedSubNodeList();
     }
 
     /**
