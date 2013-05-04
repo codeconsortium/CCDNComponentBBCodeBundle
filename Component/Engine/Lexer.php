@@ -28,11 +28,26 @@ class Lexer
 {
 	/**
 	 *
-	 * @access protected
+	 * @var LexemeTable $lexemeTable
 	 */
 	protected static $lexemeTable;
+	
+	/**
+	 *
+	 * @var array $scanChunks
+	 */
 	protected static $scanChunks;
+	
+	/**
+	 *
+	 * @var int $scanChunksSize
+	 */
 	protected static $scanChunksSize;
+	
+	/**
+	 *
+	 * @var int $scanChunksIndex
+	 */
 	protected static $scanChunksIndex;
 		
 	/**
@@ -66,6 +81,13 @@ class Lexer
 	
 	/**
 	 *
+	 * Iterates over the scan chunks, and recursively calls itself for each opening
+	 * lexeme it matches. A return from the last recursive call takes place when
+	 * both a matching lexeme (closing half) is found and that the current tree
+	 * has a parent. The iterator is used in a static context to maintain iterations
+	 * through recursion. Each recursive call creates a new tree that once returned
+	 * is appended to a node of the last tree.
+	 * 
 	 * @access protected
 	 * @param NodeTreeInterface $parent
 	 * @param NodeInterface $node
