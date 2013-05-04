@@ -14,7 +14,9 @@ services:
 
     ccdn_component_bb_code.component.twig_extension.parse_bb:
         class: %ccdn_component_bb_code.component.twig_extension.parse_bb.class%
-        arguments: [@service_container]
+        arguments:
+            - @ccdn_component_bb_code.engine
+            - %ccdn_component_bb_code.parser.enable%
         tags:
             - { name: twig.extension }
 

@@ -45,12 +45,10 @@ class BBCodeExtension extends \Twig_Extension
 	 * @access public
 	 * @param $container
 	 */
-	public function __construct($container)
+	public function __construct($engine, $enable)
 	{
-		$this->container = $container;
-		
-		$this->engine = $this->container->get('ccdn_component_bb_code.engine');
-	//	$this->enable = $this->container->getParameter('ccdn_component_bb_code.parser.enable');
+		$this->engine = $engine;
+		$this->enable = $enable;
 	
 		//$engine = new CCDNBBCodeEngine\Engine\Bootstrap();
 	}
