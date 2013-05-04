@@ -1,6 +1,6 @@
 parameters:
 
-    # Service Parameters defined in app/config    
+    # Service Parameters defined in app/config
     ccdn_component_bb_code.component.twig_extension.parse_bb.class:    CCDNComponent\BBCodeBundle\Component\TwigExtension\BBCodeExtension
 #    bb_code_fetch_choices.extension.class:         CCDNComponent\BBCodeBundle\Extension\BBCodeFetchChoicesExtension
     ccdn_component_bb_code.engine.class:            CCDNComponent\BBCodeBundle\Component\Engine\BBCodeEngine
@@ -51,4 +51,3 @@ services:
         arguments: []
         tags:
             - { name: "form.type", alias: "bb_editor" }
-    

@@ -3,8 +3,8 @@
 /*
  * This file is part of the CCDNComponent BBCodeBundle
  *
- * (c) CCDN (c) CodeConsortium <http://www.codeconsortium.com/> 
- * 
+ * (c) CCDN (c) CodeConsortium <http://www.codeconsortium.com/>
+ *
  * Available on github <http://www.github.com/codeconsortium/>
  *
  * For the full copyright and license information, please view the LICENSE
@@ -28,135 +28,131 @@ use Symfony\Component\DependencyInjection\ContainerAware;
  */
 class LexemeTable extends ContainerAware
 {
-	/**
-	 *
-	 * @var array $lexemes
-	 */
-	protected $lexemes;
+    /**
+     *
+     * @var array $lexemes
+     */
+    protected $lexemes;
 
+    /**
+     *
+     * Fully-qualified-namespace for PlainText Lexeme type.
+     *
+     * @var string $plainText
+     */
+    protected $plainText;
 
-	/**
-	 *
-	 * Fully-qualified-namespace for PlainText Lexeme type.
-	 * 
-	 * @var string $plainText
-	 */
-	protected $plainText;
-	
-	/**
-	 *
-	 * Fully-qualified-namespace for NodeTree type.
-	 * 
-	 * @var string $tree
-	 */
-	protected $tree;
-	
-	/**
-	 *
-	 * @access public
-	 */
-	public function __construct()
-	{
-		$this->setTable();		
-	}
+    /**
+     *
+     * Fully-qualified-namespace for NodeTree type.
+     *
+     * @var string $tree
+     */
+    protected $tree;
 
-	/**
-	 * 
-	 * @access public
-	 */
-	public function setTable()
-	{
-		$this->lexemes = array(
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Asset\Image',
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Asset\Vimeo',
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Asset\Youtube',
-			
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Block\Code',
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Block\CodeGroup',
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Block\Quote',
-			
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\Bold',
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\Heading1',
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\Heading2',
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\Heading3',
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\Italic',
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\Link',
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\ListItem',
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\ListOrdered',
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\ListUnordered',
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\Strike',
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\SubScript',
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\SuperScript',
-			'\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\Underline',
-		);
-		
-		$this->plainText = '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\PlainText';
-		
-		$this->tree = '\CCDNComponent\BBCodeBundle\Component\Node\Tree\NodeTree';
-	}
-	
-	/**
-	 * 
-	 * @access public
-	 */
-	public function setup()
-	{
-		foreach($this->lexemes as $lexeme) {
-			$lexeme::setLexemeTable($this);
-			$lexeme::warmup();		
-		}
-	}
-	
-	/**
-	 * 
-	 * @access public
-	 * @return array
-	 */
-	public function getClassesArray()
-	{
-		return $this->lexemes;
-	}
-	
-	/**
-	 * 
-	 * @access public
-	 * @return NodeTreeInterface
-	 */
-	public function createNodeTree()
-	{
-		return new $this->tree();
-	}
-	
-	/**
-	 * 
-	 * @access public
-	 * @param string $lookupStr
-	 * @return LexmeInterface
-	 */
-	public function lookup($lookupStr)
-	{
-		$lookupStrCanonical = strtoupper($lookupStr);
-		
-		foreach ($this->lexemes as $lexeme) {
-			if ($lexeme::isPatternMatch($lookupStr)) {
-				return $lexeme::createInstance($lookupStr);
-			}
-		}
-		
-		$plainText = $this->plainText;
-		
-		return $plainText::createInstance($lookupStr);	
-	}
-	
-	
-	
-	
+    /**
+     *
+     * @access public
+     */
+    public function __construct()
+    {
+        $this->setTable();
+    }
+
+    /**
+     *
+     * @access public
+     */
+    public function setTable()
+    {
+        $this->lexemes = array(
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Asset\Image',
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Asset\Vimeo',
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Asset\Youtube',
+
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Block\Code',
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Block\CodeGroup',
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Block\Quote',
+
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\Bold',
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\Heading1',
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\Heading2',
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\Heading3',
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\Italic',
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\Link',
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\ListItem',
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\ListOrdered',
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\ListUnordered',
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\Strike',
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\SubScript',
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\SuperScript',
+            '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\Format\Underline',
+        );
+
+        $this->plainText = '\CCDNComponent\BBCodeBundle\Component\Node\Lexeme\Tag\PlainText';
+
+        $this->tree = '\CCDNComponent\BBCodeBundle\Component\Node\Tree\NodeTree';
+    }
+
+    /**
+     *
+     * @access public
+     */
+    public function setup()
+    {
+        foreach ($this->lexemes as $lexeme) {
+            $lexeme::setLexemeTable($this);
+            $lexeme::warmup();
+        }
+    }
+
+    /**
+     *
+     * @access public
+     * @return array
+     */
+    public function getClassesArray()
+    {
+        return $this->lexemes;
+    }
+
+    /**
+     *
+     * @access public
+     * @return NodeTreeInterface
+     */
+    public function createNodeTree()
+    {
+        return new $this->tree();
+    }
+
+    /**
+     *
+     * @access public
+     * @param  string         $lookupStr
+     * @return LexmeInterface
+     */
+    public function lookup($lookupStr)
+    {
+        $lookupStrCanonical = strtoupper($lookupStr);
+
+        foreach ($this->lexemes as $lexeme) {
+            if ($lexeme::isPatternMatch($lookupStr)) {
+                return $lexeme::createInstance($lookupStr);
+            }
+        }
+
+        $plainText = $this->plainText;
+
+        return $plainText::createInstance($lookupStr);
+    }
+
 //		$labelSaid = $this->container->get('translator')->trans('ccdn_component_bb_code.parser.quote_said', array(), 'CCDNComponentBBCodeBundle');
 //		$labelCode = $this->container->get('translator')->trans('ccdn_component_bb_code.parser.code', array(), 'CCDNComponentBBCodeBundle');
-//		
+//
 //		$basePath = $this->container->get('request')->getBasePath();
 //		$smileys = $basePath . '/bundles/ccdncomponentbbcode/images/smilies/';
-//		
+//
 //			'QUOTE' => array(
 //					'symbol_lexeme' => 'QUOTE',
 //					'symbol_token' => array('/^\[QUOTE?(\=[\P{C}\p{Cc}]*)*\]$/', '/^\[\/QUOTE\]$/'),
@@ -179,8 +175,8 @@ class LexemeTable extends ContainerAware
 //					'accepts_param' => true,
 //					'param_required' => false,
 //			),
-//			
-//			
+//
+//
 //            'YOUTUBE' => array(
 //					'symbol_lexeme' => 'YOUTUBE',
 //                    'symbol_token' => array('/^\[YOUTUBE?(\=[\P{C}\p{Cc}]*)*\]$/'),
@@ -201,7 +197,7 @@ class LexemeTable extends ContainerAware
 //					'accepts_param' => true,
 //					'param_required' => true,
 //            ),
-//			'IMG' => array(	
+//			'IMG' => array(
 //					'symbol_lexeme' => 'IMG',
 //					'symbol_token' => array('/^\[IMG?(\=(.*?)*)\]$/', '/^\[\/IMG\]$/'),
 //					'symbol_html' => array('<img class="bb_tag_img" src="{{param}}" alt="User contributed image: ', '">'),
@@ -222,7 +218,7 @@ class LexemeTable extends ContainerAware
 //					'accepts_param' => true,
 //					'param_required' => true,
 //					'param_is_url' => true,
-//			),	
+//			),
 
 //			//
 //			// Smileys
@@ -352,7 +348,7 @@ class LexemeTable extends ContainerAware
 //				'symbol_token' => array('/^\[\:WINK\:\]$/'),
 //				'symbol_html' => array('<img src="' . $smileys . 'wink.gif" alt="Wink">'),
 //				'group' => 'smiley',
-//			),			
+//			),
 //			':SPOCK:' => array(
 //				'symbol_lexeme' => ':SPOCK:',
 //				'symbol_token' => array('/^\[\:SPOCK\:\]$/'),
@@ -600,7 +596,7 @@ class LexemeTable extends ContainerAware
 //				'group' => 'smiley',
 //			),
 //
-//			
+//
 //			//
 //			// Double width emoticons
 //			//
@@ -763,5 +759,5 @@ class LexemeTable extends ContainerAware
 //////				'symbol_html' => array('<img src="' . $smileys . 'atomic.gif" alt="Atomic">'),
 //////				'group' => 'smiley',
 //////			),
-	
+
 }
