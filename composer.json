@@ -7,8 +7,9 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "reecefowell",
-            "email": "reece@codeconsortium.com"
+            "name": "Reece Fowell",
+            "email": "reece@codeconsortium.com",
+			"homepage": "http://www.reecefowell.com"
         }
     ],
     "minimum-stability": "dev",
