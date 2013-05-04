@@ -29,22 +29,24 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  * @link     https://github.com/codeconsortium/CCDNComponentBBCodeBundle
  *
  */
-class BBEditorType extends AbstractType
+class BBEditorFormType extends AbstractType
 {
     /**
+     * 
      * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
             'attr' => array(
-//                'style' => 'height:250px;',
-//                'class' => 'select2_option_taggable',
+                //'style' => 'height:250px;',
+                //'class' => 'bb_editor_pane',
             ),
         ));
     }
 
     /**
+     * 
      * Pass the image url to the view
      *
      * @param \Symfony\Component\Form\FormView      $view
@@ -53,10 +55,11 @@ class BBEditorType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-    //    $view->vars['options'] = $options['choices'];
+        //$view->vars['options'] = $options['choices'];
     }
 
     /**
+     * 
      * @return null|string|\Symfony\Component\Form\FormTypeInterface
      */
     public function getParent()
@@ -65,6 +68,7 @@ class BBEditorType extends AbstractType
     }
 
     /**
+     * 
      * @return string
      */
     public function getName()

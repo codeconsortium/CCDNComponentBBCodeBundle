@@ -48,7 +48,7 @@ class BBCodeExtension extends \Twig_Extension
         $this->engine = $engine;
         $this->enable = $enable;
 
-        //$engine = new \CCDNComponent\BBCode\Bootstrap();
+//        $engine = new \CCDNComponent\BBCode\Bootstrap();
     }
 
     /**
