@@ -11,25 +11,23 @@
  * file that was distributed with this source code.
  */
 
-/*
- * Created by Reece Fowell 
- * <me at reecefowell dot com> 
- * <reece at codeconsortium dot com>
- * Created on 17/12/2011
- */
-
 namespace CCDNComponent\BBCodeBundle\Component\TwigExtension;
 
 use CCDNComponent\BBCodeBundle\Engine\BBCodeEngine;
 
 /**
- * 
- * @author Reece Fowell <reece@codeconsortium.com> 
- * @version 1.0
+ *
+ * @category CCDNComponent
+ * @package  BBCodeBundle
+ *
+ * @author   Reece Fowell <reece@codeconsortium.com>
+ * @license  http://opensource.org/licenses/MIT MIT
+ * @version  Release: 2.0
+ * @link     https://github.com/codeconsortium/CCDNComponentBBCodeBundle
+ *
  */
 class BBCodeExtension extends \Twig_Extension
 {
-	
 	/**
 	 *
 	 * @access protected
@@ -52,10 +50,10 @@ class BBCodeExtension extends \Twig_Extension
 		$this->container = $container;
 		
 		$this->engine = $this->container->get('ccdn_component_bb_code.engine');
-		$this->enable = $this->container->getParameter('ccdn_component_bb_code.parser.enable');
+	//	$this->enable = $this->container->getParameter('ccdn_component_bb_code.parser.enable');
+	
+		//$engine = new CCDNBBCodeEngine\Engine\Bootstrap();
 	}
-
-
 
 	/**
 	 *
@@ -99,11 +97,9 @@ class BBCodeExtension extends \Twig_Extension
 	 */
 	public function BBCode($input, $enableOnDemand)
 	{
-		if ($this->enable && $enableOnDemand)
-		{
+		if ($this->enable && $enableOnDemand) {
 			$html = $this->engine->process($input);
 		} else {
-
 			$html = nl2br(htmlentities($input, ENT_QUOTES));			
 		}
 		

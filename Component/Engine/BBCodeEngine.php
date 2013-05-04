@@ -16,19 +16,30 @@ namespace CCDNComponent\BBCodeBundle\Component\Engine;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 /**
- * 
- * @author Reece Fowell <reece@codeconsortium.com> 
- * @version 1.0
+ *
+ * @category CCDNComponent
+ * @package  BBCodeBundle
+ *
+ * @author   Reece Fowell <reece@codeconsortium.com>
+ * @license  http://opensource.org/licenses/MIT MIT
+ * @version  Release: 2.0
+ * @link     https://github.com/codeconsortium/CCDNComponentBBCodeBundle
+ *
  */
 class BBCodeEngine extends ContainerAware
 {
-	
 	/**
 	 * 
 	 * @access private
 	 */
 	protected $lexemeTable;
-	
+
+	/**
+	 *
+	 * @access protected
+	 */
+	protected $scanner;
+		
 	/**
 	 *
 	 * @access protected
@@ -42,25 +53,22 @@ class BBCodeEngine extends ContainerAware
 	protected $parser;
 	
 	/**
-	 * 
-	 * @access private
-	 */
-	protected $lexemes;	
-	
-	/**
 	 *
 	 * @access private
 	 * @param $lexemeTable, Lexer $lexer, Parser $parser
 	 */
-	public function __construct($lexemeTable, $lexer, $parser)
+	public function __construct($lexemeTable, $scanner, $lexer, $parser)
 	{	
 		$this->lexemeTable = $lexemeTable;
 		
-		$this->lexer = $lexer;
-		$this->lexer->setLexemeTable($this->lexemeTable);
+		$lexer::setLexemeTable($this->lexemeTable);
+		$this->scanner = $scanner;
 		
+		$lexer::setLexemeTable($this->lexemeTable);
+		$this->lexer = $lexer;
+		
+		$parser::setLexemeTable($this->lexemeTable);
 		$this->parser = $parser;
-		$this->parser->setLexemeTable($this->lexemeTable);
 	}	
 	
 	/**
@@ -70,21 +78,18 @@ class BBCodeEngine extends ContainerAware
 	 */
 	public function process($input)
 	{
-		// Scan the input and break it down into possible tags and body text.
-		$regex = '/(\[(?:\/|:)?[A-Z0-9]{1,10}(?:="[ _,.?!@#$%&*()^=:\+\-\'\/\w]*"){0,500}?:?\])/';
-		
-		$scanTree = preg_split($regex, $input, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
-
 		// Warm up the lexeme table.
-		$this->lexemeTable->prepare();
+		$this->lexemeTable->setup();
+		
+		// Split input string by likely tag format.
+		$scanChunks = $this->scanner->process($input);
 		
 		// Create a symbol tree via the lexer.
-		$symbolTree = $this->lexer->process($scanTree);
-						  
+		$symbolTree = $this->lexer->process($scanChunks);
+		
 		// Parse the lexed symbol tree to get an HTML output.
-		$html = $this->parser->parse($symbolTree);
+		$html = $this->parser->process($symbolTree);
 
 		return $html;
 	}
-	
 }

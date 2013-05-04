@@ -19,12 +19,19 @@ use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\Config\FileLocator;
 
 /**
+ *
  * This is the class that loads and manages your bundle configuration
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  * 
- * @author Reece Fowell <reece@codeconsortium.com> 
- * @version 1.0
+ * @category CCDNComponent
+ * @package  BBCodeBundle
+ *
+ * @author   Reece Fowell <reece@codeconsortium.com>
+ * @license  http://opensource.org/licenses/MIT MIT
+ * @version  Release: 2.0
+ * @link     https://github.com/codeconsortium/CCDNComponentBBCodeBundle
+ *
  */
 class CCDNComponentBBCodeExtension extends Extension
 {

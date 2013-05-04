@@ -11,7 +11,10 @@
  * file that was distributed with this source code.
  */
 
-namespace CCDNComponent\BBCodeBundle\Component\Engine;
+namespace CCDNComponent\BBCodeBundle\Component\Node\Tree;
+
+//use CCDNComponent\BBCodeBundle\Component\Lexemes\LexemeBase;
+//use CCDNComponent\BBCodeBundle\Component\Lexemes\NodeTree\TreeInterface;
 
 /**
  *
@@ -24,33 +27,7 @@ namespace CCDNComponent\BBCodeBundle\Component\Engine;
  * @link     https://github.com/codeconsortium/CCDNComponentBBCodeBundle
  *
  */
-class Parser
+interface NodeTreeInterface
 {
-	/**
-	 *
-	 * @access protected
-	 */
-	protected static $lexemeTable;
 	
-	/**
-	 *
-	 * @access public
-	 * @param LexemeTable $lexemeTable
-	 */
-	public static function setLexemeTable($lexemeTable)
-	{
-		static::$lexemeTable = $lexemeTable;
-	}
-
-	public function process($tree)
-	{
-		$html = $this->parse($tree);
-		
-		return '<div class="bb_wrapper"><pre>' . $html . '</pre></div>';
-	}
-
-	public function parse($tree)
-	{
-		return $tree->cascadeRender();
-	}
 }

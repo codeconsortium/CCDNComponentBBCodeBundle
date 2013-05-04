@@ -24,7 +24,7 @@ namespace CCDNComponent\BBCodeBundle\Component\Engine;
  * @link     https://github.com/codeconsortium/CCDNComponentBBCodeBundle
  *
  */
-class Parser
+class Scanner
 {
 	/**
 	 *
@@ -42,15 +42,22 @@ class Parser
 		static::$lexemeTable = $lexemeTable;
 	}
 
-	public function process($tree)
+	public function process($input)
 	{
-		$html = $this->parse($tree);
+		$scanChunks = $this->scan($input);
 		
-		return '<div class="bb_wrapper"><pre>' . $html . '</pre></div>';
+		return $scanChunks;
 	}
 
-	public function parse($tree)
+	public function scan($input)
 	{
-		return $tree->cascadeRender();
+		// Scan the input and break it down into possible tags and body text.
+		$symbols = '\d\w _,.?!@#$%&*()^=:\+\-\'\/';
+		
+		$regex = '/(\[(?:\/|:)?[\d\w]{1,10}(?:\=(?:\"['.$symbols.']*\"|['.$symbols.'])){0,500}?:?\])/';
+		
+		$scanChunks = preg_split($regex, $input, null, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+		
+		return $scanChunks;
 	}
 }

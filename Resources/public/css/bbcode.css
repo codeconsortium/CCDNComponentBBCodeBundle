@@ -1,82 +1,66 @@
-/* SOME TAG WRAPPERS */
-div.bb_box {
-	width: auto;
-	display: block;
-	margin: 5px;
-	padding: 0px;
+div.bb_wrapper > pre,
+div.bb_wrapper pre {
+	border:none;
+	background:none;
+	white-space:pre-wrap;
+	margin-top:0px;
+	margin-bottom:0px;
 }
 
-div.bb_tag_head_strip {
-	line-height: 20px;
-	padding: 4px 4px 4px 8px;
-	font-weight: bold;
-	font-family: "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;;
+div.bb_wrapper blockquote {
+	margin-top:0px;
+	margin-bottom:0px;
+	padding-bottom:0px;
 }
 
-/* TAGS */
-div.bb_tag_quote {
-	width: auto;
-	display: block;
-	margin: 0px;
-	padding: 5px;
-	background: #f9fcff;
-	border: 1px solid #e4e4e4;
+div.bb_wrapper blockquote > pre {
+	border:none;
+	background:none;
+	white-space:pre-wrap;
 	
-	border-radius:5px;
-	overflow: auto;
+	margin-top:0px;
+	margin-bottom:0px;
+	padding-bottom:0px;
 }
 
 /*
- *
- * BBCode
- */
-div.bb_tag_code {
-	width: 100%;
-	display: block;
-	margin: 0;
-	padding: 0;
-	overflow: auto;
+div.bb_wrapper pre.prettyprint {
+	border:1px solid #eee;
+	background-color:#444;
+}
+*/
 
-	background: #f9fcff;
-	border: 1px solid #e4e4e4;
-	border-radius:5px;
+div.bb_wrapper div.bbtag_code {
+	/*border:2px solid red;*/
 }
 
-pre.bb_tag_code {
-	width: 100%;
-	display: block;
-	margin: 0px 10px;
-	padding: 0 10px;
-	
-/*	font: small/16px "Andale Mono", mono, Courier, "Courier New";
-	white-space: pre;*/
+div.bb_wrapper div.bbtag_code > pre {
+	margin:0px;
+	padding:0px;
+}
+div.bb_wrapper div.bbtag_code > pre > code {
+	background-color:#333;	
+}
+div.bb_wrapper div.bbtag_code > ul.nav-tabs {
+	margin-left:10px;
+	margin-right:10px;
+	margin-bottom:0px;
 }
 
-/*
- *
- * End BBCode
- */
-span.bb_tag_style_title {
-	font: bold large "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
+div.bb_wrapper div.bbtag_code > ul.nav-tabs > li > a {
+	background-color:#ddd;
+	color:black;
 }
 
-span.bb_tag_style_heading {
-	font: bold medium "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
+div.bb_wrapper div.bbtag_code > ul.nav-tabs > li.active > a {
+	background-color:#333;
+	color:white;
 }
 
-span.bb_tag_style_sub_section {
-	font: bold small "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
+div.bb_wrapper .bb_invalid_tag {
+	color:red;
 }
 
-span.bb_tag_style_body {
-	font: small "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
-}
-
-img.bb_tag_img {
-	border: 0;
-	margin: 5px;
-	padding: 0px;
-}
 /* **********************************
  * COMMON BB EDITOR WIDGET
  * *********************************/

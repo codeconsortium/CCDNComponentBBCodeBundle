@@ -20,9 +20,15 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * 
- * @author Reece Fowell <reece@codeconsortium.com> 
- * @version 1.4
+ *
+ * @category CCDNComponent
+ * @package  BBCodeBundle
+ *
+ * @author   Reece Fowell <reece@codeconsortium.com>
+ * @license  http://opensource.org/licenses/MIT MIT
+ * @version  Release: 2.0
+ * @link     https://github.com/codeconsortium/CCDNComponentBBCodeBundle
+ *
  */
 class BBEditorType extends AbstractType
 {

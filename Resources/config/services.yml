@@ -4,6 +4,7 @@ parameters:
     ccdn_component_bb_code.component.twig_extension.parse_bb.class:    CCDNComponent\BBCodeBundle\Component\TwigExtension\BBCodeExtension
 #    bb_code_fetch_choices.extension.class:         CCDNComponent\BBCodeBundle\Extension\BBCodeFetchChoicesExtension
     ccdn_component_bb_code.engine.class:            CCDNComponent\BBCodeBundle\Component\Engine\BBCodeEngine
+    ccdn_component_bb_code.scanner.class:           CCDNComponent\BBCodeBundle\Component\Engine\Scanner
     ccdn_component_bb_code.lexer.class:             CCDNComponent\BBCodeBundle\Component\Engine\Lexer
     ccdn_component_bb_code.parser.class:            CCDNComponent\BBCodeBundle\Component\Engine\Parser
     ccdn_component_bb_code.lexeme_table.class:      CCDNComponent\BBCodeBundle\Component\Engine\LexemeTable
@@ -27,8 +28,12 @@ services:
         class: %ccdn_component_bb_code.engine.class%
         arguments:
             - @ccdn_component_bb_code.lexeme_table
+            - @ccdn_component_bb_code.scanner
             - @ccdn_component_bb_code.lexer
             - @ccdn_component_bb_code.parser
+
+    ccdn_component_bb_code.scanner:
+        class: %ccdn_component_bb_code.scanner.class%
 
     ccdn_component_bb_code.lexer:
         class: %ccdn_component_bb_code.lexer.class%
@@ -38,7 +43,6 @@ services:
 
     ccdn_component_bb_code.lexeme_table:
         class: %ccdn_component_bb_code.lexeme_table.class%
-        arguments: [@service_container]
 
     ccdn_component_bb_code.form.type.bb_editor:
         class: %ccdn_component_bb_code.form.type.bb_editor.class%

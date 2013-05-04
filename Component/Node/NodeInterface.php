@@ -11,7 +11,9 @@
  * file that was distributed with this source code.
  */
 
-namespace CCDNComponent\BBCodeBundle\Component\Engine;
+namespace CCDNComponent\BBCodeBundle\Component\Node;
+
+//use CCDNComponent\BBCodeBundle\Component\Node\Lexeme\LexemeInterface;
 
 /**
  *
@@ -23,34 +25,21 @@ namespace CCDNComponent\BBCodeBundle\Component\Engine;
  * @version  Release: 2.0
  * @link     https://github.com/codeconsortium/CCDNComponentBBCodeBundle
  *
+ * @abstract
+ *
  */
-class Parser
+interface NodeInterface
 {
-	/**
-	 *
-	 * @access protected
-	 */
-	protected static $lexemeTable;
+	public function setNodeParent(NodeInterface $node);
+	public function getNodeParent();
 	
-	/**
-	 *
-	 * @access public
-	 * @param LexemeTable $lexemeTable
-	 */
-	public static function setLexemeTable($lexemeTable)
-	{
-		static::$lexemeTable = $lexemeTable;
-	}
-
-	public function process($tree)
-	{
-		$html = $this->parse($tree);
-		
-		return '<div class="bb_wrapper"><pre>' . $html . '</pre></div>';
-	}
-
-	public function parse($tree)
-	{
-		return $tree->cascadeRender();
-	}
+	public function hasNodeParent();
+	
+	public function setNodePrevious(NodeInterface $node);
+	public function getNodePrevious();
+	public function hasNodePrevious();
+	
+	public function setNodeNext(NodeInterface $node);
+	public function getNodeNext();
+	public function hasNodeNext();
 }
