@@ -16,7 +16,8 @@ namespace CCDNComponent\BBCodeBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-use CCDNComponent\BBCodeBundle\DependencyInjection\Compiler\TagACLCompilerPass;
+use CCDNComponent\BBCodeBundle\DependencyInjection\Compiler\TagCompilerPass;
+use CCDNComponent\BBCodeBundle\DependencyInjection\Compiler\ACLCompilerPass;
 
 /**
  *
@@ -34,7 +35,8 @@ class CCDNComponentBBCodeBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new TagACLCompilerPass());
+        $container->addCompilerPass(new TagCompilerPass());
+        $container->addCompilerPass(new ACLCompilerPass());
     }
 	
     /**

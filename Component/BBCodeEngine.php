@@ -30,16 +30,22 @@ class BBCodeEngine
 	protected $tableContainer;
 	protected $isParserEnabled;
 	
-	public function __construct($engine, $isParserEnabled, $tableContainer, $aclChain)
+	public function __construct($engine, $isParserEnabled, $tableContainer, $tagChain, $aclChain)
 	{
 		$this->engine = $engine;
 		
 		$this->isParserEnabled = $isParserEnabled;
 		
-		$integrators = $aclChain->getACLIntegrators();
+		$tagIntegrators = $tagChain->getTagIntegrators();
+
+		foreach ($tagIntegrators as $tagIntegrator) {
+			$tableContainer->setTableLexemes($tagIntegrator->build());
+		}
+
+		$aclIntegrators = $aclChain->getACLIntegrators();
 		
-		foreach ($integrators as $integrator) {
-			$tableContainer->setTableACL($integrator->build());
+		foreach ($aclIntegrators as $aclIntegrator) {
+			$tableContainer->setTableACL($aclIntegrator->build());
 		}
 		
 		$this->tableContainer = $tableContainer;

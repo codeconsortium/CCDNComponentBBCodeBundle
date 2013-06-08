@@ -99,7 +99,12 @@ class CCDNComponentBBCodeExtension extends Extension
     {
         $container->setParameter('ccdn_component_bb_code.component.twig_extension.parse_bb.class', $config['component']['twig_extension']['parse_bb']['class']);
 
+        $container->setParameter('ccdn_component_bb_code.component.chain.tag.class', $config['component']['chain']['tag']['class']);
+        $container->setParameter('ccdn_component_bb_code.component.chain.acl.class', $config['component']['chain']['acl']['class']);
+		
         $container->setParameter('ccdn_component_bb_code.component.bootstrap.class', $config['component']['bootstrap']['class']);
+
+        $container->setParameter('ccdn_component_bb_code.component.engine.bootstrap.class', $config['component']['engine']['bootstrap']['class']);
         $container->setParameter('ccdn_component_bb_code.component.engine.table_container.class', $config['component']['engine']['table_container']['class']);
         $container->setParameter('ccdn_component_bb_code.component.engine.scanner.class', $config['component']['engine']['scanner']['class']);
         $container->setParameter('ccdn_component_bb_code.component.engine.lexer.class', $config['component']['engine']['lexer']['class']);

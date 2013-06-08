@@ -11,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace CCDNComponent\BBCodeBundle\Component\ACL\Chain;
+namespace CCDNComponent\BBCodeBundle\Component\Chain;
 
 /**
  *
@@ -24,13 +24,13 @@ namespace CCDNComponent\BBCodeBundle\Component\ACL\Chain;
  * @link     https://github.com/codeconsortium/CCDNComponentBBCodeBundle
  *
  */
-class ACLChain
+class TagChain
 {
     /**
      *
      * @access private
      */
-    private $tagACLIntegrators;
+    private $tagIntegrators;
 
     /**
      *
@@ -38,21 +38,26 @@ class ACLChain
      */
     public function __construct()
     {
-		$this->tagACLIntegrators = array();
+		$this->tagIntegrators = array();
     }
 
     /**
      *
      * @access public
-     * @param $tagACL
+     * @param $tagIntegrator
      */
-    public function addACL($tagACLIntegrator)
+    public function addTagIntegrator($tagIntegrator)
     {
-		$this->tagACLIntegrators[] = $tagACLIntegrator;
+		$this->tagIntegrators[] = $tagIntegrator;
     }
 	
-	public function getACLIntegrators()
+	/**
+	 * 
+	 * @access public
+	 * @return array
+	 */
+	public function getTagIntegrators()
 	{
-		return $this->tagACLIntegrators;
+		return $this->tagIntegrators;
 	}
 }

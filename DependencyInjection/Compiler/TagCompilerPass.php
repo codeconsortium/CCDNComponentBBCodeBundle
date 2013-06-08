@@ -28,7 +28,7 @@ use Symfony\Component\DependencyInjection\Reference;
  * @link     https://github.com/codeconsortium/CCDNComponentBBCodeBundle
  *
  */
-class TagACLCompilerPass implements CompilerPassInterface
+class TagCompilerPass implements CompilerPassInterface
 {
     /**
      *
@@ -37,16 +37,16 @@ class TagACLCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (false === $container->hasDefinition('ccdn_component_bb_code.tag_acl_chain')) {
+        if (false === $container->hasDefinition('ccdn_component_bb_code.component.chain.tag')) {
             return;
         }
 
-        $definition = $container->getDefinition('ccdn_component_bb_code.tag_acl_chain');
+        $definition = $container->getDefinition('ccdn_component_bb_code.component.chain.tag');
 
-		$taggedServices = $container->findTaggedServiceIds('ccdn_component_bb_code.tag_acl');
-		
+		$taggedServices = $container->findTaggedServiceIds('ccdn_component_bb_code.tag');
+
         foreach ($taggedServices as $id => $attributes) {
-            $definition->addMethodCall('addACL', array(new Reference($id)));
+            $definition->addMethodCall('addTagIntegrator', array(new Reference($id)));
         }
     }
 }
