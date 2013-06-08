@@ -56,6 +56,7 @@ class Configuration implements ConfigurationInterface
 
         // Configuration stuff.
         $this
+			->addTagGroups($rootNode)
             ->addEditorSection($rootNode)
             ->addParserSection($rootNode)
         ;
@@ -138,11 +139,11 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsIfNotSet()
                             ->canBeUnset()
                             ->children()
-		                        ->arrayNode('lexeme_table')
+		                        ->arrayNode('table_container')
 		                            ->addDefaultsIfNotSet()
 		                            ->canBeUnset()
 		                            ->children()
-		                                ->scalarNode('class')->defaultValue('CCDNComponent\BBCode\Engine\LexemeTable')->end()
+		                                ->scalarNode('class')->defaultValue('CCDNComponent\BBCode\Engine\Table\TableContainer')->end()
 		                            ->end()
 		                        ->end()
 		                        ->arrayNode('scanner')
@@ -176,6 +177,54 @@ class Configuration implements ConfigurationInterface
         return $this;
     }
 
+    /**
+     *
+     * @access private
+     * @param  ArrayNodeDefinition                                           $node
+     * @return \CCDNComponent\BBCodeBundle\DependencyInjection\Configuration
+     */
+    private function addTagGroups(ArrayNodeDefinition $node)
+    {
+		$node
+			->addDefaultsIfNotSet()
+			->canBeUnset()
+			->children()
+				->arrayNode('tag_acl')
+					->prototype('array') // For the tag groups
+						->children()
+							->arrayNode('group') // for the group list
+								->addDefaultsIfNotSet()
+								->canBeUnset()
+								->children()
+									->arrayNode('white_list')
+										->prototype('scalar')->end()
+									->end()
+									->arrayNode('black_list')
+										->prototype('scalar')->end()
+									->end()
+								->end()
+							->end()
+							->arrayNode('tag')
+								->addDefaultsIfNotSet()
+								->canBeUnset()
+								->children()
+									->arrayNode('white_list')
+										->prototype('scalar')->end()
+									->end()
+									->arrayNode('black_list')
+										->prototype('scalar')->end()
+									->end()
+								->end()
+							->end()
+						->end()
+					->end()
+				->end()
+			->end()
+		;
+		
+		return $this;
+	}
+	
     /**
      *
      * @access private

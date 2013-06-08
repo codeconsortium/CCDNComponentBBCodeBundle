@@ -1,0 +1,35 @@
+{%- macro button_group(button_group) -%}
+	{%- for button_order, tag in button_group -%}
+		{%- set icon = BBCode_GetButtonIcon(tag) -%}
+		{%- set label = BBCode_GetButtonLabel(tag) -%}
+		{%- set token_name = BBCode_GetTokenName(tag) -%}
+		{%- set token_count = BBCode_GetTokenCount(tag) -%}
+
+		&#91;{{- token_name |raw -}}&#93;,&nbsp;
+	{%- endfor -%}
+{%- endmacro -%}
+
+{%- macro button_row(groups) -%}
+	{%- import _self as bb_macros -%}
+	
+	{%- for group_name, group in groups -%}
+		<b>
+			{{- group_name -}}&nbsp;
+		</b>
+		
+		{%- for button_group_name, button_group in group -%}
+			{{- bb_macros.button_group(button_group) -}}
+		{%- endfor -%}
+	{%- endfor -%}
+	
+	<br>
+{%- endmacro -%}
+
+<section>
+
+	{%- import _self as bb_macros -%}
+
+	{{- bb_macros.button_row({'Format': tag_groups['Format']}) -}}
+	{{- bb_macros.button_row({'Asset': tag_groups['Asset'], 'Block': tag_groups['Block']}) -}}
+
+</section>

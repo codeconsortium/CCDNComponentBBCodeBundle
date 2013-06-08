@@ -14,6 +14,9 @@
 namespace CCDNComponent\BBCodeBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+
+use CCDNComponent\BBCodeBundle\DependencyInjection\Compiler\TagACLCompilerPass;
 
 /**
  *
@@ -22,7 +25,18 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class CCDNComponentBBCodeBundle extends Bundle
 {
+    /**
+     *
+     * @access public
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     */
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
 
+        $container->addCompilerPass(new TagACLCompilerPass());
+    }
+	
     /**
      *
      * @access public
@@ -30,11 +44,14 @@ class CCDNComponentBBCodeBundle extends Bundle
     public function boot()
     {
         $twig = $this->container->get('twig');
-        $twig->addGlobal('ccdn_component_bb_code', array(
-            'editor' => array(
-                'enable' => $this->container->getParameter('ccdn_component_bb_code.editor.enable'),
-            ),
-        ));
+		
+        $twig->addGlobal(
+			'ccdn_component_bb_code',
+			array(
+	            'editor' => array(
+	                'enable' => $this->container->getParameter('ccdn_component_bb_code.editor.enable'),
+	            ),
+	        )
+		); // End Twig Globals.
     }
-
 }

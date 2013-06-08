@@ -1,63 +1,52 @@
-{% block bb_editor_widget %}
-	{% set attr = attr|merge({ 'class': attr.class|default('') ~ 'text-xlarge span10 bb-editor', 'style': attr.style|default('') ~ 'height:250px;'}) %}
-	{% set field_id = BBCodeFetchElementIDforTheme(block('widget_attributes')) %}
-{#	{% if ccdn_component_bb_code.editor.enable == true %}
-		<div class="btn-toolbar hidden" style="clear:both;" data-compat="interactive-js-compat">
+{%- macro button_group(button_group) -%}
+	{%- for button_order, tag in button_group -%}
+		{%- set icon = BBCode_GetButtonIcon(tag) -%}
+		{%- set label = BBCode_GetButtonLabel(tag) -%}
+		{%- set token_name = BBCode_GetTokenName(tag) -%}
+		{%- set token_count = BBCode_GetTokenCount(tag) -%}
+		{%- set param_question = BBCode_GetButtonParameterQuestion(tag) -%}
+		
+		<button class="btn btn-mini" data-tag="{{- token_name -}}" data-tag-count="{{- token_count -}}"{%- if param_question %} data-param-question="{{- param_question -}}"{% endif %}>
+			{%- if icon -%}
+				<i class="{{- icon -}}"></i>
+			{%- else -%}
+				{{- label |raw -}}
+			{%- endif -%}
+		</button>
+	{%- endfor -%}
+{%- endmacro -%}
 
-			<div class="btn-group" style="margin-bottom:0px;vertical-align:bottom;">
-				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.style' | trans({}, 'CCDNComponentBBCodeBundle') }}">
-					&para;<i class="icon-font"></i>
-					&nbsp;<span class="caret"></span>
-				</a>
-				<ul class="dropdown-menu">
-					{% set styles = BBCodeFetchChoices('style') %}
-					{% for key, style in styles %}
-						<li><a href="#" class="bb-block" data-use-param="{{ style }}">&para;&nbsp;<span class="{{ style }}">{{ key |title }}</span></a></li>
-					{% endfor %}
-				</ul>
-			</div>
-
-			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="B" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.bold' | trans({}, 'CCDNComponentBBCodeBundle') }}"><b>B</b></button>
-			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="U" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.underline' | trans({}, 'CCDNComponentBBCodeBundle') }}"><u>U</u></button>
-			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="I" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.italic' | trans({}, 'CCDNComponentBBCodeBundle') }}"><i>I</i></button>
-
-			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="STRIKE" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.strike' | trans({}, 'CCDNComponentBBCodeBundle') }}"><strike>S</strike></button>
-
-			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="SUB" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.sub' | trans({}, 'CCDNComponentBBCodeBundle') }}"><b><i>x</i></b><sub class="button_script">y</sub></button>
-			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="SUP" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.sup' | trans({}, 'CCDNComponentBBCodeBundle') }}"><b><i>x</i></b><sup class="button_script">y</sup></button>
-
-			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="CODE" data-ask-param="What language?" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.code' | trans({}, 'CCDNComponentBBCodeBundle') }}">code</button>
-			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="QUOTE" data-ask-param="Who said this?" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.quote' | trans({}, 'CCDNComponentBBCodeBundle') }}">quote</button>
-
-			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="URL" data-ask-param="Add the url here:" data-ask-value="Add a label for this url:" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.url' | trans({}, 'CCDNComponentBBCodeBundle') }}"><i class="icon-globe"></i></button>
-			<button type="button" class="btn bb-block" data-target-textarea="{{ field_id | raw }}" data-tag="IMG" data-ask-param="Add the image url here:" data-ask-value="Add text for image description:" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.image' | trans({}, 'CCDNComponentBBCodeBundle') }}"><i class="icon-picture"></i></button>
-
-			{{ block('smileys') }}
-		</div>
-	{% endif %}#}
-
-    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
-
-{% endblock bb_editor_widget %}
-
-
-
-{% block smileys %}
-
-	<div class="btn-group" style="margin-bottom:0px;vertical-align:bottom;">
-		<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" data-tip="top" title="{{ 'ccdn_component_bb_code.editor.button.smileys' | trans({}, 'CCDNComponentBBCodeBundle') }}">
-			<img src="{{ asset('bundles/ccdncomponentbbcode/images/smilies/smile.gif') }}" alt="smiley" />
-			<span class="caret"></span>
-		</a>
-		<div class="dropdown-menu pull-right" style="width:650px;">
-		{%- spaceless -%}
-			<ul class="thumbnails row" style="padding:2px;">
-			{%- for key, smiley in BBCodeFetchGroup('smiley') -%}
-				<li style="margin:0px;"><a class="thumbnail bb-emoticon" style="margin:2px;box-shadow:none;" onClick="addBlock({{ field_id | raw }})" href="#" data-target-textarea="{{- field_id | raw -}}" data-tag=":{{- smiley['symbol_lexeme'] -}}:">{{- smiley['symbol_html'][0] |raw -}}</a></li>
+{%- macro button_row(groups) -%}
+	{%- import _self as bb_macros -%}
+	
+	<div class="btn-toolbar">
+		{%- for group_name, group in groups -%}
+			{%- for button_group_name, button_group in group -%}
+				{%- if button_group_name == '' or button_group_name == 'none' -%}
+					{{- bb_macros.button_group(button_group) -}}
+				{%- else -%}
+					<div class="btn-group">
+						{{- bb_macros.button_group(button_group) -}}
+					</div>
+				{%- endif -%}
 			{%- endfor -%}
-			</ul>
-		{%- endspaceless -%}
-		</div>
+		{%- endfor -%}
 	</div>
+{%- endmacro -%}
 
-{% endblock smileys %}
+{% block bb_editor_widget %}
+	<div class="bb-editor">
+		{% set attr = attr|merge({ 'class': attr.class|default('') ~ 'text-xlarge span10 bb-editor', 'style': attr.style|default('') ~ 'height:250px;'}) %}
+
+		<div class="collapse">
+			{%- set tag_groups = BBCode_GetTagsAllowed(attr.acl_group) -%}
+			{%- import _self as bb_macros -%}
+	
+			{{- bb_macros.button_row({'Format': tag_groups['Format']}) -}}
+			{{- bb_macros.button_row({'Asset': tag_groups['Asset'], 'Block': tag_groups['Block']}) -}}
+		</div>
+		
+	    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+		
+	</div>
+{% endblock bb_editor_widget %}

@@ -1,53 +1,19 @@
 parameters:
 
     # Service Parameters defined in app/config
-#   ccdn_component_bb_code.component.twig_extension.fetch_choices.class: CCDNComponent\BBCodeBundle\Extension\BBCodeFetchChoicesExtension
-    #ccdn_component_bb_code.component.twig_extension.parse_bb.class:     CCDNComponent\BBCodeBundle\Component\TwigExtension\BBCodeExtension
-
-    #ccdn_component_bb_code.form.type.bb_editor.class:                   CCDNComponent\BBCodeBundle\Form\Type\BBEditorType
-
-    #ccdn_component_bb_code.component.bootstrap.class:                             CCDNComponent\BBCode\Bootstrap
-    #ccdn_component_bb_code.component.engine.scanner.class:                               CCDNComponent\BBCode\Engine\Scanner
-    #ccdn_component_bb_code.component.engine.lexer.class:                                 CCDNComponent\BBCode\Engine\Lexer
-    #ccdn_component_bb_code.component.engine.parser.class:                                CCDNComponent\BBCode\Engine\Parser
-    #ccdn_component_bb_code.component.engine.lexeme_table.class:                          CCDNComponent\BBCode\Engine\LexemeTable
+    ccdn_component_bb_code.tag_acl_chain.class: CCDNComponent\BBCodeBundle\Component\ACL\Chain\ACLChain
+    ccdn_component_bb_code.component.engine.class: CCDNComponent\BBCodeBundle\Component\BBCodeEngine
 
 services:
 
-#    ccdn_component_bb_code.component.twig_extension.fetch_choices:
-#        class: %ccdn_component_bb_code.component.twig_extension.fetch_choices.class%
-#        arguments: [@service_container]
-#        tags:
-#            - { name: twig.extension }
-
-    ccdn_component_bb_code.component.twig_extension.parse_bb:
-        class: %ccdn_component_bb_code.component.twig_extension.parse_bb.class%
-        arguments:
-            - @ccdn_component_bb_code.component.bootstrap
-            - %ccdn_component_bb_code.parser.enable%
-        tags:
-            - { name: twig.extension }
-
-
-    #
-    # Form Types.
-    #
-    ccdn_component_bb_code.form.type.bb_editor:
-        class: %ccdn_component_bb_code.form.type.bb_editor.class%
-        arguments: []
-        tags:
-            - { name: "form.type", alias: "bb_editor" }
+    ccdn_component_bb_code.tag_acl_chain:
+        class: %ccdn_component_bb_code.tag_acl_chain.class%
 
     #
     # BB Code Engine.
     #
-    ccdn_component_bb_code.component.bootstrap:
-        class: %ccdn_component_bb_code.component.bootstrap.class%
-        arguments:
-            - @ccdn_component_bb_code.component.engine.lexeme_table
-            - @ccdn_component_bb_code.component.engine.scanner
-            - @ccdn_component_bb_code.component.engine.lexer
-            - @ccdn_component_bb_code.component.engine.parser
+    ccdn_component_bb_code.component.engine.table_container:
+        class: %ccdn_component_bb_code.component.engine.table_container.class%
 
     ccdn_component_bb_code.component.engine.scanner:
         class: %ccdn_component_bb_code.component.engine.scanner.class%
@@ -58,5 +24,40 @@ services:
     ccdn_component_bb_code.component.engine.parser:
         class: %ccdn_component_bb_code.component.engine.parser.class%
 
-    ccdn_component_bb_code.component.engine.lexeme_table:
-        class: %ccdn_component_bb_code.component.engine.lexeme_table.class%
+    ccdn_component_bb_code.component.bootstrap:
+        class: %ccdn_component_bb_code.component.bootstrap.class%
+        arguments:
+            - @ccdn_component_bb_code.component.engine.table_container
+            - @ccdn_component_bb_code.component.engine.scanner
+            - @ccdn_component_bb_code.component.engine.lexer
+            - @ccdn_component_bb_code.component.engine.parser
+
+    ccdn_component_bb_code.component.engine:
+        class: %ccdn_component_bb_code.component.engine.class%
+        arguments:
+            - @ccdn_component_bb_code.component.bootstrap
+            - %ccdn_component_bb_code.parser.enable%
+            - @ccdn_component_bb_code.component.engine.table_container
+            - @ccdn_component_bb_code.tag_acl_chain
+
+#    ccdn_component_bb_code.component.twig_extension.fetch_choices:
+#        class: %ccdn_component_bb_code.component.twig_extension.fetch_choices.class%
+#        arguments: [@service_container]
+#        tags:
+#            - { name: twig.extension }
+
+    ccdn_component_bb_code.component.twig_extension.parse_bb:
+        class: %ccdn_component_bb_code.component.twig_extension.parse_bb.class%
+        arguments:
+            - @ccdn_component_bb_code.component.engine
+        tags:
+            - { name: twig.extension }
+
+    #
+    # Form Types.
+    #
+    ccdn_component_bb_code.form.type.bb_editor:
+        class: %ccdn_component_bb_code.form.type.bb_editor.class%
+        arguments: []
+        tags:
+            - { name: "form.type", alias: "bb_editor" }

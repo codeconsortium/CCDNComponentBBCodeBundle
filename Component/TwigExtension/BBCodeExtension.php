@@ -31,24 +31,16 @@ class BBCodeExtension extends \Twig_Extension
      * @access protected
      */
     protected $engine;
-
-    /**
-     *
-     * @access protected
-     */
-    protected $enable;
-
+	
     /**
      *
      * @access public
-     * @param $container
+     * @param $engine
+	 * @param $enable
      */
-    public function __construct($engine, $enable)
+    public function __construct($engine)
     {
         $this->engine = $engine;
-        $this->enable = $enable;
-
-//        $engine = new \CCDNComponent\BBCode\Bootstrap();
     }
 
     /**
@@ -59,10 +51,16 @@ class BBCodeExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'BBCode' => new \Twig_Function_Method($this, 'BBCode'),
-            'BBCodeFetchChoices' => new \Twig_Function_Method($this, 'BBCodeFetchChoices'),
-            'BBCodeFetchGroup' => new \Twig_Function_Method($this, 'BBCodeFetchGroup'),
-            'BBCodeFetchElementIDforTheme' => new \Twig_Function_Method($this, 'BBCodeFetchElementIDforTheme'),
+            'BBCode_Parse' => new \Twig_Function_Method($this, 'BBCodeParse'),
+			'BBCode_IsParserEnabled' => new \Twig_Function_Method($this, 'BBCodeIsParserEnabled'),
+			'BBCode_GetTagsAllowed' => new \Twig_Function_Method($this, 'BBCodeGetTagsAllowed'),
+			'BBCode_GetTagsByGroup' => new \Twig_Function_Method($this, 'BBCodeGetTagsByGroup'),
+			'BBCode_GetTokenName' => new \Twig_Function_Method($this, 'BBCodeGetTokenName'),
+			'BBCode_GetTokenCount' => new \Twig_Function_Method($this, 'BBCodeGetTokenCount'),
+			'BBCode_GetLexemeName' => new \Twig_Function_Method($this, 'BBCodeGetLexemeName'),
+			'BBCode_GetButtonLabel' => new \Twig_Function_Method($this, 'BBCodeGetButtonLabel'),
+			'BBCode_GetButtonIcon' => new \Twig_Function_Method($this, 'BBCodeGetButtonIcon'),
+			'BBCode_GetButtonParameterQuestion' => new \Twig_Function_Method($this, 'BBCodeGetButtonParameterQuestion'),
         );
     }
 
@@ -81,81 +79,73 @@ class BBCodeExtension extends \Twig_Extension
      * Converts BBCode to HTML via breaking down the BBCode tags into lexemes (via lexer method), which are
      * then stored in the form of an array, this array is then given to the parser which matches the proper
      * pairs to their HTML equivalent. Pairs must have a matching token, matched/unmatched are marked as
-     * so during the lexing process via an reference token.
+     * so during the lexing process via a reference token.
      *
      * @access public
-     * @param $input
-     * @return string $html
+     * @param  $input
+	 * @param  string $tagGroup
      */
-    public function BBCode($input, $enableOnDemand)
+    public function BBCodeParse($input, $tableACLName = null)
     {
-        if ($this->enable && $enableOnDemand) {
-            $html = $this->engine->process($input);
-        } else {
-            $html = nl2br(htmlentities($input, ENT_QUOTES));
-        }
-
-        return $html;
+        return $this->engine->process($input, $tableACLName);
     }
-
-    /**
-     *
-     * @access public
-     * @param $tag
-     * @return array
-     */
-    public function BBCodeFetchChoices($tag)
-    {
-        $lexemes = $this->engine->getLexemes();
-
-        foreach ($lexemes as $lexeme) {
-            if ($lexeme['symbol_lexeme'] == $tag) {
-                if (array_key_exists('param_choices', $lexeme)) {
-                    return $lexeme['param_choices'];
-                }
-
-                return array();
-            }
-        }
-
-        return array();
-    }
-
-    /**
-     *
-     * @access public
-     * @param $group
-     * @return array
-     */
-    public function BBCodeFetchGroup($group)
-    {
-        $lexemes = $this->engine->getLexemes();
-
-        $found = array();
-
-        foreach ($lexemes as $lexeme_key => $lexeme) {
-            if (array_key_exists('group', $lexeme)) {
-                if ($lexeme['group'] == $group) {
-                    $found[] = $lexeme;
-                }
-            }
-        }
-
-        return $found;
-    }
-
-    /**
-     *
-     * @access public
-     * @param $attributes
-     * @return int $id
-     */
-    public function BBCodeFetchElementIDforTheme($attributes)
-    {
-        preg_match('/id\=\"([a-zA-Z0-9_[]]*)*\"/', $attributes, $matches, 0, 0);
-        $id = substr($matches[0], 4, -1);
-
-        return $id;
-    }
-
+	
+	/**
+	 * 
+	 * Determines if the parser is enabled based on global engine enabled state and the requested acl group.
+	 * 
+	 * @access public
+	 * @param  string $aclName
+	 * @return bool
+	 */
+	public function BBCodeIsParserEnabled($aclName)
+	{
+		$table = $this->engine->getTableACL($aclName);
+		
+		return $this->engine->isParserEnabled() && $table->isParserEnabled();
+	}
+	
+	public function BBCodeGetTagsAllowed($aclName)
+	{
+		$table = $this->engine->getTableACL($aclName);
+		
+		return $table->getTags();
+	}
+	
+	public function BBCodeGetTagsByGroup($aclName, $groupName)
+	{
+		$table = $this->engine->getTableACL($aclName);
+		
+		return $table->getTagsByGroup($groupName);
+	}
+	
+	public function BBCodeGetTokenName($lexemeClass)
+	{
+		return $lexemeClass::getCanonicalTokenName();
+	}
+	
+	public function BBCodeGetTokenCount($lexemeClass)
+	{
+		return $lexemeClass::getTokenCount();
+	}
+	
+	public function BBCodeGetLexemeName($lexemeClass)
+	{
+		return $lexemeClass::getCanonicalLexemeName();
+	}
+	
+	public function BBCodeGetButtonLabel($lexemeClass)
+	{
+		return $lexemeClass::getButtonLabel();
+	}
+	
+	public function BBCodeGetButtonIcon($lexemeClass)
+	{
+		return $lexemeClass::getButtonIcon();
+	}
+	
+	public function BBCodeGetButtonParameterQuestion($lexemeClass)
+	{
+		return $lexemeClass::getButtonParameterQuestion();
+	}
 }

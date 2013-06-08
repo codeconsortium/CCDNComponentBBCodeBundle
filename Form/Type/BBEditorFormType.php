@@ -16,6 +16,7 @@ namespace CCDNComponent\BBCodeBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
@@ -37,27 +38,15 @@ class BBEditorFormType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'attr' => array(
-                //'style' => 'height:250px;',
-                //'class' => 'bb_editor_pane',
-            ),
-        ));
+        $resolver->setDefaults(
+			array(
+				'attr' => array(
+					'acl_group' => 'default',
+				),
+	        )
+		);
     }
-
-    /**
-     * 
-     * Pass the image url to the view
-     *
-     * @param \Symfony\Component\Form\FormView      $view
-     * @param \Symfony\Component\Form\FormInterface $form
-     * @param array                                 $options
-     */
-    public function buildView(FormView $view, FormInterface $form, array $options)
-    {
-        //$view->vars['options'] = $options['choices'];
-    }
-
+	
     /**
      * 
      * @return null|string|\Symfony\Component\Form\FormTypeInterface

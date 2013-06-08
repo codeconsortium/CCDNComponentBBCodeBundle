@@ -64,6 +64,7 @@ class CCDNComponentBBCodeExtension extends Extension
 
         // Configuration stuff.
         $this
+			->getTagGroupsSection($config, $container)
             ->getEditorSection($config, $container)
             ->getParserSection($config, $container)
         ;
@@ -97,10 +98,9 @@ class CCDNComponentBBCodeExtension extends Extension
     private function getComponentSection(array $config, ContainerBuilder $container)
     {
         $container->setParameter('ccdn_component_bb_code.component.twig_extension.parse_bb.class', $config['component']['twig_extension']['parse_bb']['class']);
-        //$container->setParameter('ccdn_component_bb_code.component.twig_extension.fetch_bb_tags.class', $config['component']['twig_extension']['fetch_bb_tags']['class']);
-		
+
         $container->setParameter('ccdn_component_bb_code.component.bootstrap.class', $config['component']['bootstrap']['class']);
-        $container->setParameter('ccdn_component_bb_code.component.engine.lexeme_table.class', $config['component']['engine']['lexeme_table']['class']);
+        $container->setParameter('ccdn_component_bb_code.component.engine.table_container.class', $config['component']['engine']['table_container']['class']);
         $container->setParameter('ccdn_component_bb_code.component.engine.scanner.class', $config['component']['engine']['scanner']['class']);
         $container->setParameter('ccdn_component_bb_code.component.engine.lexer.class', $config['component']['engine']['lexer']['class']);
         $container->setParameter('ccdn_component_bb_code.component.engine.parser.class', $config['component']['engine']['parser']['class']);
@@ -108,6 +108,20 @@ class CCDNComponentBBCodeExtension extends Extension
         return $this;
     }
 
+    /**
+     *
+     * @access private
+     * @param  array                                                                        $config
+     * @param  \Symfony\Component\DependencyInjection\ContainerBuilder                      $container
+     * @return \CCDNComponent\BBCodeBundle\DependencyInjection\CCDNComponentBBCodeExtension
+     */
+    private function getTagGroupsSection(array $config, ContainerBuilder $container)
+    {
+		$container->setParameter('ccdn_component_bb_code.tag_acl', $config['tag_acl']);
+		
+		return $this;
+	}
+	
     /**
      *
      * @access private
