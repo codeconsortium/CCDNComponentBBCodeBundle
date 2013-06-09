@@ -22,3 +22,5 @@ For more information about translations, check [Symfony documentation](http://sy
 
 - [Installing CCDNComponent BBCodeBundle for Symfony 2.1.x](install.md).
 - [Configuration Reference](configuration_reference.md).
+- [Adding New Tags](adding_new_tags.md).
+- [Adding New ACL Groups](adding_new_acl_groups.md).

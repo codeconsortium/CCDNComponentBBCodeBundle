@@ -23,6 +23,7 @@ Append the following to end of your applications composer.json file (found in th
     // ...
     "require": {
         // ...
+        "codeconsortium/ccdn-component-bb-code": "dev-master",
         "codeconsortium/ccdn-component-bb-code-bundle": "dev-master"
     }
 }
@@ -86,3 +87,5 @@ If you need further help/support, have suggestions or want to contribute please 
 
 - [Return back to the docs index](index.md).
 - [Configuration Reference](configuration_reference.md).
+- [Adding New Tags](adding_new_tags.md).
+- [Adding New ACL Groups](adding_new_acl_groups.md).

@@ -64,7 +64,6 @@ class CCDNComponentBBCodeExtension extends Extension
 
         // Configuration stuff.
         $this
-			->getTagGroupsSection($config, $container)
             ->getEditorSection($config, $container)
             ->getParserSection($config, $container)
         ;
@@ -112,20 +111,6 @@ class CCDNComponentBBCodeExtension extends Extension
 
         return $this;
     }
-
-    /**
-     *
-     * @access private
-     * @param  array                                                                        $config
-     * @param  \Symfony\Component\DependencyInjection\ContainerBuilder                      $container
-     * @return \CCDNComponent\BBCodeBundle\DependencyInjection\CCDNComponentBBCodeExtension
-     */
-    private function getTagGroupsSection(array $config, ContainerBuilder $container)
-    {
-		$container->setParameter('ccdn_component_bb_code.tag_acl', $config['tag_acl']);
-		
-		return $this;
-	}
 	
     /**
      *

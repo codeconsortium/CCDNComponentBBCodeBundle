@@ -36,7 +36,7 @@ BBCodeBundle Provides the following features:
 	1. [B][/B] for Bold
 	2. [U][/U] for Underline.
 	3. [I][/I] for Italics.
-	4. Also include tags for other formatting types.
+	4. [See the full list of tags here](http://github.com/codeconsortium/CCDNComponentBBCodeBundle/blob/master/Resources/doc/default_tag_reference.md).
 4. Includes smilies. 
 5. Includes inline bbcode editor as a Symfony2 form theme. Use anywhere.
 6. Features syntax highlighting for code blocks through GeSHi support.
