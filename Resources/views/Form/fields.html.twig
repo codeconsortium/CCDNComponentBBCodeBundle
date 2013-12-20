@@ -6,7 +6,7 @@
 		{%- set token_count = BBCode_GetTokenCount(tag) -%}
 		{%- set param_question = BBCode_GetButtonParameterQuestion(tag) -%}
 		
-		<button class="btn btn-mini" data-tag="{{- token_name -}}" data-tag-count="{{- token_count -}}"{%- if param_question %} data-param-question="{{- param_question -}}"{% endif %}>
+		<button class="btn btn-default btn-sm" data-tag="{{- token_name -}}" data-tag-count="{{- token_count -}}"{%- if param_question %} data-param-question="{{- param_question -}}"{% endif %}>
 			{%- if icon -%}
 				<i class="{{- icon -}}"></i>
 			{%- else -%}
@@ -36,9 +36,9 @@
 
 {% block bb_editor_widget %}
 	<div class="bb-editor">
-		{% set attr = attr|merge({ 'class': attr.class|default('') ~ 'text-xlarge span10 bb-editor', 'style': attr.style|default('') ~ 'height:250px;'}) %}
+		{% set attr = attr|merge({ 'class': attr.class|default('') ~ 'form-control bb-editor', 'style': attr.style|default('') ~ 'height:250px;'}) %}
 
-		<div class="collapse">
+		<div class="hidden-xs">
 			{%- set tag_groups = BBCode_GetTagsAllowed(attr.acl_group) -%}
 			{%- import _self as bb_macros -%}
 	
