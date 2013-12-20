@@ -11,17 +11,17 @@
 
 {%- macro button_row(groups) -%}
 	{%- import _self as bb_macros -%}
-	
+
 	{%- for group_name, group in groups -%}
 		<b>
 			{{- group_name -}}&nbsp;
 		</b>
-		
+
 		{%- for button_group_name, button_group in group -%}
 			{{- bb_macros.button_group(button_group) -}}
 		{%- endfor -%}
 	{%- endfor -%}
-	
+
 	<br>
 {%- endmacro -%}
 

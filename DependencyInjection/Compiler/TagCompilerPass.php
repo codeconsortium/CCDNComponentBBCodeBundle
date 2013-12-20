@@ -43,7 +43,7 @@ class TagCompilerPass implements CompilerPassInterface
 
         $definition = $container->getDefinition('ccdn_component_bb_code.component.chain.tag');
 
-		$taggedServices = $container->findTaggedServiceIds('ccdn_component_bb_code.tag');
+        $taggedServices = $container->findTaggedServiceIds('ccdn_component_bb_code.tag');
 
         foreach ($taggedServices as $id => $attributes) {
             $definition->addMethodCall('addTagIntegrator', array(new Reference($id)));

@@ -100,7 +100,7 @@ class CCDNComponentBBCodeExtension extends Extension
 
         $container->setParameter('ccdn_component_bb_code.component.chain.tag.class', $config['component']['chain']['tag']['class']);
         $container->setParameter('ccdn_component_bb_code.component.chain.acl.class', $config['component']['chain']['acl']['class']);
-		
+
         $container->setParameter('ccdn_component_bb_code.component.bootstrap.class', $config['component']['bootstrap']['class']);
 
         $container->setParameter('ccdn_component_bb_code.component.engine.bootstrap.class', $config['component']['engine']['bootstrap']['class']);
@@ -111,7 +111,7 @@ class CCDNComponentBBCodeExtension extends Extension
 
         return $this;
     }
-	
+
     /**
      *
      * @access private

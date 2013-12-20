@@ -38,7 +38,7 @@ class CCDNComponentBBCodeBundle extends Bundle
         $container->addCompilerPass(new TagCompilerPass());
         $container->addCompilerPass(new ACLCompilerPass());
     }
-	
+
     /**
      *
      * @access public
@@ -46,14 +46,14 @@ class CCDNComponentBBCodeBundle extends Bundle
     public function boot()
     {
         $twig = $this->container->get('twig');
-		
+
         $twig->addGlobal(
-			'ccdn_component_bb_code',
-			array(
-	            'editor' => array(
-	                'enable' => $this->container->getParameter('ccdn_component_bb_code.editor.enable'),
-	            ),
-	        )
-		); // End Twig Globals.
+            'ccdn_component_bb_code',
+            array(
+                'editor' => array(
+                    'enable' => $this->container->getParameter('ccdn_component_bb_code.editor.enable'),
+                ),
+            )
+        ); // End Twig Globals.
     }
 }

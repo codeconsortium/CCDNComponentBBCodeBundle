@@ -38,7 +38,7 @@ class ACLChain
      */
     public function __construct()
     {
-		$this->tagACLIntegrators = array();
+        $this->tagACLIntegrators = array();
     }
 
     /**
@@ -48,16 +48,16 @@ class ACLChain
      */
     public function addACLIntegrator($tagACLIntegrator)
     {
-		$this->tagACLIntegrators[] = $tagACLIntegrator;
+        $this->tagACLIntegrators[] = $tagACLIntegrator;
     }
-	
-	/**
-	 * 
-	 * @access public
-	 * @return array
-	 */
-	public function getACLIntegrators()
-	{
-		return $this->tagACLIntegrators;
-	}
+
+    /**
+     *
+     * @access public
+     * @return array
+     */
+    public function getACLIntegrators()
+    {
+        return $this->tagACLIntegrators;
+    }
 }

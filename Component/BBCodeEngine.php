@@ -26,49 +26,49 @@ namespace CCDNComponent\BBCodeBundle\Component;
  */
 class BBCodeEngine
 {
-	protected $engine;
-	protected $tableContainer;
-	protected $isParserEnabled;
-	
-	public function __construct($engine, $isParserEnabled, $tableContainer, $tagChain, $aclChain)
-	{
-		$this->engine = $engine;
-		
-		$this->isParserEnabled = $isParserEnabled;
-		
-		$tagIntegrators = $tagChain->getTagIntegrators();
+    protected $engine;
+    protected $tableContainer;
+    protected $isParserEnabled;
 
-		foreach ($tagIntegrators as $tagIntegrator) {
-			$tableContainer->setTableLexemes($tagIntegrator->build());
-		}
+    public function __construct($engine, $isParserEnabled, $tableContainer, $tagChain, $aclChain)
+    {
+        $this->engine = $engine;
 
-		$aclIntegrators = $aclChain->getACLIntegrators();
-		
-		foreach ($aclIntegrators as $aclIntegrator) {
-			$tableContainer->setTableACL($aclIntegrator->build());
-		}
-		
-		$this->tableContainer = $tableContainer;
-	}
-	
-	public function process($input, $tableACLName = null)
-	{
+        $this->isParserEnabled = $isParserEnabled;
+
+        $tagIntegrators = $tagChain->getTagIntegrators();
+
+        foreach ($tagIntegrators as $tagIntegrator) {
+            $tableContainer->setTableLexemes($tagIntegrator->build());
+        }
+
+        $aclIntegrators = $aclChain->getACLIntegrators();
+
+        foreach ($aclIntegrators as $aclIntegrator) {
+            $tableContainer->setTableACL($aclIntegrator->build());
+        }
+
+        $this->tableContainer = $tableContainer;
+    }
+
+    public function process($input, $tableACLName = null)
+    {
         if ($this->isParserEnabled) {
             $html = $this->engine->process($input, $tableACLName);
         } else {
             $html = '<pre>' . htmlentities($input, ENT_QUOTES) . '</pre>';
         }
-		
-		return $html;
-	}
-	
-	public function isParserEnabled()
-	{
-		return $this->isParserEnabled;
-	}
-	
-	public function getTableACL($tableACLName)
-	{
-		return $this->engine->getTableACL($tableACLName);
-	}
+
+        return $html;
+    }
+
+    public function isParserEnabled()
+    {
+        return $this->isParserEnabled;
+    }
+
+    public function getTableACL($tableACLName)
+    {
+        return $this->engine->getTableACL($tableACLName);
+    }
 }

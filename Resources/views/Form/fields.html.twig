@@ -5,7 +5,7 @@
 		{%- set token_name = BBCode_GetTokenName(tag) -%}
 		{%- set token_count = BBCode_GetTokenCount(tag) -%}
 		{%- set param_question = BBCode_GetButtonParameterQuestion(tag) -%}
-		
+
 		<button class="btn btn-default btn-sm" data-tag="{{- token_name -}}" data-tag-count="{{- token_count -}}"{%- if param_question %} data-param-question="{{- param_question -}}"{% endif %}>
 			{%- if icon -%}
 				<i class="{{- icon -}}"></i>
@@ -18,7 +18,7 @@
 
 {%- macro button_row(groups) -%}
 	{%- import _self as bb_macros -%}
-	
+
 	<div class="btn-toolbar">
 		{%- for group_name, group in groups -%}
 			{%- for button_group_name, button_group in group -%}
@@ -41,12 +41,12 @@
 		<div class="hidden-xs">
 			{%- set tag_groups = BBCode_GetTagsAllowed(attr.acl_group) -%}
 			{%- import _self as bb_macros -%}
-	
+
 			{{- bb_macros.button_row({'Format': tag_groups['Format']}) -}}
 			{{- bb_macros.button_row({'Asset': tag_groups['Asset'], 'Block': tag_groups['Block']}) -}}
 		</div>
-		
+
 	    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
-		
+
 	</div>
 {% endblock bb_editor_widget %}

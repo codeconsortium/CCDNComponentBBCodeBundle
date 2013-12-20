@@ -43,7 +43,7 @@ class ACLCompilerPass implements CompilerPassInterface
 
         $definition = $container->getDefinition('ccdn_component_bb_code.component.chain.acl');
 
-		$taggedServices = $container->findTaggedServiceIds('ccdn_component_bb_code.acl');
+        $taggedServices = $container->findTaggedServiceIds('ccdn_component_bb_code.acl');
 
         foreach ($taggedServices as $id => $attributes) {
             $definition->addMethodCall('addACLIntegrator', array(new Reference($id)));

@@ -38,7 +38,7 @@ class TagChain
      */
     public function __construct()
     {
-		$this->tagIntegrators = array();
+        $this->tagIntegrators = array();
     }
 
     /**
@@ -48,16 +48,16 @@ class TagChain
      */
     public function addTagIntegrator($tagIntegrator)
     {
-		$this->tagIntegrators[] = $tagIntegrator;
+        $this->tagIntegrators[] = $tagIntegrator;
     }
-	
-	/**
-	 * 
-	 * @access public
-	 * @return array
-	 */
-	public function getTagIntegrators()
-	{
-		return $this->tagIntegrators;
-	}
+
+    /**
+     *
+     * @access public
+     * @return array
+     */
+    public function getTagIntegrators()
+    {
+        return $this->tagIntegrators;
+    }
 }
