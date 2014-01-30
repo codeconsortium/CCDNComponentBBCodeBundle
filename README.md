@@ -1,7 +1,7 @@
-[![Stories in Ready](https://badge.waffle.io/codeconsortium/ccdncomponentbbcodebundle.png?label=ready)](https://waffle.io/codeconsortium/ccdncomponentbbcodebundle)
 CCDNComponent BBCodeBundle README.
 ==================================
- 
+
+[![Stories in Ready](https://badge.waffle.io/codeconsortium/ccdncomponentbbcodebundle.png?label=ready)](https://waffle.io/codeconsortium/ccdncomponentbbcodebundle) 
 
 ## Notes:  
   
