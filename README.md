@@ -5,8 +5,7 @@ CCDNComponent BBCodeBundle README.
 
 ## Notes:  
   
-This bundle is for the symfony framework and requires Symfony 2.1.x and PHP 5.4
-
+This bundle is for the symfony framework and requires Symfony ~2.4 and PHP 5.4
 
 This file is part of the CCDNComponent BBCodeBundle
 

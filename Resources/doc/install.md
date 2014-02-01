@@ -1,5 +1,5 @@
-Installing CCDNComponent BBCodeBundle 1.x
-=========================================
+Installing CCDNComponent BBCodeBundle
+=====================================
 
 ## Dependencies:
 
@@ -49,9 +49,9 @@ register the new bundle:
 public function registerBundles()
 {
     $bundles = array(
-		new CCDNComponent\BBCodeBundle\CCDNComponentBBCodeBundle(),
-		...
-	);
+        new CCDNComponent\BBCodeBundle\CCDNComponentBBCodeBundle(),
+        // ...
+    );
 }
 ```
 
